@@ -23,7 +23,6 @@ static int next_state();
 static get_actual_token(char token_str[],int token_ind);
 
 #include <stdio.h>
-#include <unistd.h>
 FILE* file_name = NULL;
 
 
@@ -31,16 +30,11 @@ main(argc,argv)
 int argc;
 char *argv[];
 {   
-    char* cwd = NULL;
-    char buff[256];
 
-    cwd = getcwd( buff, 256 );
-	if (cwd == NULL) 
-       return;
-	sprintf(cwd, "%s\\%s", cwd, "instrument.txt");
     file_name=fopen(cwd,"a+"); 
     if(!file_name)
-    {	printf("File could not be opened! \n");
+    {	
+        printf("File could not be opened! \n");
         fclose(file_name);
         exit(0);
     }
