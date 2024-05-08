@@ -30,7 +30,7 @@ main(argc,argv)
 int argc;
 char *argv[];
 {   
-    file_name=fopen("logs.txt","a+"); 
+    file_name=fopen("v3.txt","a+"); 
     if(!file_name)
     {	
         printf("File could not be opened! \n");
