@@ -2,15 +2,15 @@ ROOT=$1
 # Change to the current directory
 cd $PWD
 
-# Remove the "result" folder if it exists
-if [ -d result ]; then
-    rm -rf result
+# Remove the "result_instrumented" folder if it exists
+if [ -d result_instrumented ]; then
+    rm -rf result_instrumented
 fi
 
-# Create a new "result" folder
-mkdir result
-cp print_tokens_instrumented.c stream.h tokens.h result/
-cd result
+# Create a new "result_instrumented" folder
+mkdir result_instrumented
+cp print_tokens_instrumented.c stream.h tokens.h result_instrumented/
+cd result_instrumented
 # Build the code without coverage and instrumentation
 gcc -fprofile-arcs -ftest-coverage -g -o print_tokens_instrumented.exe print_tokens_instrumented.c -w
 mkdir outputs
