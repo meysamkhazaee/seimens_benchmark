@@ -172,6 +172,15 @@ token_stream tp;
     buffer[i]=ch;
     return(buffer); 
   }
+  if(id==0 && ch==59)
+  { 
+    ch=unget_char(ch,tp);       /* then put back this character         */
+    if(ch==EOF)
+    {
+      unget_error(tp);
+    }
+    return(buffer); 
+  }
   return(buffer);                   /* return nomal case token             */
 }
 
@@ -391,25 +400,29 @@ static int is_num_constant(str)
 static int is_str_constant(str)
     token str;
 {
+  fprintf(file_name,"P82,");
   int i=1;
- 
   if ( *str =='"')
   { 
-    while (*(str+i)!='\0')  /* until meet the token end sign */
-    { 
+    while (*(str)!='\0')  /* until meet the token end sign */
+    {
       if(*(str+i)=='"')
       {
+        fprintf(file_name,"P83,");
         return(TRUE);        /* meet the second '"'           */
       }
       else
       {
+        fprintf(file_name,"P84,");
         i++;
-      } 
+      }     
     }               /* end WHILE */
+    fprintf(file_name,"P85,");
     return(FALSE);
   }
   else
   {
+    fprintf(file_name,"P86,");
     return(FALSE);       /* other return FALSE */
   }
 }
@@ -417,25 +430,29 @@ static int is_str_constant(str)
 static int is_identifier(str)
     token  str;
 {
+  fprintf(file_name,"P87,");
   int i=1;
-
-  if(isalpha(*str)) 
+  if ( isalpha( *str) ) 
   {
     while(  *(str+i) !='\0' )   /* unti meet the end token sign */
-    { 
+    {
       if(isalpha(*(str+i)) || isdigit(*(str+i)))
       {
+        fprintf(file_name,"P88,");
         i++;
-      }
+      } 
       else
       {
+        fprintf(file_name,"P89,");
         return(FALSE);
       }
     }      /* end WHILE */
+    fprintf(file_name,"P90,");
     return(TRUE);
   }
   else
   {
+    fprintf(file_name,"P91,");
     return(FALSE);
   }
 }
@@ -443,77 +460,92 @@ static int is_identifier(str)
 static unget_error(fp)
 character_stream *fp;
 {
+  fprintf(file_name,"P92,");
   fprintf(stdout,"It can not get charcter\n");
 }
 
 static void print_spec_symbol(str)
 token str;
 {
-    if(!strcmp(str,"("))
-    {
-      fprintf(stdout, "%s\n","lparen.");
-      return;
-    } 
-    if(!strcmp(str,")"))
-    {
-      fprintf(stdout, "%s\n","rparen.");
-      return;
-    }
-    if(!strcmp(str,"["))
-    {
-      fprintf(stdout, "%s\n","lsquare.");
-      return;
-    }
-    if(!strcmp(str,"]"))
-    {
-      fprintf(stdout, "%s\n","rsquare.");
-      return;
-    }
-    if(!strcmp(str,"'"))
-    {
-      fprintf(stdout, "%s\n","quote.");
-      return;
-    }
-    if (!strcmp(str,"`"))
-    {
-      fprintf(stdout, "%s\n","bquote.");
-      return;
-    }
-    
-    fprintf(stdout, "%s\n","comma.");
+  if (!strcmp(str,"("))
+  {
+    fprintf(file_name,"P93,");
+    fprintf(stdout, "%s\n","lparen.");
+    return;
+  } 
+  if (!strcmp(str,")"))
+  {
+    fprintf(file_name,"P94,");
+    fprintf(stdout, "%s\n","rparen.");
+    return;
+  }
+  if (!strcmp(str,"["))
+  {
+    fprintf(file_name,"P95,");
+    fprintf(stdout, "%s\n","lsquare.");
+    return;
+  }
+  if (!strcmp(str,"]"))
+  {
+    fprintf(file_name,"P96,");
+    fprintf(stdout, "%s\n","rsquare.");
+    return;
+  }
+  if (!strcmp(str,"'"))
+  {
+    fprintf(file_name,"P97,");
+    fprintf(stdout, "%s\n","quote.");
+    return;
+  }
+  if (!strcmp(str,"`"))
+  {
+    fprintf(file_name,"P98,");
+    fprintf(stdout, "%s\n","bquote.");
+    return;
+  }
+  fprintf(file_name,"P99,");
+  fprintf(stdout, "%s\n","comma.");
 }
 
 static int is_spec_symbol(str)
     token str;
 {
   if (!strcmp(str,"("))
-  {  
+  {
+    fprintf(file_name,"P100,");  
     return(TRUE);
   }
   if (!strcmp(str,")"))
   {
+    fprintf(file_name,"P101,");
     return(TRUE);
   }
   if (!strcmp(str,"["))
   {
+    fprintf(file_name,"P102,");
     return(TRUE);
   }
   if (!strcmp(str,"]"))
   {
+    fprintf(file_name,"P103,");
     return(TRUE);
   }
   if (!strcmp(str,"'"))
   {
+    fprintf(file_name,"P104,");
     return(TRUE);
   }
   if (!strcmp(str,"`"))
   {
+    fprintf(file_name,"P105,");
     return(TRUE);
   }
   if (!strcmp(str,","))
   {
+    fprintf(file_name,"P106,");
     return(TRUE);
   }
+  fprintf(file_name,"P107,");
   return(FALSE);     /* others return FALSE */
 }
 
