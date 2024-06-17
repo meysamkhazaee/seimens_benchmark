@@ -1,5 +1,4 @@
-
-
+ 
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -219,7 +218,6 @@ token_stream tp;
     return(buffer); 
   }
   if(id==0 && ch==59)
-                                  /* when not in string or comment,meet ";" */
   { 
     fprintf(file_name,"P37,");
     ch=unget_char(ch,tp);       /* then put back this character         */
@@ -597,7 +595,6 @@ token str;
   fprintf(file_name,"P99,");
   fprintf(stdout, "%s\n","comma.");
 }
-
 
 static int is_spec_symbol(str)
     token str;
