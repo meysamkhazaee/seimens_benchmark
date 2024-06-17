@@ -151,13 +151,19 @@ token_stream tp;
   if(is_eof_token(ch1)==TRUE)       /* if end character is eof token    */
   { 
     ch=unget_char(ch,tp);        /* then put back eof on token_stream */
-    if(ch==EOF)unget_error(tp);
+    if(ch==EOF)
+    {
+      unget_error(tp);
+    }
     return(buffer);
   }
   if(is_spec_symbol(ch1)==TRUE)     /* if end character is special_symbol */
   { 
     ch=unget_char(ch,tp);        /* then put back this character       */
-    if(ch==EOF)unget_error(tp);
+    if(ch==EOF)
+    {
+      unget_error(tp);
+    }
     return(buffer);
   }
   if(id==1)                  /* if end character is " and is string */
