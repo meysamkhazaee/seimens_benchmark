@@ -22,7 +22,6 @@ static int constant(int state,char token_str[],int token_ind);
 static int next_state();
 static get_actual_token(char token_str[],int token_ind);
 
-#include <stdio.h>
 FILE* file_name = NULL;
 
 
