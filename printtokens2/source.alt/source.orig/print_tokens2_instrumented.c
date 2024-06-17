@@ -238,11 +238,11 @@ token_stream tp;
 static int is_token_end(str_com_id,ch)
 char ch;
 int str_com_id;
-{ 
+{
+  fprintf(file_name,"P41,");
   char ch1[2];  /* fixed array declaration MONI */
   ch1[0]=ch;
   ch1[1]='\0';
-  fprintf(file_name,"P41,");
   if(is_eof_token(ch1)==TRUE)
   {
     fprintf(file_name,"P42,");
@@ -463,7 +463,6 @@ static int is_num_constant(str)
   if ( isdigit(*str)) 
   {
     fprintf(file_name,"P77,");
-    return(FALSE);               /* other return FALSE */
     while ( *(str+i) != '\0' )   /* until meet token end sign */
     {
       if(isdigit(*(str+i)))
