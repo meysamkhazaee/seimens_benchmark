@@ -276,17 +276,17 @@ rm v6.txt cmp.v0.v6.csv
 echo -e ""
 python3 compare.files.py v0.txt v7.txt cmp.v0.v7.csv
 python3 removing.duplicate.testcases.py cmp.v0.v7.csv cmp.v0.v7.optimized.csv
-rm v0.txt v7.txt cmp.v0.v7.csv
+rm v7.txt cmp.v0.v7.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v8.txt cmp.v0.v8.csv
 python3 removing.duplicate.testcases.py cmp.v0.v8.csv cmp.v0.v8.optimized.csv
-rm v0.txt v8.txt cmp.v0.v8.csv
+rm v8.txt cmp.v0.v8.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v9.txt cmp.v0.v9.csv
 python3 removing.duplicate.testcases.py cmp.v0.v9.csv cmp.v0.v9.optimized.csv
-rm v0.txt v9.txt cmp.v0.v9.csv
+rm v9.txt cmp.v0.v9.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v10.txt cmp.v0.v10.csv
