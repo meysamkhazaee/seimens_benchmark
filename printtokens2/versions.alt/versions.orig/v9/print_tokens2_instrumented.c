@@ -12,7 +12,7 @@ main(argc,argv)
 int argc;
 char *argv[3];
 {
-  file_name=fopen("v0.txt","a+"); 
+  file_name=fopen("v9.txt","a+"); 
   if(!file_name)
   {	
       printf("File could not be opened! \n");
