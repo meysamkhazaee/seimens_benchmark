@@ -1,15 +1,14 @@
 
-
 cd $PWD
 cd ..
 ROOT=$PWD # set root of project
-cd scripts
+cd $ROOT/scripts
 
 chmod +x runner.sh runner_instrumented.sh # give require access if not garunted
-cp runner.sh runner_instrumented.sh ../source.alt/source.orig
-cd ../source.alt/source.orig
+cp runner.sh runner_instrumented.sh $ROOT/source.alt/source.orig
+cd $ROOT/source.alt/source.orig
 
-echo -e ">>>>>>> running raw_code source.orig ..."
+echo -e ">>>>>>> running raw_code source.orig/v0 ..."
 echo -e ""
 ./runner.sh $ROOT
 echo -e ""
@@ -17,7 +16,7 @@ echo -e ">>>>>>> complete."
 echo -e ""
 echo -e "----------------------"
 
-echo -e ">>>>>>> running instrumented_code source.orig ..."
+echo -e ">>>>>>> running instrumented_code source.orig/v0 ..."
 ./runner_instrumented.sh $ROOT     
 rm runner.sh runner_instrumented.sh
 echo -e ""
@@ -27,10 +26,9 @@ echo -e "----------------------"
 
 
 
-cd ../..
-cd scripts
-cp runner.sh runner_instrumented.sh ../versions.alt/versions.orig/v1
-cd ../versions.alt/versions.orig/v1
+cd $ROOT/scripts
+cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v1
+cd $ROOT/versions.alt/versions.orig/v1
 
 echo -e ">>>>>>> running raw_code versions.orig/v1 ..."
 ./runner.sh $ROOT
@@ -49,10 +47,9 @@ echo -e "----------------------"
 
 
 
-cd ../../..
-cd scripts
-cp runner.sh runner_instrumented.sh ../versions.alt/versions.orig/v2
-cd ../versions.alt/versions.orig/v2
+cd $ROOT/scripts
+cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v2
+cd $ROOT/versions.alt/versions.orig/v2
 
 echo -e ">>>>>>> running raw_code versions.orig/v2 ..."
 ./runner.sh $ROOT
@@ -70,10 +67,9 @@ echo -e ""
 echo -e "----------------------"
 
 
-cd ../../..
-cd scripts
-cp runner.sh runner_instrumented.sh ../versions.alt/versions.orig/v3
-cd ../versions.alt/versions.orig/v3
+cd $ROOT/scripts
+cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v3
+cd $ROOT/versions.alt/versions.orig/v3
 
 echo -e ">>>>>>> running raw_code versions.orig/v3 ..."
 ./runner.sh $ROOT
@@ -91,10 +87,9 @@ echo -e ""
 echo -e "----------------------"
 
 
-cd ../../..
-cd scripts
-cp runner.sh runner_instrumented.sh ../versions.alt/versions.orig/v4
-cd ../versions.alt/versions.orig/v4
+cd $ROOT/scripts
+cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v4
+cd $ROOT/versions.alt/versions.orig/v4
 
 echo -e ">>>>>>> running raw_code versions.orig/v4 ..."
 ./runner.sh $ROOT
@@ -112,10 +107,9 @@ echo -e ""
 echo -e "----------------------"
 
 
-cd ../../..
-cd scripts
-cp runner.sh runner_instrumented.sh ../versions.alt/versions.orig/v5
-cd ../versions.alt/versions.orig/v5
+cd $ROOT/scripts
+cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v5
+cd $ROOT/versions.alt/versions.orig/v5
 
 echo -e ">>>>>>> running raw_code versions.orig/v5 ..."
 ./runner.sh $ROOT
@@ -134,10 +128,9 @@ echo -e "----------------------"
 
 
 
-cd ../../..
-cd scripts
-cp runner.sh runner_instrumented.sh ../versions.alt/versions.orig/v6
-cd ../versions.alt/versions.orig/v6
+cd $ROOT/scripts
+cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v6
+cd $ROOT/versions.alt/versions.orig/v6
 
 echo -e ">>>>>>> running raw_code versions.orig/v6 ..."
 ./runner.sh $ROOT
@@ -156,10 +149,9 @@ echo -e "----------------------"
 
 
 
-cd ../../..
-cd scripts
-cp runner.sh runner_instrumented.sh ../versions.alt/versions.orig/v7
-cd ../versions.alt/versions.orig/v7
+cd $ROOT/scripts
+cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v7
+cd $ROOT/versions.alt/versions.orig/v7
 
 echo -e ">>>>>>> running raw_code versions.orig/v7 ..."
 ./runner.sh $ROOT
@@ -176,7 +168,7 @@ echo -e ">>>>>>> complete."
 echo -e ""
 echo -e "----------------------"
 
-cd ../../..
+cd $ROOT
 echo -e ">>>>>>> optimize instrumentation result of all executions"
 cp source.alt/source.orig/result_instrumented/v0.txt \
    versions.alt/versions.orig/v1/result_instrumented/v1.txt \
@@ -187,7 +179,7 @@ cp source.alt/source.orig/result_instrumented/v0.txt \
    versions.alt/versions.orig/v6/result_instrumented/v6.txt \
    versions.alt/versions.orig/v7/result_instrumented/v7.txt optimize.instrumentations/
 
-cd optimize.instrumentations
+cd $ROOT/optimize.instrumentations
 
 echo -e ""
 python3 compare.files.py v0.txt v1.txt cmp.v0.v1.csv
