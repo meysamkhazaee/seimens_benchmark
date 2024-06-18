@@ -1,0 +1,12 @@
+keyword,"xor".
+lparen.
+identifier,"Qd".
+keyword,"and".
+keyword,"lambda".
+rsquare.
+keyword,"=>".
+numeric,8.
+bquote.
+keyword,"and".
+quote.
+eof.

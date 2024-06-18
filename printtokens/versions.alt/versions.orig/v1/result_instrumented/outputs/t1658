@@ -1,0 +1,20 @@
+identifier,	"r7Ip".
+keyword,	"xor".
+keyword,	"xor".
+keyword,	"or".
+lsquare.
+identifier,	"m1Yj".
+keyword,	"xor".
+comma.
+identifier,	"MY".
+identifier,	"HS".
+bquote.
+keyword,	"or".
+lsquare.
+keyword,	"and".
+identifier,	"s8".
+lparen.
+lsquare.
+keyword,	"lambda".
+error,	"".
+error

@@ -1,0 +1,13 @@
+identifier,"z".
+comma.
+error,"	".
+rsquare.
+error,"dO\G".
+error,":#:lambda".
+keyword,"and".
+identifier,"X2".
+comma.
+lsquare.
+It can not get charcter
+error,"#?".
+eof.

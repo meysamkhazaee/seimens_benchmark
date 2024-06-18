@@ -1,0 +1,5 @@
+lparen.
+error,"34".
+It can not get charcter
+error,"	".
+eof.

@@ -1,0 +1,5 @@
+identifier,"bb".
+bquote.
+It can not get charcter
+error,"	^x".
+eof.

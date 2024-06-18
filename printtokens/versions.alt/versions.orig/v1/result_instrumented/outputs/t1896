@@ -1,0 +1,8 @@
+keyword,	"and".
+keyword,	"if".
+keyword,	"xor".
+lsquare.
+keyword,	"lambda".
+comma.
+rparen.
+error

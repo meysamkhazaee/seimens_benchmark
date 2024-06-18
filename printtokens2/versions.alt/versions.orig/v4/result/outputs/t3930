@@ -1,0 +1,12 @@
+rparen.
+identifier,"x".
+rparen.
+error,"\|.".
+bquote.
+keyword,"=>".
+error,"#+"e"".
+lsquare.
+bquote.
+numeric,56.
+numeric,12.
+eof.

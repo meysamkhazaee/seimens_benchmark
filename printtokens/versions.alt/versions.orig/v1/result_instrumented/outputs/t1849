@@ -1,0 +1,8 @@
+keyword,	"or".
+keyword,	"if".
+string,	"OfQ".
+numeric,	8.
+bquote.
+keyword,	"or".
+identifier,	"o".
+error

@@ -1,0 +1,8 @@
+keyword,"if".
+numeric,7.
+keyword,"lambda".
+identifier,"l".
+keyword,"and".
+bquote.
+numeric,3.
+eof.
