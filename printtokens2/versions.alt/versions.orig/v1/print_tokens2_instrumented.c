@@ -217,7 +217,7 @@ token_stream tp;
     buffer[i]=ch;
     return(buffer); 
   }
-  fprintf(file_name, "P111,")
+  fprintf(file_name, "P111,");
   return(buffer);                   /* return nomal case token             */
 }
 
