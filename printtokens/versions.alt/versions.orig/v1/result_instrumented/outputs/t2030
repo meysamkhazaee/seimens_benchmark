@@ -1,0 +1,16 @@
+character,	"Z".
+numeric,	61.
+keyword,	"and".
+character,	"g".
+lparen.
+string,	"1".
+comma.
+numeric,	49.
+identifier,	"kTqif".
+lparen.
+character,	"c".
+identifier,	"eypV".
+numeric,	88.
+lsquare.
+string,	"^".
+error

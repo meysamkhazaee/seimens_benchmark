@@ -1,0 +1,11 @@
+identifier,	"awyoV1".
+quote.
+keyword,	"and".
+identifier,	"r".
+error,	"^".
+error,	".".
+identifier,	"cl".
+keyword,	"or".
+numeric,	90.
+character,	"R".
+error

@@ -1,0 +1,12 @@
+error,"#".
+error,"#".
+comma.
+lparen.
+It can not get charcter
+error,"3<4Zr".
+It can not get charcter
+numeric,43.
+error,"#".
+lsquare.
+lparen.
+eof.
