@@ -1,9 +1,0 @@
-rparen.
-identifier,"x".
-rparen.
-error,"\|.".
-lsquare.
-bquote.
-error,"56".
-error,"12".
-eof.
