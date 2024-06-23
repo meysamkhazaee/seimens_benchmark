@@ -1,12 +1,5 @@
-/*  -*- Last-Edit:  Wed May 7 10:12:52 1993 by Monica; -*- */
-
-
 #include <stdio.h>
-
-/* A job descriptor. */
-
 #define NULL 0
-
 
 #define NEW_JOB        1
 #define UPGRADE_PRIO   2 
@@ -18,6 +11,8 @@
 
 #define MAXPRIO 3
 
+FILE* file_name = NULL;
+
 typedef struct _job {
     struct  _job *next, *prev; /* Next and Previous in job list. */
     int          val  ;         /* Id-value of program. */
@@ -26,20 +21,16 @@ typedef struct _job {
 
 typedef struct list		/* doubly linked list */
 {
-  Ele *first;
-  Ele *last;
-  int    mem_count;		/* member count */
+    Ele *first;
+    Ele *last;
+    int    mem_count;		/* member count */
 } List;
 
-/*-----------------------------------------------------------------------------
-  new_ele
-     alloates a new element with value as num.
------------------------------------------------------------------------------*/
 Ele* new_ele(new_num) 
 int new_num;
-{	
+{
+    fprintf(file_name,"P20,");	
     Ele *ele;
-
     ele =(Ele *)malloc(sizeof(Ele));
     ele->next = NULL;
     ele->prev = NULL;
@@ -47,100 +38,115 @@ int new_num;
     return ele;
 }
 
-/*-----------------------------------------------------------------------------
-  new_list
-        allocates, initializes and returns a new list.
-        Note that if the argument compare() is provided, this list can be
-            made into an ordered list. see insert_ele().
------------------------------------------------------------------------------*/
 List *new_list()
 {
+    fprintf(file_name,"P21,");
     List *list;
-
     list = (List *)malloc(sizeof(List));
-    
     list->first = NULL;
     list->last  = NULL;
     list->mem_count = 0;
     return (list);
 }
 
-/*-----------------------------------------------------------------------------
-  append_ele
-        appends the new_ele to the list. If list is null, a new
-	list is created. The modified list is returned.
------------------------------------------------------------------------------*/
 List *append_ele(a_list, a_ele)
 List *a_list;
 Ele  *a_ele;
 {
-  if (!a_list)
-      a_list = new_list();	/* make list without compare function */
+    fprintf(file_name,"P22,");
+    if (!a_list)
+    {
+        fprintf(file_name,"P23,");
+        a_list = new_list();	/* make list without compare function */
+    }
 
-  a_ele->prev = a_list->last;	/* insert at the tail */
-  if (a_list->last)
-    a_list->last->next = a_ele;
-  else
-    a_list->first = a_ele;
-  a_list->last = a_ele;
-  a_ele->next = NULL;
-  a_list->mem_count++;
-  return (a_list);
+    a_ele->prev = a_list->last;	/* insert at the tail */
+    fprintf(file_name,"P24,");
+    if (a_list->last)
+    {
+        fprintf(file_name,"P25,");
+        a_list->last->next = a_ele;
+    }
+    else
+    {
+        fprintf(file_name,"P26,");
+        a_list->first = a_ele;
+    }
+    fprintf(file_name,"P27,");
+    a_list->last = a_ele;
+    a_ele->next = NULL;
+    a_list->mem_count++;
+    return (a_list);
 }
 
-/*-----------------------------------------------------------------------------
-  find_nth
-        fetches the nth element of the list (count starts at 1)
------------------------------------------------------------------------------*/
 Ele *find_nth(f_list, n)
 List *f_list;
 int   n;
 {
     Ele *f_ele;
     int i;
-
+    fprintf(file_name,"P28,");
     if (!f_list)
-	return NULL;
+    {
+        fprintf(file_name,"P29,");
+        return NULL;
+    }
+
     f_ele = f_list->first;
+    fprintf(file_name,"P30,");
     for (i=1; f_ele && (i<n); i++)
-	f_ele = f_ele->next;
+    {
+        fprintf(file_name,"P31,");
+        f_ele = f_ele->next;
+    }
+    fprintf(file_name,"P32,");
     return f_ele;
 }
 
-/*-----------------------------------------------------------------------------
-  del_ele
-        deletes the old_ele from the list.
-        Note: even if list becomes empty after deletion, the list
-	      node is not deallocated.
------------------------------------------------------------------------------*/
 List *del_ele(d_list, d_ele)
 List *d_list;
 Ele  *d_ele;
 {
+    fprintf(file_name,"P33,");
     if (!d_list || !d_ele)
-	return (NULL);
+    {
+        fprintf(file_name,"P34,");
+        return (NULL);
+    }
     
+    fprintf(file_name,"P35,");
     if (d_ele->next)
-	d_ele->next->prev = d_ele->prev;
+    {
+        fprintf(file_name,"P36,");
+        d_ele->next->prev = d_ele->prev;
+    }
     else
-	d_list->last = d_ele->prev;
+    {
+        fprintf(file_name,"P37,");
+        d_list->last = d_ele->prev;
+    }
+
+    fprintf(file_name,"P38,");
     if (d_ele->prev)
-	d_ele->prev->next = d_ele->next;
+    {
+        fprintf(file_name,"P39,");
+        d_ele->prev->next = d_ele->next;
+    }
     else
-	d_list->first = d_ele->next;
+    {
+        fprintf(file_name,"P40,");
+        d_list->first = d_ele->next;
+    }
+    fprintf(file_name,"P41,");
     /* KEEP d_ele's data & pointers intact!! */
     d_list->mem_count--;
     return (d_list);
 }
 
-/*-----------------------------------------------------------------------------
-   free_ele
-       deallocate the ptr. Caution: The ptr should point to an object
-       allocated in a single call to malloc.
------------------------------------------------------------------------------*/
 void free_ele(ptr)
 Ele *ptr;
 {
+    fprintf(file_name,"P42,");
     free(ptr);
 }
 
@@ -154,11 +160,13 @@ void
 finish_process()
 {
     schedule();
+    fprintf(file_name,"P43,");
     if (cur_proc)
     {
-	fprintf(stdout, "%d ", cur_proc->val);
-	free_ele(cur_proc);
-	num_processes--;
+        fprintf(file_name,"P44,");
+        fprintf(stdout, "%d ", cur_proc->val);
+        free_ele(cur_proc);
+        num_processes--;
     }
 }
 
@@ -168,23 +176,29 @@ finish_all_processes()
     int i;
     int total;
     total = num_processes;
+    fprintf(file_name,"P45,");
     for (i=0; i<total; i++)
-	finish_process();
+    {
+        fprintf(file_name,"P46,");
+        finish_process();
+    }
 }
 
 schedule()
 {
     int i;
-    
     cur_proc = NULL;
+    fprintf(file_name,"P47,");
     for (i=MAXPRIO; i > 0; i--)
     {
-	if (prio_queue[i]->mem_count > 0)
-	{
-	    cur_proc = prio_queue[i]->first;
-	    prio_queue[i] = del_ele(prio_queue[i], cur_proc);
-	    return;
-	}
+        fprintf(file_name,"P48,");
+        if (prio_queue[i]->mem_count > 0)
+        {
+            fprintf(file_name,"P49,");
+            cur_proc = prio_queue[i]->first;
+            prio_queue[i] = del_ele(prio_queue[i], cur_proc);
+            return;
+        }
     }
 }
 
@@ -197,22 +211,31 @@ float ratio;
     int n;
     Ele *proc;
     List *src_queue, *dest_queue;
-    
+    fprintf(file_name,"P50,");
     if (prio >= MAXPRIO)
-	return;
+    {
+        fprintf(file_name,"P51,");
+        return;
+    }
+	    
     src_queue = prio_queue[prio];
     dest_queue = prio_queue[prio+1];
     count = src_queue->mem_count;
 
+    fprintf(file_name,"P52,");
     if (count > 1) /* off by one */ {
-	n = (int) (count*ratio + 1);
-	proc = find_nth(src_queue, n);
-	if (proc) {
-	    src_queue = del_ele(src_queue, proc);
-	    /* append to appropriate prio queue */
-	    proc->priority = prio;
-	    dest_queue = append_ele(dest_queue, proc);
-	}
+    {
+        n = (int) (count*ratio + 1);
+        proc = find_nth(src_queue, n);
+        fprintf(file_name,"P53,");
+        if (proc) 
+        {
+            fprintf(file_name,"P54,");
+            src_queue = del_ele(src_queue, proc);
+            /* append to appropriate prio queue */
+            proc->priority = prio;
+            dest_queue = append_ele(dest_queue, proc);
+        }
     }
 }
 
@@ -224,17 +247,21 @@ float ratio;
     int n;
     Ele *proc;
     int prio;
+    fprintf(file_name,"P55,");
     if (block_queue)
     {
-	count = block_queue->mem_count;
-	n = (int) (count*ratio + 1);
-	proc = find_nth(block_queue, n);
-	if (proc) {
-	    block_queue = del_ele(block_queue, proc);
-	    /* append to appropriate prio queue */
-	    prio = proc->priority;
-	    prio_queue[prio] = append_ele(prio_queue[prio], proc);
-	}
+        count = block_queue->mem_count;
+        n = (int) (count*ratio + 1);
+        proc = find_nth(block_queue, n);
+        fprintf(file_name,"P56,");
+        if (proc) 
+        {
+            fprintf(file_name,"P57,");
+            block_queue = del_ele(block_queue, proc);
+            /* append to appropriate prio queue */
+            prio = proc->priority;
+            prio_queue[prio] = append_ele(prio_queue[prio], proc);
+        }
     }
 }
 
@@ -242,10 +269,12 @@ void quantum_expire()
 {
     int prio;
     schedule();
+    fprintf(file_name,"P58,");
     if (cur_proc)
     {
-	prio = cur_proc->priority;
-	prio_queue[prio] = append_ele(prio_queue[prio], cur_proc);
+        fprintf(file_name,"P59,");
+        prio = cur_proc->priority;
+        prio_queue[prio] = append_ele(prio_queue[prio], cur_proc);
     }	
 }
 	
@@ -253,15 +282,18 @@ void
 block_process()
 {
     schedule();
+    fprintf(file_name,"P60,");
     if (cur_proc)
     {
-	block_queue = append_ele(block_queue, cur_proc);
+        fprintf(file_name,"P61,");
+	    block_queue = append_ele(block_queue, cur_proc);
     }
 }
 
 Ele * new_process(prio)
 int prio;
 {
+    fprintf(file_name,"P62,");
     Ele *proc;
     proc = new_ele(alloc_proc_num++);
     proc->priority = prio;
@@ -272,6 +304,7 @@ int prio;
 void add_process(prio)
 int prio;
 {
+    fprintf(file_name,"P63,");
     Ele *proc;
     proc = new_process(prio);
     prio_queue[prio] = append_ele(prio_queue[prio], proc);
@@ -283,19 +316,22 @@ int num_proc;
 {
     List *queue;
     Ele  *proc;
-    int i;
-    
+    int i;   
     queue = new_list();
+    fprintf(file_name,"P64,");
     for (i=0; i<num_proc; i++)
     {
-	proc = new_process(prio);
-	queue = append_ele(queue, proc);
+        fprintf(file_name,"P65,");
+        proc = new_process(prio);
+        queue = append_ele(queue, proc);
     }
+    fprintf(file_name,"P66,");
     prio_queue[prio] = queue;
 }
 
 void initialize()
 {
+    fprintf(file_name,"P67,");
     alloc_proc_num = 0;
     num_processes = 0;
 }
@@ -305,107 +341,98 @@ main(argc, argv)
 int argc;
 char *argv[];
 {
+
+    file_name=fopen("v4.txt","a+"); 
+    if(!file_name)
+    {	
+        printf("File could not be opened! \n");
+        fclose(file_name);
+        exit(0);
+    }
+
     int command;
     int prio;
     float ratio;
     int status;
 
+    fprintf(file_name,"\nP1,");
     if (argc < (MAXPRIO+1))
     {
-	fprintf(stdout, "incorrect usage\n");
-	return;
+        fprintf(file_name,"P2,");
+        fprintf(stdout, "incorrect usage\n");
+        return;
     }
-    
+
     initialize();
+    fprintf(file_name,"P3,");
     for (prio=MAXPRIO; prio >= 1; prio--)
     {
-	init_prio_queue(prio, atoi(argv[prio]));
+        fprintf(file_name,"P4,");
+	    init_prio_queue(prio, atoi(argv[prio]));
     }
+
+    fprintf(file_name,"P5,");
     for (status = fscanf(stdin, "%d", &command);
 	 ((status!=EOF) && status);
 	 status = fscanf(stdin, "%d", &command))
     {
-	switch(command)
-	{
-	case FINISH:
-	    finish_process();
-	    break;
-	case BLOCK:
-	    block_process();
-	    break;
-	case QUANTUM_EXPIRE:
-	    quantum_expire();
-	    break;
-	case UNBLOCK:
-	    fscanf(stdin, "%f", &ratio);
-	    unblock_process(ratio);
-	    break;
-	case UPGRADE_PRIO:
-	    fscanf(stdin, "%d", &prio);
-	    fscanf(stdin, "%f", &ratio);
-	    if (prio > MAXPRIO || prio <= 0) { 
-		fprintf(stdout, "** invalid priority\n");
-		return;
-	    }
-	    else 
-		upgrade_process_prio(prio, ratio);
-	    break;
-	case NEW_JOB:
-	    fscanf(stdin, "%d", &prio);
-	    if (prio > MAXPRIO || prio <= 0) {
-		fprintf(stdout, "** invalid priority\n");
-		return;
-	    }
-	    else 
-		add_process(prio);
-	    break;
-	case FLUSH:
-	    finish_all_processes();
-	    break;
-	}
+        fprintf(file_name,"P6,");
+        switch(command)
+        {
+            case FINISH:
+                fprintf(file_name,"P7,");
+                finish_process();
+                break;
+            case BLOCK:
+                fprintf(file_name,"P8,");
+                block_process();
+                break;
+            case QUANTUM_EXPIRE:
+                fprintf(file_name,"P9,");
+                quantum_expire();
+                break;
+            case UNBLOCK:
+                fprintf(file_name,"P10,");
+                fscanf(stdin, "%f", &ratio);
+                unblock_process(ratio);
+                break;
+            case UPGRADE_PRIO:
+                fscanf(stdin, "%d", &prio);
+                fscanf(stdin, "%f", &ratio);
+                fprintf(file_name,"P11,");
+                if (prio > MAXPRIO || prio <= 0) 
+                {
+                    fprintf(file_name,"P12,");
+                    fprintf(stdout, "** invalid priority\n");
+                    return;
+                }
+                else
+                {
+                    fprintf(file_name,"P13,");
+                    upgrade_process_prio(prio, ratio);
+                }
+                fprintf(file_name,"P14,");
+                break;
+            case NEW_JOB:
+                fscanf(stdin, "%d", &prio);
+                fprintf(file_name,"P15,");
+                if (prio > MAXPRIO || prio <= 0) 
+                {
+                    fprintf(file_name,"P16,");
+                    fprintf(stdout, "** invalid priority\n");
+                    return;
+                }
+                else 
+                {
+                    fprintf(file_name,"P17,");
+                    add_process(prio);
+                }
+                fprintf(file_name,"P18,");
+                break;
+            case FLUSH:
+                fprintf(file_name,"P19,");
+                finish_all_processes();
+                break;
+        }
     }
 }
-
-/* A simple input spec:
-  
-  a.out n3 n2 n1
-
-  where n3, n2, n1 are non-negative integers indicating the number of
-  initial processes at priority 3, 2, and 1, respectively.
-
-  The input file is a list of commands of the following kinds:
-   (For simplicity, comamnd names are integers (NOT strings)
-    
-  FINISH            ;; this exits the current process (printing its number)
-  NEW_JOB priority  ;; this adds a new process at specified priority
-  BLOCK             ;; this adds the current process to the blocked queue
-  QUANTUM_EXPIRE    ;; this puts the current process at the end
-                    ;;      of its prioqueue
-  UNBLOCK ratio     ;; this unblocks a process from the blocked queue
-                    ;;     and ratio is used to determine which one
-
-  UPGRADE_PRIO small-priority ratio ;; this promotes a process from
-                    ;; the small-priority queue to the next higher priority
-                    ;;     and ratio is used to determine which process
- 
-  FLUSH	            ;; causes all the processes from the prio queues to
-                    ;;    exit the system in their priority order
-
-where
- NEW_JOB        1
- UPGRADE_PRIO   2 
- BLOCK          3
- UNBLOCK        4  
- QUANTUM_EXPIRE 5
- FINISH         6
- FLUSH          7
-and priority is in        1..3
-and small-priority is in  1..2
-and ratio is in           0.0..1.0
-
- The output is a list of numbers indicating the order in which
- processes exit from the system.   
-
-*/
-
-
