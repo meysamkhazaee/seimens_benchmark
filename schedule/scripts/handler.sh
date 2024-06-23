@@ -135,6 +135,15 @@ echo -e "----------------------"
 
 
 cd $ROOT
+
+# Remove the "result" folder if it exists
+if [ -d  optimize.instrumentations ]; then
+    rm -rf  optimize.instrumentations
+fi
+
+# Create a new "result" folder
+mkdir  optimize.instrumentations
+
 echo -e ">>>>>>> optimize instrumentation result of all executions"
 cp source.alt/source.orig/result_instrumented/v0.txt \
    versions.alt/versions.orig/v1/result_instrumented/v1.txt \
@@ -147,7 +156,7 @@ cp source.alt/source.orig/result_instrumented/v0.txt \
    versions.alt/versions.orig/v8/result_instrumented/v8.txt \
    versions.alt/versions.orig/v9/result_instrumented/v9.txt optimize.instrumentations/
 
-cd optimize.instrumentations
+cd $ROOT/optimize.instrumentations
 
 echo -e ""
 python3 compare.files.py v0.txt v1.txt cmp.v0.v1.csv
