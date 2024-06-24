@@ -1,3 +1,4 @@
+#mshadow: optimize duplicated file
 cd $PWD
 cd ..
 ROOT=$PWD # set root of project

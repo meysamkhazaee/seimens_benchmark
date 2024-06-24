@@ -1,20 +1,7 @@
 cd $PWD
 cd ..
 ROOT=$PWD # set root of project
-
-
-
-
-
 cd $ROOT
-
-# Remove the "result" folder if it exists
-if [ -d  optimize.instrumentations ]; then
-    rm -rf  optimize.instrumentations
-fi
-
-# Create a new "result" folder
-mkdir  optimize.instrumentations
 
 echo -e ">>>>>>> optimize instrumentation result of all executions"
 cp source.alt/source.orig/result_instrumented/v0.txt \
