@@ -120,12 +120,23 @@ echo -e ">>>>>>> complete."
 echo -e ""
 echo -e "----------------------"
 
-
 cd $ROOT/scripts
 cp runner_instrumented.sh $ROOT/versions.alt/versions.orig/v9
 cd $ROOT/versions.alt/versions.orig/v9
 
 echo -e ">>>>>>> running instrumented_code versions.orig/v9 ..."
+./runner_instrumented.sh $ROOT    
+rm runner_instrumented.sh
+echo -e ""
+echo -e ">>>>>>> complete."
+echo -e ""
+echo -e "----------------------"
+
+cd $ROOT/scripts
+cp runner_instrumented.sh $ROOT/versions.alt/versions.orig/v10
+cd $ROOT/versions.alt/versions.orig/v10
+
+echo -e ">>>>>>> running instrumented_code versions.orig/v10 ..."
 ./runner_instrumented.sh $ROOT    
 rm runner_instrumented.sh
 echo -e ""
@@ -147,7 +158,8 @@ cp source.alt/source.orig/result_instrumented/v0.txt \
    versions.alt/versions.orig/v6/result_instrumented/v6.txt \
    versions.alt/versions.orig/v7/result_instrumented/v7.txt \
    versions.alt/versions.orig/v8/result_instrumented/v8.txt \
-   versions.alt/versions.orig/v9/result_instrumented/v9.txt optimize.instrumentations/
+   versions.alt/versions.orig/v9/result_instrumented/v9.txt \
+   versions.alt/versions.orig/v10/result_instrumented/v10.txt optimize.instrumentations/
 
 cd $ROOT/optimize.instrumentations
 
@@ -194,7 +206,12 @@ rm v8.txt cmp.v0.v8.csv
 echo -e ""
 python3 compare.files.py v0.txt v9.txt cmp.v0.v9.csv
 python3 removing.duplicate.testcases.py cmp.v0.v9.csv cmp.v0.v9.optimized.csv
-rm v0.txt v9.txt cmp.v0.v9.csv
+rm v9.txt cmp.v0.v9.csv
+
+echo -e ""
+python3 compare.files.py v0.txt v10.txt cmp.v0.v10.csv
+python3 removing.duplicate.testcases.py cmp.v0.v10.csv cmp.v0.v10.optimized.csv
+rm v0.txt v10.txt cmp.v0.v10.csv
 
 echo -e ""
 echo -e ">>>>>>> complete."
