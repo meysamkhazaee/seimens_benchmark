@@ -15,8 +15,6 @@ cd result_instrumented
 gcc -fprofile-arcs -ftest-coverage -g -o schedule2.exe schedule2.c -w
 mkdir outputs
 
-echo script type: R
-
 ./schedule2.exe 7 1 9  < $ROOT/inputs/input/inp.58 > ./outputs/t1
 
 ./schedule2.exe 2 3 5  < $ROOT/inputs/input/inp.46 > ./outputs/t2
