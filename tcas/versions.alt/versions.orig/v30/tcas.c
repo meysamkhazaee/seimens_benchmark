@@ -168,7 +168,7 @@ main(argc, argv)
 int argc;
 char *argv[];
 {
-    file_name=fopen("v0.txt","a+"); 
+    file_name=fopen("v30.txt","a+"); 
     if(!file_name)
     {	
         printf("File could not be opened! \n");
