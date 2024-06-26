@@ -71,7 +71,7 @@ bool Non_Crossing_Biased_Climb()
     if (upward_preferred)
     {
         fprintf(file_name,"P9,");
-	result = ((Own_Below_Threat()) && (!(Down_Separation >= ALIM())));
+	    result = ((Own_Below_Threat()) && (!(Down_Separation >= ALIM())));
     }
     else
     {	
