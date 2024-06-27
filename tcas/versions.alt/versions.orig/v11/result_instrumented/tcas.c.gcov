@@ -167,7 +167,7 @@
         -:  163:int argc;
         -:  164:char *argv[];
         -:  165:{
-     1608:  166:    file_name=fopen("v12.txt","a+"); 
+     1608:  166:    file_name=fopen("v11.txt","a+"); 
      1608:  167:    if(!file_name)
         -:  168:    {	
     #####:  169:        printf("File could not be opened! \n");

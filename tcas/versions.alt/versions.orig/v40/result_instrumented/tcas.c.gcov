@@ -75,7 +75,7 @@
       886:   71:    if (upward_preferred)
         -:   72:    {
       478:   73:        fprintf(file_name,"P9,");
-      478:   74:	result = ((Own_Below_Threat()) && (!(Down_Separation >= ALIM())));
+      478:   74:	    result = ((Own_Below_Threat()) && (!(Down_Separation >= ALIM())));
         -:   75:    }
         -:   76:    else
         -:   77:    {	
