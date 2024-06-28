@@ -40,6 +40,8 @@ printtokens2/versions.alt/versions.orig/v8/result_instrumented/outputs
 printtokens2/versions.alt/versions.orig/v8/result
 printtokens2/versions.alt/versions.orig/v9/result_instrumented/outputs
 printtokens2/versions.alt/versions.orig/v9/result
+printtokens2/versions.alt/versions.orig/v10/result_instrumented/outputs
+printtokens2/versions.alt/versions.orig/v10/result
 # printtokens2/optimize.instrumentations/*.txt
 # printtokens2/optimize.instrumentations/*.csv
 
