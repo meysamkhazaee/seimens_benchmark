@@ -1,0 +1,440 @@
+        -:    0:Source:schedule.c
+        -:    0:Graph:schedule.gcno
+        -:    0:Data:schedule.gcda
+        -:    0:Runs:2609
+        -:    1:#include <stdio.h>
+        -:    2:#define NULL 0
+        -:    3:
+        -:    4:#define NEW_JOB        1
+        -:    5:#define UPGRADE_PRIO   2 
+        -:    6:#define BLOCK          3
+        -:    7:#define UNBLOCK        4  
+        -:    8:#define QUANTUM_EXPIRE 5
+        -:    9:#define FINISH         6
+        -:   10:#define FLUSH          7
+        -:   11:
+        -:   12:#define MAXPRIO 3
+        -:   13:
+        -:   14:FILE* file_name = NULL;
+        -:   15:
+        -:   16:typedef struct _job {
+        -:   17:    struct  _job *next, *prev; /* Next and Previous in job list. */
+        -:   18:    int          val  ;         /* Id-value of program. */
+        -:   19:    short        priority;     /* Its priority. */
+        -:   20:} Ele, *Ele_Ptr;
+        -:   21:
+        -:   22:typedef struct list		/* doubly linked list */
+        -:   23:{
+        -:   24:    Ele *first;
+        -:   25:    Ele *last;
+        -:   26:    int    mem_count;		/* member count */
+        -:   27:} List;
+        -:   28:
+    39922:   29:Ele* new_ele(new_num) 
+        -:   30:int new_num;
+        -:   31:{
+    39922:   32:    fprintf(file_name,"P20,");	
+        -:   33:    Ele *ele;
+    39922:   34:    ele =(Ele *)malloc(sizeof(Ele));
+    39922:   35:    ele->next = NULL;
+    39922:   36:    ele->prev = NULL;
+    39922:   37:    ele->val  = new_num;
+    39922:   38:    return ele;
+        -:   39:}
+        -:   40:
+     9513:   41:List *new_list()
+        -:   42:{
+     9513:   43:    fprintf(file_name,"P21,");
+        -:   44:    List *list;
+     9513:   45:    list = (List *)malloc(sizeof(List));
+     9513:   46:    list->first = NULL;
+     9513:   47:    list->last  = NULL;
+     9513:   48:    list->mem_count = 0;
+     9513:   49:    return (list);
+        -:   50:}
+        -:   51:
+    60483:   52:List *append_ele(a_list, a_ele)
+        -:   53:List *a_list;
+        -:   54:Ele  *a_ele;
+        -:   55:{
+    60483:   56:    fprintf(file_name,"P22,");
+    60483:   57:    if (!a_list)
+        -:   58:    {
+     1776:   59:        fprintf(file_name,"P23,");
+     1776:   60:        a_list = new_list();	/* make list without compare function */
+        -:   61:    }
+        -:   62:
+    60483:   63:    a_ele->prev = a_list->last;	/* insert at the tail */
+    60483:   64:    fprintf(file_name,"P24,");
+    60483:   65:    if (a_list->last)
+        -:   66:    {
+    33520:   67:        fprintf(file_name,"P25,");
+    33520:   68:        a_list->last->next = a_ele;
+        -:   69:    }
+        -:   70:    else
+        -:   71:    {
+    26963:   72:        fprintf(file_name,"P26,");
+    26963:   73:        a_list->first = a_ele;
+        -:   74:    }
+    60483:   75:    fprintf(file_name,"P27,");
+    60483:   76:    a_list->last = a_ele;
+    60483:   77:    a_ele->next = NULL;
+    60483:   78:    a_list->mem_count++;
+    60483:   79:    return (a_list);
+        -:   80:}
+        -:   81:
+    12334:   82:Ele *find_nth(f_list, n)
+        -:   83:List *f_list;
+        -:   84:int   n;
+        -:   85:{
+        -:   86:    Ele *f_ele;
+        -:   87:    int i;
+    12334:   88:    fprintf(file_name,"P28,");
+    12334:   89:    if (!f_list)
+        -:   90:    {
+    #####:   91:        fprintf(file_name,"P29,");
+    #####:   92:        return NULL;
+        -:   93:    }
+        -:   94:
+    12334:   95:    f_ele = f_list->first;
+    12334:   96:    fprintf(file_name,"P30,");
+    16862:   97:    for (i=1; f_ele && (i<n); i++)
+        -:   98:    {
+     4528:   99:        fprintf(file_name,"P31,");
+     4528:  100:        f_ele = f_ele->next;
+        -:  101:    }
+    12334:  102:    fprintf(file_name,"P32,");
+    12334:  103:    return f_ele;
+        -:  104:}
+        -:  105:
+    51480:  106:List *del_ele(d_list, d_ele)
+        -:  107:List *d_list;
+        -:  108:Ele  *d_ele;
+        -:  109:{
+    51480:  110:    fprintf(file_name,"P33,");
+    51480:  111:    if (!d_list || !d_ele)
+        -:  112:    {
+    #####:  113:        fprintf(file_name,"P34,");
+    #####:  114:        return (NULL);
+        -:  115:    }
+        -:  116:    
+    51480:  117:    fprintf(file_name,"P35,");
+    51480:  118:    if (d_ele->next)
+        -:  119:    {
+    26675:  120:        fprintf(file_name,"P36,");
+    26675:  121:        d_ele->next->prev = d_ele->prev;
+        -:  122:    }
+        -:  123:    else
+        -:  124:    {
+    24805:  125:        fprintf(file_name,"P37,");
+    24805:  126:        d_list->last = d_ele->prev;
+        -:  127:    }
+        -:  128:
+    51480:  129:    fprintf(file_name,"P38,");
+    51480:  130:    if (d_ele->prev)
+        -:  131:    {
+     2396:  132:        fprintf(file_name,"P39,");
+     2396:  133:        d_ele->prev->next = d_ele->next;
+        -:  134:    }
+        -:  135:    else
+        -:  136:    {
+    49084:  137:        fprintf(file_name,"P40,");
+    49084:  138:        d_list->first = d_ele->next;
+        -:  139:    }
+    51480:  140:    fprintf(file_name,"P41,");
+        -:  141:    /* KEEP d_ele's data & pointers intact!! */
+    51480:  142:    d_list->mem_count--;
+    51480:  143:    return (d_list);
+        -:  144:}
+        -:  145:
+    30919:  146:void free_ele(ptr)
+        -:  147:Ele *ptr;
+        -:  148:{
+    30919:  149:    fprintf(file_name,"P42,");
+    30919:  150:    free(ptr);
+    30919:  151:}
+        -:  152:
+        -:  153:int alloc_proc_num;
+        -:  154:int num_processes;
+        -:  155:Ele* cur_proc;
+        -:  156:List *prio_queue[MAXPRIO+1]; 	/* 0th element unused */
+        -:  157:List *block_queue;
+        -:  158:
+        -:  159:void
+    41510:  160:finish_process()
+        -:  161:{
+    41510:  162:    schedule();
+    41510:  163:    fprintf(file_name,"P43,");
+    41510:  164:    if (cur_proc)
+        -:  165:    {
+    30919:  166:        fprintf(file_name,"P44,");
+    30919:  167:        fprintf(stdout, "%d ", cur_proc->val);
+    30919:  168:        free_ele(cur_proc);
+    30919:  169:        num_processes--;
+        -:  170:    }
+    41510:  171:}
+        -:  172:
+        -:  173:void
+    10690:  174:finish_all_processes()
+        -:  175:{
+        -:  176:    int i;
+        -:  177:    int total;
+    10690:  178:    total = num_processes;
+    10690:  179:    fprintf(file_name,"P45,");
+    44209:  180:    for (i=0; i<total; i++)
+        -:  181:    {
+    33519:  182:        fprintf(file_name,"P46,");
+    33519:  183:        finish_process();
+        -:  184:    }
+    10690:  185:}
+        -:  186:
+    65052:  187:schedule()
+        -:  188:{
+        -:  189:    int i;
+    65052:  190:    cur_proc = NULL;
+    65052:  191:    fprintf(file_name,"P47,");
+   165520:  192:    for (i=MAXPRIO; i > 0; i--)
+        -:  193:    {
+   143888:  194:        fprintf(file_name,"P48,");
+   143888:  195:        if (prio_queue[i]->mem_count > 0)
+        -:  196:        {
+    43420:  197:            fprintf(file_name,"P49,");
+    43420:  198:            cur_proc = prio_queue[i]->first;
+    43420:  199:            prio_queue[i] = del_ele(prio_queue[i], cur_proc);
+    43420:  200:            return;
+        -:  201:        }
+        -:  202:    }
+        -:  203:}
+        -:  204:
+        -:  205:void
+    11576:  206:upgrade_process_prio(prio, ratio)
+        -:  207:int prio;
+        -:  208:float ratio;
+        -:  209:{
+        -:  210:    int count;
+        -:  211:    int n;
+        -:  212:    Ele *proc;
+        -:  213:    List *src_queue, *dest_queue;
+    11576:  214:    fprintf(file_name,"P50,");
+    11576:  215:    if (prio >= MAXPRIO)
+        -:  216:    {
+      852:  217:        fprintf(file_name,"P51,");
+      852:  218:        return;
+        -:  219:    }
+        -:  220:	    
+    10724:  221:    src_queue = prio_queue[prio];
+    10724:  222:    dest_queue = prio_queue[prio+1];
+    10724:  223:    count = src_queue->mem_count;
+        -:  224:
+    10724:  225:    fprintf(file_name,"P52,");
+    10724:  226:    if (count > 0)
+        -:  227:    {
+     3310:  228:        n = (int) (count*ratio + 1);
+     3310:  229:        proc = find_nth(src_queue, n);
+     3310:  230:        fprintf(file_name,"P53,");
+        -:  231:		/* if (proc) { */
+     3310:  232:            src_queue = del_ele(src_queue, proc);
+        -:  233:            /* append to appropriate prio queue */
+     3310:  234:            proc->priority = prio;
+     3310:  235:            dest_queue = append_ele(dest_queue, proc);
+        -:  236:    	/* }  missing conditional check */
+        -:  237:    }
+        -:  238:}
+        -:  239:
+        -:  240:void
+    12310:  241:unblock_process(ratio)
+        -:  242:float ratio;
+        -:  243:{
+        -:  244:    int count;
+        -:  245:    int n;
+        -:  246:    Ele *proc;
+        -:  247:    int prio;
+    12310:  248:    fprintf(file_name,"P55,");
+    12310:  249:    if (block_queue)
+        -:  250:    {
+     9024:  251:        count = block_queue->mem_count;
+     9024:  252:        n = (int) (count*ratio + 1);
+     9024:  253:        proc = find_nth(block_queue, n);
+     9024:  254:        fprintf(file_name,"P56,");
+     9024:  255:        if (proc) 
+        -:  256:        {
+     4750:  257:            fprintf(file_name,"P57,");
+     4750:  258:            block_queue = del_ele(block_queue, proc);
+        -:  259:            /* append to appropriate prio queue */
+     4750:  260:            prio = proc->priority;
+     4750:  261:            prio_queue[prio] = append_ele(prio_queue[prio], proc);
+        -:  262:        }
+        -:  263:    }
+    12310:  264:}
+        -:  265:
+    11639:  266:void quantum_expire()
+        -:  267:{
+        -:  268:    int prio;
+    11639:  269:    schedule();
+    11639:  270:    fprintf(file_name,"P58,");
+    11639:  271:    if (cur_proc)
+        -:  272:    {
+     6191:  273:        fprintf(file_name,"P59,");
+     6191:  274:        prio = cur_proc->priority;
+     6191:  275:        prio_queue[prio] = append_ele(prio_queue[prio], cur_proc);
+        -:  276:    }	
+    11639:  277:}
+        -:  278:	
+        -:  279:void
+    11903:  280:block_process()
+        -:  281:{
+    11903:  282:    schedule();
+    11903:  283:    fprintf(file_name,"P60,");
+    11903:  284:    if (cur_proc)
+        -:  285:    {
+     6310:  286:        fprintf(file_name,"P61,");
+     6310:  287:	    block_queue = append_ele(block_queue, cur_proc);
+        -:  288:    }
+    11903:  289:}
+        -:  290:
+    39922:  291:Ele * new_process(prio)
+        -:  292:int prio;
+        -:  293:{
+    39922:  294:    fprintf(file_name,"P62,");
+        -:  295:    Ele *proc;
+    39922:  296:    proc = new_ele(alloc_proc_num++);
+    39922:  297:    proc->priority = prio;
+    39922:  298:    num_processes++;
+    39922:  299:    return proc;
+        -:  300:}
+        -:  301:
+    12731:  302:void add_process(prio)
+        -:  303:int prio;
+        -:  304:{
+    12731:  305:    fprintf(file_name,"P63,");
+        -:  306:    Ele *proc;
+    12731:  307:    proc = new_process(prio);
+    12731:  308:    prio_queue[prio] = append_ele(prio_queue[prio], proc);
+    12731:  309:}
+        -:  310:
+     7737:  311:void init_prio_queue(prio, num_proc)
+        -:  312:int prio;
+        -:  313:int num_proc;
+        -:  314:{
+        -:  315:    List *queue;
+        -:  316:    Ele  *proc;
+        -:  317:    int i;   
+     7737:  318:    queue = new_list();
+     7737:  319:    fprintf(file_name,"P64,");
+    34928:  320:    for (i=0; i<num_proc; i++)
+        -:  321:    {
+    27191:  322:        fprintf(file_name,"P65,");
+    27191:  323:        proc = new_process(prio);
+    27191:  324:        queue = append_ele(queue, proc);
+        -:  325:    }
+     7737:  326:    fprintf(file_name,"P66,");
+     7737:  327:    prio_queue[prio] = queue;
+     7737:  328:}
+        -:  329:
+     2579:  330:void initialize()
+        -:  331:{
+     2579:  332:    fprintf(file_name,"P67,");
+     2579:  333:    alloc_proc_num = 0;
+     2579:  334:    num_processes = 0;
+     2579:  335:}
+        -:  336:				
+        -:  337:/* test driver */
+     2609:  338:main(argc, argv)
+        -:  339:int argc;
+        -:  340:char *argv[];
+        -:  341:{
+        -:  342:
+     2609:  343:    file_name=fopen("v5.txt","a+"); 
+     2609:  344:    if(!file_name)
+        -:  345:    {	
+    #####:  346:        printf("File could not be opened! \n");
+    #####:  347:        fclose(file_name);
+    #####:  348:        exit(0);
+        -:  349:    }
+        -:  350:
+        -:  351:    int command;
+        -:  352:    int prio;
+        -:  353:    float ratio;
+        -:  354:    int status;
+        -:  355:
+     2609:  356:    fprintf(file_name,"\nP1,");
+     2609:  357:    if (argc < (MAXPRIO+1))
+        -:  358:    {
+       30:  359:        fprintf(file_name,"P2,");
+       30:  360:        fprintf(stdout, "incorrect usage\n");
+      225:  361:        return;
+        -:  362:    }
+        -:  363:
+     2579:  364:    initialize();
+     2579:  365:    fprintf(file_name,"P3,");
+    10316:  366:    for (prio=MAXPRIO; prio >= 1; prio--)
+        -:  367:    {
+     7737:  368:        fprintf(file_name,"P4,");
+     7737:  369:	    init_prio_queue(prio, atoi(argv[prio]));
+        -:  370:    }
+        -:  371:
+     2579:  372:    fprintf(file_name,"P5,");
+     2579:  373:    for (status = fscanf(stdin, "%d", &command);
+    81438:  374:	 ((status!=EOF) && status);
+    78859:  375:	 status = fscanf(stdin, "%d", &command))
+        -:  376:    {
+    79054:  377:        fprintf(file_name,"P6,");
+    79054:  378:        switch(command)
+        -:  379:        {
+     7991:  380:            case FINISH:
+     7991:  381:                fprintf(file_name,"P7,");
+     7991:  382:                finish_process();
+     7991:  383:                break;
+    11903:  384:            case BLOCK:
+    11903:  385:                fprintf(file_name,"P8,");
+    11903:  386:                block_process();
+    11903:  387:                break;
+    11639:  388:            case QUANTUM_EXPIRE:
+    11639:  389:                fprintf(file_name,"P9,");
+    11639:  390:                quantum_expire();
+    11639:  391:                break;
+    12310:  392:            case UNBLOCK:
+    12310:  393:                fprintf(file_name,"P10,");
+    12310:  394:                fscanf(stdin, "%f", &ratio);
+    12310:  395:                unblock_process(ratio);
+    12310:  396:                break;
+    11604:  397:            case UPGRADE_PRIO:
+    11604:  398:                fscanf(stdin, "%d", &prio);
+    11604:  399:                fscanf(stdin, "%f", &ratio);
+    11604:  400:                fprintf(file_name,"P11,");
+    11604:  401:                if (prio > MAXPRIO || prio <= 0) 
+        -:  402:                {
+       28:  403:                    fprintf(file_name,"P12,");
+       28:  404:                    fprintf(stdout, "** invalid priority\n");
+       28:  405:                    return;
+        -:  406:                }
+        -:  407:                else
+        -:  408:                {
+    11576:  409:                    fprintf(file_name,"P13,");
+    11576:  410:                    upgrade_process_prio(prio, ratio);
+        -:  411:                }
+    11576:  412:                fprintf(file_name,"P14,");
+    11576:  413:                break;
+    12898:  414:            case NEW_JOB:
+    12898:  415:                fscanf(stdin, "%d", &prio);
+    12898:  416:                fprintf(file_name,"P15,");
+    12898:  417:                if (prio > MAXPRIO || prio <= 0) 
+        -:  418:                {
+      167:  419:                    fprintf(file_name,"P16,");
+      167:  420:                    fprintf(stdout, "** invalid priority\n");
+      167:  421:                    return;
+        -:  422:                }
+        -:  423:                else 
+        -:  424:                {
+    12731:  425:                    fprintf(file_name,"P17,");
+    12731:  426:                    add_process(prio);
+        -:  427:                }
+    12731:  428:                fprintf(file_name,"P18,");
+    12731:  429:                break;
+    10690:  430:            case FLUSH:
+    10690:  431:                fprintf(file_name,"P19,");
+    10690:  432:                finish_all_processes();
+    10690:  433:                break;
+        -:  434:        }
+        -:  435:    }
+        -:  436:}
