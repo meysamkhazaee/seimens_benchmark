@@ -1,0 +1,436 @@
+        -:    0:Source:schedule2.c
+        -:    0:Graph:schedule2.gcno
+        -:    0:Data:schedule2.gcda
+        -:    0:Runs:2710
+        -:    1:#include <stdio.h>
+        -:    2:#include "schedule2.h"
+        -:    3:
+        -:    4:FILE* file_name = NULL;
+        -:    5:
+        -:    6:static struct process * current_job;
+        -:    7:static int next_pid = 0;
+        -:    8:
+        -:    9:int
+    62215:   10:enqueue(prio, new_process)
+        -:   11:int prio;
+        -:   12:struct process *new_process;
+        -:   13:{
+        -:   14:    int status;
+    62215:   15:    fprintf(file_name,"P14,");
+    62215:   16:    if(status = put_end(prio, new_process)) 
+        -:   17:    {
+      253:   18:        fprintf(file_name,"P15,");
+      253:   19:        return(status); /* Error */
+        -:   20:    }
+    61962:   21:    fprintf(file_name,"P16,");
+    61962:   22:    return(reschedule(prio));
+        -:   23:}
+        -:   24:
+        -:   25:struct queue
+        -:   26:{
+        -:   27:    int length;
+        -:   28:    struct process *head;
+        -:   29:};
+        -:   30:
+        -:   31:static struct queue prio_queue[MAXPRIO + 1]; /* blocked queue is [0] */
+        -:   32:
+     2710:   33:main(argc, argv) /* n3, n2, n1 : # of processes at prio3 ... */
+        -:   34:int argc;
+        -:   35:char *argv[];
+        -:   36:{
+     2710:   37:    file_name=fopen("v1.txt","a+"); 
+     2710:   38:    if(!file_name)
+        -:   39:    {	
+    #####:   40:        printf("File could not be opened! \n");
+    #####:   41:        fclose(file_name);
+    #####:   42:        exit(0);
+        -:   43:    }
+        -:   44:
+     2710:   45:    fprintf(file_name,"\nP1,");
+        -:   46:    int command, prio;
+        -:   47:    float ratio;
+        -:   48:    int nprocs, status, pid;
+        -:   49:    struct process *process;
+     2710:   50:    if(argc != MAXPRIO + 1)
+        -:   51:    {
+       31:   52:        fprintf(file_name,"P2,");
+       31:   53:        exit_here(BADNOARGS);
+        -:   54:    }
+     2679:   55:    fprintf(file_name,"P3,");
+    10656:   56:    for(prio = MAXPRIO; prio > 0; prio--)
+        -:   57:    {
+     8007:   58:        fprintf(file_name,"P4,");
+     8007:   59:        if((nprocs = atoi(argv[MAXPRIO + 1 - prio])) < 0)
+        -:   60:        {
+       30:   61:            fprintf(file_name,"P5,");
+       30:   62:            exit_here(BADARG);
+        -:   63:        }
+     7977:   64:        fprintf(file_name,"P6,"); 
+    35735:   65:        for(; nprocs > 0; nprocs--)
+        -:   66:        {
+    27758:   67:            fprintf(file_name,"P7,");
+    27758:   68:            if(status = new_job(prio))
+        -:   69:            {
+    #####:   70:                fprintf(file_name,"P8,");
+    #####:   71:                exit_here(status);
+        -:   72:            } 
+        -:   73:        }
+        -:   74:    }
+        -:   75:    /* while there are commands, schedule it */
+     2649:   76:    fprintf(file_name,"P9,");
+    90443:   77:    while((status = get_command(&command, &prio, &ratio)) > 0)
+        -:   78:    {
+    87794:   79:        fprintf(file_name,"P10,");
+    87794:   80:	    schedule(command, prio, ratio);
+        -:   81:    }
+     2649:   82:    fprintf(file_name,"P11,");
+     2649:   83:    if(status < 0)
+        -:   84:    {
+    #####:   85:        fprintf(file_name,"P12,");
+    #####:   86:        exit_here(status); /* Real bad error */
+        -:   87:    }
+     2649:   88:    fprintf(file_name,"P13,"); 
+     2649:   89:    exit_here(OK);
+        -:   90:}
+        -:   91:
+        -:   92:int 
+    90443:   93:get_command(command, prio, ratio)
+        -:   94:int *command, *prio;
+        -:   95:float *ratio;
+        -:   96:{
+    90443:   97:    int status = OK;
+        -:   98:    char buf[CMDSIZE];
+    90443:   99:    fprintf(file_name,"P17,");
+    90443:  100:    if(fgets(buf, CMDSIZE, stdin))
+        -:  101:    {
+    87794:  102:        *prio = *command = -1; *ratio =-1.0;
+    87794:  103:        sscanf(buf, "%d", command);
+    87794:  104:        fprintf(file_name,"P18,");
+    87794:  105:        switch(*command)
+        -:  106:        {
+    13594:  107:            case NEW_JOB :
+    13594:  108:                fprintf(file_name,"P19,");
+    13594:  109:                sscanf(buf, "%*s%d", prio);
+    13594:  110:                break;
+    13134:  111:            case UNBLOCK :
+    13134:  112:                fprintf(file_name,"P20,");
+    13134:  113:                sscanf(buf, "%*s%f", ratio);
+    13134:  114:                break;
+    12314:  115:            case UPGRADE_PRIO :
+    12314:  116:                fprintf(file_name,"P21,");
+    12314:  117:                sscanf(buf, "%*s%d%f", prio, ratio);
+    12314:  118:                break;
+        -:  119:        }
+        -:  120:	 /* Find end of  line of input if no EOF */
+    87794:  121:        fprintf(file_name,"P22,");
+    88006:  122:	    while(buf[strlen(buf)-1] != '\n' && fgets(buf, CMDSIZE, stdin));
+    87794:  123:        fprintf(file_name,"P23,");
+    87794:  124:	    return(TRUE);
+        -:  125:    }
+        -:  126:    else
+        -:  127:    {
+     2649:  128:        fprintf(file_name,"P24,");
+     2649:  129:        return(FALSE);
+        -:  130:    } 
+        -:  131:}
+        -:  132:
+     2710:  133:exit_here(status)
+        -:  134:int status;
+        -:  135:{
+     2710:  136:    fprintf(file_name,"P25,");
+     2710:  137:    exit(abs(status));
+        -:  138:}
+        -:  139:
+        -:  140:
+        -:  141:int 
+    41352:  142:new_job(prio) /* allocate new pid and process block. Stick at end */
+        -:  143:int prio;
+        -:  144:{
+    41352:  145:    fprintf(file_name,"P26,");
+    41352:  146:    int pid, status = OK;
+        -:  147:    struct process *new_process;
+    41352:  148:    pid = next_pid++;
+    41352:  149:    new_process = (struct process *) malloc(sizeof(struct process));
+    41352:  150:    if(!new_process)
+        -:  151:    {
+    #####:  152:        fprintf(file_name,"P27,");
+    #####:  153:        status = MALLOC_ERR;
+        -:  154:    } 
+        -:  155:    else
+        -:  156:    {
+    41352:  157:        fprintf(file_name,"P28,");
+    41352:  158:        new_process->pid = pid;
+    41352:  159:        new_process->priority = prio;
+    41352:  160:        new_process->next = (struct process *) 0;
+    41352:  161:        status = enqueue(prio, new_process);
+    41352:  162:        if(status)
+        -:  163:        {
+      167:  164:            fprintf(file_name,"P29,");
+      167:  165:            free(new_process); /* Return process block */
+        -:  166:        }
+        -:  167:    }
+    41352:  168:    fprintf(file_name,"P30,");
+    41352:  169:    if(status)
+        -:  170:    {
+      167:  171:        fprintf(file_name,"P31,");
+      167:  172:        next_pid--; /* Unsuccess. Restore pid */
+        -:  173:    }
+    41352:  174:    fprintf(file_name,"P32,"); 
+    41352:  175:    return(status);
+        -:  176:}
+        -:  177:
+    12314:  178:int upgrade_prio(prio, ratio) /* increment priority at ratio in queue */
+        -:  179:int prio;
+        -:  180:float ratio;
+        -:  181:{
+        -:  182:    int status;
+        -:  183:    struct process * job;
+    12314:  184:    fprintf(file_name,"P33,");
+        -:  185:/*  if(prio < 1 || prio > MAXLOPRIO)
+        -:  186:	{
+        -:  187:        fprintf(file_name,"P34,");
+        -:  188:		return(BADPRIO); MISSING CODE
+        -:  189:	}  */
+    12314:  190:    if((status = get_process(prio, ratio, &job)) <= 0) 
+        -:  191:    {
+     9634:  192:        fprintf(file_name,"P36,");
+     9634:  193:        return(status);
+        -:  194:    }
+     2680:  195:    fprintf(file_name,"P37,");
+        -:  196:    /* We found a job in that queue. Upgrade it */
+     2680:  197:    job->priority = prio + 1;
+     2680:  198:    return(enqueue(prio + 1, job));
+        -:  199:}
+        -:  200:
+        -:  201:int
+    12700:  202:block() /* Put current job in blocked queue */
+        -:  203:{
+    12700:  204:    fprintf(file_name,"P38,");
+        -:  205:    struct process * job;
+    12700:  206:    job = get_current();
+    12700:  207:    if(job)
+        -:  208:    {
+     6624:  209:        fprintf(file_name,"P39,");
+     6624:  210:        current_job = (struct process *)0; /* remove it */
+     6624:  211:        return(enqueue(BLOCKPRIO, job)); /* put into blocked queue */
+        -:  212:    }
+     6076:  213:    fprintf(file_name,"P40,");
+     6076:  214:    return(OK);
+        -:  215:}
+        -:  216:
+        -:  217:int
+    13134:  218:unblock(ratio) /* Restore job @ ratio in blocked queue to its queue */
+        -:  219:float ratio;
+        -:  220:{
+    13134:  221:    fprintf(file_name,"P41,");
+        -:  222:    int status;
+        -:  223:    struct process * job;
+    13134:  224:    if((status = get_process(BLOCKPRIO, ratio, &job)) <= 0)
+        -:  225:    {
+     8086:  226:        fprintf(file_name,"P42,");
+     8086:  227:        return(status);
+        -:  228:    } 
+     5048:  229:    fprintf(file_name,"P43,");
+        -:  230:    /* We found a blocked process. Put it where it belongs. */
+     5048:  231:    return(enqueue(job->priority, job));
+        -:  232:}
+        -:  233:
+        -:  234:int
+    12358:  235:quantum_expire() /* put current job at end of its queue */
+        -:  236:{
+    12358:  237:    fprintf(file_name,"P44,");
+        -:  238:    struct process * job;
+    12358:  239:    job = get_current();
+    12358:  240:    if(job)
+        -:  241:    {
+     6511:  242:        fprintf(file_name,"P45,");
+     6511:  243:        current_job = (struct process *)0; /* remove it */
+     6511:  244:        return(enqueue(job->priority, job));
+        -:  245:    }
+     5847:  246:    fprintf(file_name,"P46,");
+     5847:  247:    return(OK);
+        -:  248:}
+        -:  249:
+        -:  250:int
+    48467:  251:finish() /* Get current job, print it, and zap it. */
+        -:  252:{
+    48467:  253:    fprintf(file_name,"P47,");
+        -:  254:    struct process * job;
+    48467:  255:    job = get_current();
+    48467:  256:    if(job)
+        -:  257:    {
+    32416:  258:        fprintf(file_name,"P48,");
+    32416:  259:        current_job = (struct process *)0;
+    32416:  260:        reschedule(0);
+    32416:  261:        fprintf(stdout, " %d", job->pid);
+    32416:  262:        free(job);
+    32416:  263:        return(FALSE);
+        -:  264:    }
+        -:  265:    else
+        -:  266:    {
+    16051:  267:        fprintf(file_name,"P49,");
+    16051:  268:        return(TRUE);
+        -:  269:    } 
+        -:  270:}
+        -:  271:
+        -:  272:int
+    11525:  273:flush() /* Get all jobs in priority queues & zap them */
+        -:  274:{
+    11525:  275:    fprintf(file_name,"P50,");
+    39672:  276:    while(!finish());
+    11525:  277:    fprintf(file_name,"P51,");
+    11525:  278:    fprintf(stdout, "\n");
+    11525:  279:    return(OK);
+        -:  280:}
+        -:  281:
+        -:  282:struct process * 
+   167903:  283:get_current() /* If no current process, get it. Return it */
+        -:  284:{
+        -:  285:    int prio;
+   167903:  286:    fprintf(file_name,"P52,");
+   167903:  287:    if(!current_job)
+        -:  288:    {
+    87288:  289:        fprintf(file_name,"P53,");
+   243414:  290:        for(prio = MAXPRIO; prio > 0; prio--)
+        -:  291:        { /* find head of highest queue with a process */
+   205436:  292:            fprintf(file_name,"P54,");
+   205436:  293:            if(get_process(prio, 0.0, &current_job) > 0)
+        -:  294:            {
+    49310:  295:                fprintf(file_name,"P55,");
+    49310:  296:                break;
+        -:  297:            } 
+        -:  298:        }
+        -:  299:    }
+   167903:  300:    fprintf(file_name,"P56,");
+   167903:  301:    return(current_job);
+        -:  302:}
+        -:  303:
+        -:  304:int
+    94378:  305:reschedule(prio) /* Put highest priority job into current_job */
+        -:  306:int prio;
+        -:  307:{
+    94378:  308:    fprintf(file_name,"P57,");
+    94378:  309:    if(current_job && prio > current_job->priority)
+        -:  310:    {
+     2282:  311:        fprintf(file_name,"P58,");
+     2282:  312:        put_end(current_job->priority, current_job);
+     2282:  313:        current_job = (struct process *)0;
+        -:  314:    }
+    94378:  315:    fprintf(file_name,"P59,");
+    94378:  316:    get_current(); /* Reschedule */
+    94378:  317:    return(OK);
+        -:  318:}
+        -:  319:
+        -:  320:int 
+    87794:  321:schedule(command, prio, ratio)
+        -:  322:int command, prio;
+        -:  323:float ratio;
+        -:  324:{
+    87794:  325:    fprintf(file_name,"P60,");
+    87794:  326:    int status = OK;
+    87794:  327:    switch(command)
+        -:  328:    {
+    13594:  329:        case NEW_JOB :
+    13594:  330:            fprintf(file_name,"P61,");
+    13594:  331:            status = new_job(prio);
+    13594:  332:            break;
+    12358:  333:        case QUANTUM_EXPIRE :
+    12358:  334:            fprintf(file_name,"P62,");
+    12358:  335:            status = quantum_expire();
+    12358:  336:            break;
+    12314:  337:        case UPGRADE_PRIO :
+    12314:  338:            fprintf(file_name,"P63,");
+    12314:  339:            status = upgrade_prio(prio, ratio);
+    12314:  340:            break;
+    12700:  341:        case BLOCK :
+    12700:  342:            fprintf(file_name,"P64,");
+    12700:  343:            status = block();
+    12700:  344:            break;
+    13134:  345:        case UNBLOCK :
+    13134:  346:            fprintf(file_name,"P65,");
+    13134:  347:            status = unblock(ratio);
+    13134:  348:            break;
+     8795:  349:        case FINISH :
+     8795:  350:            fprintf(file_name,"P66,");
+     8795:  351:            finish();
+     8795:  352:            fprintf(stdout, "\n");
+     8795:  353:            break;
+    11525:  354:        case FLUSH :
+    11525:  355:            fprintf(file_name,"P67,");
+    11525:  356:            status = flush();
+    11525:  357:            break;
+     3374:  358:        default:
+     3374:  359:            fprintf(file_name,"P68,");
+     3374:  360:            status = NO_COMMAND;
+        -:  361:    }
+    87794:  362:    fprintf(file_name,"P69,");
+    87794:  363:    return(status);
+        -:  364:}
+        -:  365:
+        -:  366:
+        -:  367:int 
+    64497:  368:put_end(prio, process) /* Put process at end of queue */
+        -:  369:int prio;
+        -:  370:struct process *process;
+        -:  371:{
+    64497:  372:    fprintf(file_name,"P70,");
+        -:  373:    struct process **next;
+    64497:  374:    if(prio > MAXPRIO || prio < 0)
+        -:  375:    {
+      253:  376:        fprintf(file_name,"P71,");
+      253:  377:        return(BADPRIO); /* Somebody goofed */
+        -:  378:    } 
+        -:  379:     /* find end of queue */
+    64244:  380:    fprintf(file_name,"P72,");
+   155942:  381:    for(next = &prio_queue[prio].head; *next; next = &(*next)->next);
+    64244:  382:    fprintf(file_name,"P73,");
+    64244:  383:    *next = process;
+    64244:  384:    prio_queue[prio].length++;
+    64244:  385:    return(OK);
+        -:  386:}
+        -:  387:
+        -:  388:int 
+   230884:  389:get_process(prio, ratio, job)
+        -:  390:int prio;
+        -:  391:float ratio;
+        -:  392:struct process ** job;
+        -:  393:{
+   230884:  394:    fprintf(file_name,"P74,");
+        -:  395:    int length, index;
+        -:  396:    struct process **next;
+   230884:  397:    if(prio > MAXPRIO || prio < 0)
+        -:  398:    {
+      119:  399:        fprintf(file_name,"P75,");
+      119:  400:        return(BADPRIO); /* Somebody goofed */
+        -:  401:    } 
+   230765:  402:    fprintf(file_name,"P76,");
+   230765:  403:    if(ratio < 0.0 || ratio > 1.0)
+        -:  404:    {
+      276:  405:        fprintf(file_name,"P77,");
+      276:  406:        return(BADRATIO); /* Somebody else goofed */
+        -:  407:    }
+   230489:  408:    fprintf(file_name,"P78,"); 
+   230489:  409:    length = prio_queue[prio].length;
+   230489:  410:    index = ratio * length;
+   230489:  411:    index = index >= length ? length -1 : index; /* If ratio == 1.0 */
+   235025:  412:    for(next = &prio_queue[prio].head; index && *next; index--)
+        -:  413:    {
+     4536:  414:        fprintf(file_name,"P79,");
+     4536:  415:        next = &(*next)->next; /* Count up to it */
+        -:  416:    }
+   230489:  417:    fprintf(file_name,"P80,");
+   230489:  418:    *job = *next;
+   230489:  419:    if(*job)
+        -:  420:    {
+    57038:  421:        fprintf(file_name,"P81,");
+    57038:  422:        *next = (*next)->next; /* Mend the chain */
+    57038:  423:        (*job)->next = (struct process *) 0; /* break this link */
+    57038:  424:        prio_queue[prio].length--;
+    57038:  425:	    return(TRUE);
+        -:  426:    }
+        -:  427:    else
+        -:  428:    {
+   173451:  429:        fprintf(file_name,"P82,");
+   173451:  430:        return(FALSE);
+        -:  431:    } 
+        -:  432:}
