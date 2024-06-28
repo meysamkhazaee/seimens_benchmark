@@ -3,13 +3,14 @@ import csv
 import re
 
 def process_csv(rows, outfile):
-  seen = []
+  seen = set()
   result = []
 
   for row in rows:
-    if row[2] not in seen:
-      seen.append(row[2])
-      result.append(row)
+    test_tuple = tuple(row)
+    if test_tuple not in seen:
+        seen.add(test_tuple)
+        result.append(row)
 
   with open(outfile, 'w', newline='') as output:
     writer = csv.writer(output)
