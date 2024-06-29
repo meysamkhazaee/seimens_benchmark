@@ -1,0 +1,422 @@
+        -:    0:Source:tot_info.c
+        -:    0:Graph:tot_info.gcno
+        -:    0:Data:tot_info.gcda
+        -:    0:Runs:1052
+        -:    1:#include	<ctype.h>
+        -:    2:#include	<stdio.h>
+        -:    3:
+        -:    4:#include	"std.h"
+        -:    5:
+        -:    6:#include	"chisq.h"
+        -:    7:#include	"gamma.h"
+        -:    8:
+        -:    9:FILE* file_name = NULL;
+        -:   10:
+        -:   11:#define	MAXLINE	256
+        -:   12:
+        -:   13:
+        -:   14:#ifndef MAXTBL
+        -:   15:#define	MAXTBL	1000
+        -:   16:#endif
+        -:   17:
+        -:   18:static char	line[MAXLINE];
+        -:   19:static long	f[MAXTBL];	
+        -:   20:static int	r;		
+        -:   21:static int	c;		
+        -:   22:
+        -:   23:#define	x(i,j)	f[(i)*c+(j)]
+        -:   24:
+        -:   25:#define	COMMENT	'#'
+        -:   26:
+        -:   27:
+        -:   28:#ifndef NULL
+        -:   29:#define NULL 0
+        -:   30:#endif
+        -:   31:
+        -:   32:int
+     1052:   33:main(argc, argv)
+        -:   34:int	argc;
+        -:   35:char *argv[];
+        -:   36:{
+     1052:   37:	file_name=fopen("v9.txt","a+"); 
+     1052:   38:    if(!file_name)
+        -:   39:    {	
+    #####:   40:        printf("File could not be opened! \n");
+    #####:   41:        fclose(file_name);
+    #####:   42:        exit(0);
+        -:   43:    }
+        -:   44:
+        -:   45:	char	*p;		/* input line scan location */
+        -:   46:	int	i;		/* row index */
+        -:   47:	int	j;		/* column index */
+        -:   48:	double		info;		/* computed information measure */
+        -:   49:	int		infodf;		/* degrees of freedom for information */
+     1052:   50:	double		totinfo = 0.0;	/* accumulated information */
+        -:   51:	int		totdf;	/* accumulated degrees of freedom */
+        -:   52: 
+     1052:   53:    totdf = 0;
+     1052:   54:	fprintf(file_name,"\nP1,");
+     8994:   55:	while ( fgets( line, MAXLINE, stdin ) != NULL )	/* start new table */
+        -:   56:	{
+     8310:   57:		fprintf(file_name,"P53,");
+    14864:   58:		for ( p = line; *p != '\0' && isspace( (int)*p ); ++p );
+        -:   59:
+     8310:   60:		fprintf(file_name,"P54,");
+     8310:   61:		if ( *p == '\0' )
+        -:   62:		{
+     3707:   63:			fprintf(file_name,"P55,");
+     3707:   64:			continue;	/* skip blank line */
+        -:   65:		}
+        -:   66:
+     4603:   67:		fprintf(file_name,"P56,");
+     4603:   68:		if ( *p == COMMENT )
+        -:   69:		{		/* copy comment through */
+     1449:   70:			fprintf(file_name,"P57,");
+     1449:   71:			(void)fputs( line, stdout );
+     1449:   72:			continue;
+        -:   73:		}
+        -:   74:
+     3154:   75:		fprintf(file_name,"P58,");
+     3154:   76:		if ( sscanf( p, "%d %d\n", &r, &c ) != 2 )
+        -:   77:		{
+       76:   78:			fprintf(file_name,"P59,");
+       76:   79:			(void)fputs( "* invalid row/column line *\n", stdout );
+       76:   80:			return EXIT_FAILURE;
+        -:   81:		}
+        -:   82:
+     3078:   83:		fprintf(file_name,"P60,");
+     3078:   84:		if ( r * c > MAXTBL )
+        -:   85:		{
+      186:   86:			fprintf(file_name,"P61,");
+      186:   87:			(void)fputs( "* table too large *\n", stdout );
+      186:   88:			return EXIT_FAILURE;
+        -:   89:		}
+        -:   90:
+     2892:   91:		fprintf(file_name,"P62,");
+    22867:   92:		for ( i = 0; i < r; ++i )
+        -:   93:		{
+    20081:   94:			fprintf(file_name,"P63,");
+   221055:   95:			for ( j = 0; j < c; ++j )
+        -:   96:			{
+   201080:   97:				fprintf(file_name,"P64,");
+   201080:   98:				if ( scanf( " %ld", &x(i,j) ) != 1 )
+        -:   99:				{
+      106:  100:					fprintf(file_name,"P65,");
+      106:  101:					(void)fputs( "* EOF in table *\n", stdout);
+      106:  102:					return EXIT_FAILURE;
+        -:  103:				}
+        -:  104:			}
+        -:  105:		}
+        -:  106:
+     2786:  107:		fprintf(file_name,"P66,");
+     2786:  108:		info = InfoTbl( r, c, f, &infodf );
+        -:  109:
+     2786:  110:		fprintf(file_name,"P67,");
+     2786:  111:		if ( info >= 0.0 )
+        -:  112:		{
+     1806:  113:			fprintf(file_name,"P68,");
+     1806:  114:			(void)printf( "2info = %5.2f\tdf = %2d\tq = %7.4f\n", info, infodf, QChiSq( info, infodf ));
+     1806:  115:			totinfo += info;
+     1806:  116:			totdf = infodf;
+        -:  117:		}
+        -:  118:		else
+        -:  119:		{
+      980:  120:			fprintf(file_name,"P69,");
+     980*:  121:			(void)fputs( info < -3.5 ? "out of memory\n": info < -2.5 ? "table too small\n": info < -1.5 ? "negative freq\n": "table all zeros\n", stdout);
+        -:  122:		}
+        -:  123:	}
+        -:  124:
+      684:  125:	fprintf(file_name,"P2,");
+      684:  126:	if ( totdf <= 0 )
+        -:  127:	{
+      167:  128:		fprintf(file_name,"P3,");
+      167:  129:		(void)fputs( "\n*** no information accumulated ***\n", stdout );
+      167:  130:		return EXIT_FAILURE;
+        -:  131:	}
+        -:  132:
+      517:  133:	fprintf(file_name,"P4,");
+      517:  134:	(void)printf( "\ntotal 2info = %5.2f\tdf = %2d\tq = %7.4f\n", totinfo, totdf, QChiSq( totinfo, totdf ));
+      517:  135:	return EXIT_SUCCESS;
+        -:  136:}
+        -:  137:
+        -:  138:
+        -:  139:#include <math.h>
+        -:  140:#include <stdio.h>
+        -:  141:
+        -:  142:#include "std.h"
+        -:  143:
+        -:  144:double
+     2186:  145:LGamma( x )
+        -:  146:double x;
+        -:  147:{
+        -:  148:	static const double	cof[6] =
+        -:  149:	{
+        -:  150:		76.18009173,	-86.50532033,	24.01409822,
+        -:  151:		-1.231739516,	0.120858003e-2,	-0.536382e-5
+        -:  152:	};
+        -:  153:	double tmp, ser;
+        -:  154:	int	j;
+        -:  155:
+     2186:  156:	fprintf(file_name,"P5,");
+     2186:  157:	if ( --x < 0.0 )	/* use reflection formula for accuracy */
+        -:  158:	{
+      179:  159:		fprintf(file_name,"P6,");
+      179:  160:		double	pix = PI * x;
+      179:  161:		return log( pix / sin( pix ) ) - LGamma( 1.0 - x );
+        -:  162:	}
+        -:  163:
+     2007:  164:	tmp = x + 5.5;
+     2007:  165:	tmp -= (x + 0.5) * log( tmp );
+     2007:  166:	ser = 1.0;
+        -:  167:
+     2007:  168:	fprintf(file_name,"P7,");
+    14049:  169:	for ( j = 0; j < 6; ++j )
+        -:  170:	{
+    12042:  171:		fprintf(file_name,"P8,");
+    12042:  172:		ser += cof[j] / ++x;
+        -:  173:	}
+        -:  174:	
+     2007:  175:	fprintf(file_name,"P9,");
+     2007:  176:	return -tmp + log( 2.50662827465 * ser );
+        -:  177:}
+        -:  178:
+        -:  179:#define	ITMAX	100
+        -:  180:#define	EPS	3.0e-7
+        -:  181:
+        -:  182:static double
+      816:  183:gser( a, x )
+        -:  184:double a, x;
+        -:  185:{
+        -:  186:	double ap, del, sum;
+        -:  187:	int	n;
+        -:  188:
+      816:  189:	fprintf(file_name,"P10,");
+      816:  190:	if ( x <= 0.0 )
+        -:  191:	{
+      316:  192:		fprintf(file_name,"P11,");
+      316:  193:		return 0.0;
+        -:  194:	}
+        -:  195:		
+      500:  196:	del = sum = 1.0 / (ap = a);
+        -:  197:
+      500:  198:	fprintf(file_name,"P12,");
+     3737:  199:	for ( n = 1; n <= ITMAX; ++n )
+        -:  200:	{
+     3737:  201:		sum += del *= x / ++ap;
+     3737:  202:		fprintf(file_name,"P13,");
+    3737*:  203:		if ( Abs( del ) < Abs( sum ) * EPS )
+        -:  204:		{
+      500:  205:			fprintf(file_name,"P14,");
+      500:  206:			return sum * exp( -x + a * log( x ) - LGamma( a ) );
+        -:  207:		}
+        -:  208:	}
+    #####:  209:}
+        -:  210:
+        -:  211:static double
+     1507:  212:gcf( a, x )
+        -:  213:double	a, x;
+        -:  214:{
+        -:  215:	int	n;
+     1507:  216:	double	gold = 0.0, fac = 1.0, b1 = 1.0, b0 = 0.0, a0 = 1.0, a1 = x;
+        -:  217:
+     1507:  218:	fprintf(file_name,"P15,");
+     3904:  219:	for ( n = 1; n <= ITMAX; ++n )
+        -:  220:	{
+        -:  221:		double	anf;
+     3904:  222:		double	an = (double)n;
+     3904:  223:		double	ana = an - a;
+        -:  224:
+     3904:  225:		a0 = (a1 + a0 * ana) * fac;
+     3904:  226:		b0 = (b1 + b0 * ana) * fac;
+     3904:  227:		anf = an * fac;
+     3904:  228:		b1 = x * b0 + anf * b1;
+     3904:  229:		a1 = x * a0 + anf * a1;
+        -:  230:
+     3904:  231:		fprintf(file_name,"P16,");
+     3904:  232:		if (a1 != 0.0)
+        -:  233:		{		/* renormalize */
+     3904:  234:			double	g = b1 * (fac = 1.0 / a1);
+     3904:  235:			gold = g - gold;
+     3904:  236:			fprintf(file_name,"P17,");
+    3904*:  237:			if ( Abs( gold ) < EPS * Abs( g ) )
+        -:  238:			{
+     1507:  239:				fprintf(file_name,"P18,");
+     1507:  240:				return exp( -x + a * log( x ) - LGamma( a ) ) * g;
+        -:  241:			}
+     2397:  242:			fprintf(file_name,"P19,");
+     2397:  243:			gold = g;
+        -:  244:		}
+        -:  245:	}
+    #####:  246:}
+        -:  247:
+        -:  248:double
+     2323:  249:QGamma( a, x )
+        -:  250:double a, x;
+        -:  251:{
+     2323:  252:	fprintf(file_name,"P20,");
+     2323:  253:	return x < a + 1.0 ? 1.0 - gser( a, x ) : gcf( a, x );
+        -:  254:}
+        -:  255:
+        -:  256:double
+     2323:  257:QChiSq( chisq, df )
+        -:  258:double	chisq;
+        -:  259:int	df;
+        -:  260:{
+     2323:  261:	fprintf(file_name,"P21,");
+     2323:  262:	return QGamma( (double)df / 2.0, chisq / 2.0 );
+        -:  263:}
+        -:  264:
+        -:  265:#include	<math.h>		/* for log() */
+        -:  266:#if __STDC__
+        -:  267:#include	<stdlib.h>		/* malloc, free */
+        -:  268:
+        -:  269:#include	"std.h"
+        -:  270:#else
+        -:  271:#include	"std.h"
+        -:  272:
+        -:  273:extern pointer	malloc();
+        -:  274:extern void	free();
+        -:  275:#endif
+        -:  276:
+        -:  277:#ifndef NULL
+        -:  278:#define NULL 0
+        -:  279:#endif
+        -:  280:
+        -:  281:#define	x(i,j)	f[(i)*c+(j)]		/* convenient way to access freqs */
+        -:  282:
+        -:  283:double
+     2786:  284:InfoTbl( r, c, f, pdf )
+        -:  285:int		r;		/* # rows in table */
+        -:  286:int		c;		/* # columns in table */
+        -:  287:const long	*f;		/* -> r*c frequency tallies */
+        -:  288:int		*pdf;		/* -> return # d.f. for chi-square */
+        -:  289:{
+        -:  290:	int	i;		/* row index */
+        -:  291:	int	j;		/* column index */
+        -:  292:	double		N;		/* (double)n */
+        -:  293:	double		info;		/* accumulates information measure */
+        -:  294:	double		*xi;		/* row sums */
+        -:  295:	double		*xj;		/* col sums */
+     2786:  296:	int		rdf = r - 1;	/* row degrees of freedom */
+     2786:  297:	int		cdf = c - 1;	/* column degrees of freedom */
+        -:  298:
+     2786:  299:	fprintf(file_name,"P22,");
+     2786:  300:	if ( rdf <= 0 || cdf <= 0 )
+        -:  301:	{
+      359:  302:		fprintf(file_name,"P23,");
+      359:  303:		info = -3.0;
+      359:  304:		goto ret3;
+        -:  305:	}
+        -:  306:
+     2427:  307:	*pdf = rdf * cdf;		/* total degrees of freedom */
+     2427:  308:	fprintf(file_name,"P24,");
+     2427:  309:	if ( (xi = (double *)malloc( r * sizeof(double) )) == NULL )
+        -:  310:	{
+    #####:  311:		fprintf(file_name,"P25,");
+    #####:  312:		info = -4.0;
+    #####:  313:		goto ret3;
+        -:  314:	}
+        -:  315:
+     2427:  316:	fprintf(file_name,"P26,");
+     2427:  317:	if ( (xj = (double *)malloc( c * sizeof(double) )) == NULL )
+        -:  318:	{
+    #####:  319:		fprintf(file_name,"P27,");
+    #####:  320:		info = -4.0;
+    #####:  321:		goto ret2;
+        -:  322:	}
+        -:  323:
+     2427:  324:	N = 0.0;
+     2427:  325:	fprintf(file_name,"P28,");
+    19979:  326:	for ( i = 0; i < r; ++i )
+        -:  327:	{
+    17731:  328:		double	sum = 0.0;	/* accumulator */
+    17731:  329:		fprintf(file_name,"P29,");
+   214604:  330:		for ( j = 0; j < c; ++j )
+        -:  331:		{
+   197052:  332:			long	k = x(i,j);
+        -:  333:
+   197052:  334:			fprintf(file_name,"P30,");
+   197052:  335:			if ( k < 0L )
+        -:  336:			{
+      179:  337:				fprintf(file_name,"P31,");
+      179:  338:				info = -2.0;
+      179:  339:				goto ret1;
+        -:  340:			}
+   196873:  341:			fprintf(file_name,"P32,");
+   196873:  342:			sum += (double)k;
+        -:  343:		}
+    17552:  344:		fprintf(file_name,"P33,");
+    17552:  345:		N += xi[i] = sum;
+        -:  346:	}
+     2248:  347:	fprintf(file_name,"P34,");
+     2248:  348:	if ( N <= 0.0 )
+        -:  349:	{
+      244:  350:		fprintf(file_name,"P35,");
+      244:  351:		info = -1.0;
+      244:  352:		goto ret1;
+        -:  353:	}
+        -:  354:
+     2004:  355:	fprintf(file_name,"P36,");
+    17618:  356:	for ( j = 0; j < c; ++j )
+        -:  357:	{
+    15614:  358:		double	sum = 0.0;	/* accumulator */
+    15614:  359:		fprintf(file_name,"P37,");
+   206981:  360:		for ( i = 0; i < r; ++i )
+        -:  361:		{
+   191367:  362:			fprintf(file_name,"P38,");
+   191367:  363:			sum += (double)x(i,j);
+        -:  364:		}
+    15614:  365:		fprintf(file_name,"P39,");
+    15614:  366:		xj[j] = sum;
+        -:  367:	}
+        -:  368:
+     2004:  369:	info = N * log( N );					/* part 1 */
+     2004:  370:	fprintf(file_name,"P40,");
+    18715:  371:	for ( i = 0; i < r; ++i )
+        -:  372:	{
+    16711:  373:		double	pi = xi[i];	/* row sum */
+    16711:  374:		fprintf(file_name,"P41,");
+    16711:  375:		if ( pi > 0.0 )
+        -:  376:		{
+    16089:  377:			fprintf(file_name,"P42,");
+    16089:  378:			info -= pi * log( pi );			/* part 2 */
+        -:  379:		}
+        -:  380:		
+    16711:  381:		fprintf(file_name,"P43,");
+   208078:  382:		for ( j = 0; j < c; ++j )
+        -:  383:		{
+   191367:  384:			double	pij = (double)x(i,j);
+   191367:  385:			fprintf(file_name,"P44,");
+   191367:  386:			if ( pij > 0.0 )
+        -:  387:			{
+   185547:  388:				fprintf(file_name,"P45,");
+   185547:  389:				info += pij * log( pij );	/* part 3 */
+        -:  390:			}
+        -:  391:		}
+        -:  392:	}
+        -:  393:	
+     2004:  394:	fprintf(file_name,"P46,");
+    17618:  395:	for ( j = 0; j < c; ++j )
+        -:  396:	{
+    15614:  397:		double	pj = xj[j];	/* column sum */
+    15614:  398:		fprintf(file_name,"P47,");
+    15614:  399:		if ( pj > 0.0 )
+        -:  400:		{
+    15113:  401:			fprintf(file_name,"P48,");
+    15113:  402:			info -= pj * log( pj );			/* part 4 */
+        -:  403:		}
+        -:  404:	}
+        -:  405:
+     2004:  406:	fprintf(file_name,"P49,");
+     2004:  407:	info *= 2.0;			/* for comparability with chi-square */
+        -:  408:
+     2427:  409:    ret1:
+     2427:  410:		fprintf(file_name,"P50,");
+     2427:  411:		free( (pointer)xj );
+     2427:  412:    ret2:
+     2427:  413:		fprintf(file_name,"P51,");
+     2427:  414:		free( (pointer)xi );
+     2786:  415:    ret3:
+     2786:  416:		fprintf(file_name,"P52,");
+     2786:  417:		return info;
+        -:  418:}

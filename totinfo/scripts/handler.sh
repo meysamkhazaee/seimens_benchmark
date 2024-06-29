@@ -326,7 +326,7 @@ cp source.alt/source.orig/result_instrumented/v0.txt \
    versions.alt/versions.orig/v20/result_instrumented/v20.txt \
    versions.alt/versions.orig/v21/result_instrumented/v21.txt \
    versions.alt/versions.orig/v22/result_instrumented/v22.txt \
-   versions.alt/versions.orig/v23/result_instrumented/v23.txt \ optimize.instrumentations/
+   versions.alt/versions.orig/v23/result_instrumented/v23.txt optimize.instrumentations/
 
 cd $ROOT/optimize.instrumentations
 
