@@ -12,7 +12,7 @@ mkdir result_instrumented
 cp chisq.h gamma.h std.h tot_info.c result_instrumented/
 cd result_instrumented
 # Build the code without coverage and instrumentation
-gcc -fprofile-arcs -ftest-coverage -g -o tot_info.exe tot_info.c -w
+gcc -fprofile-arcs -ftest-coverage -g -o tot_info.exe tot_info.c -w -lm
 mkdir outputs
 
 ./tot_info.exe  < $ROOT/inputs/universe/tst88 > ./outputs/t1

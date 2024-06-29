@@ -126,3 +126,30 @@ tcas/versions.alt/versions.orig/v40/result_instrumented/outputs
 tcas/versions.alt/versions.orig/v41/result_instrumented/outputs
 # tcas/optimize.instrumentations/*.txt
 # tcas/optimize.instrumentations/*.csv
+
+totinfo/source.alt/source.orig/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v1/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v2/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v3/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v4/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v5/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v6/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v7/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v8/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v9/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v10/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v11/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v12/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v13/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v14/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v15/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v16/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v17/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v18/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v19/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v20/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v21/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v22/result_instrumented/outputs
+totinfo/versions.alt/versions.orig/v23/result_instrumented/outputs
+# totinfo/optimize.instrumentations/*.txt
+# totinfo/optimize.instrumentations/*.csv
