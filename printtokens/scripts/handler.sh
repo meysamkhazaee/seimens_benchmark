@@ -183,37 +183,37 @@ cd $ROOT/optimize.instrumentations
 
 echo -e ""
 python3 compare.files.py v0.txt v1.txt cmp.v0.v1.csv
-python3 removing.duplicate.testcases.py cmp.v0.v1.csv cmp.v0.v1.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v1.csv cmp.v0.v1.printtoken.csv
 rm v1.txt cmp.v0.v1.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v2.txt cmp.v0.v2.csv
-python3 removing.duplicate.testcases.py cmp.v0.v2.csv cmp.v0.v2.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v2.csv cmp.v0.v2.printtoken.csv
 rm v2.txt cmp.v0.v2.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v3.txt cmp.v0.v3.csv
-python3 removing.duplicate.testcases.py cmp.v0.v3.csv cmp.v0.v3.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v3.csv cmp.v0.v3.printtoken.csv
 rm v3.txt cmp.v0.v3.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v4.txt cmp.v0.v4.csv
-python3 removing.duplicate.testcases.py cmp.v0.v4.csv cmp.v0.v4.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v4.csv cmp.v0.v4.printtoken.csv
 rm v4.txt cmp.v0.v4.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v5.txt cmp.v0.v5.csv
-python3 removing.duplicate.testcases.py cmp.v0.v5.csv cmp.v0.v5.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v5.csv cmp.v0.v5.printtoken.csv
 rm v5.txt cmp.v0.v5.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v6.txt cmp.v0.v6.csv
-python3 removing.duplicate.testcases.py cmp.v0.v6.csv cmp.v0.v6.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v6.csv cmp.v0.v6.printtoken.csv
 rm v6.txt cmp.v0.v6.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v7.txt cmp.v0.v7.csv
-python3 removing.duplicate.testcases.py cmp.v0.v7.csv cmp.v0.v7.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v7.csv cmp.v0.v7.printtoken.csv
 rm v0.txt v7.txt cmp.v0.v7.csv
 
 
