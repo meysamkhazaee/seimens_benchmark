@@ -1,6 +1,7 @@
 import sys
 import csv
-import re
+
+csv.field_size_limit(10 * 1024 * 1024)
 
 def process_csv(rows, outfile):
   seen = []
