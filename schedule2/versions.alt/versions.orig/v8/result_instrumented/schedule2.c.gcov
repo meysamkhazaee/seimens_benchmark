@@ -414,12 +414,12 @@
    224614:  410:    length = prio_queue[prio].length;
    224614:  411:    index = ratio * length;
    224614:  412:    index = index >= length ? length -1 : index; /* If ratio == 1.0 */
-321690639515881:  413:    for(next = &prio_queue[prio].head; index && *next; index--)
+308533003399401:  413:    for(next = &prio_queue[prio].head; index && *next; index--)
         -:  414:    {
      4387:  415:        fprintf(file_name,"P79,");
-321690639291267:  416:        next = &(*next)->next; /* Count up to it */
+308533003174787:  416:        next = &(*next)->next; /* Count up to it */
         -:  417:    }
-321690639511494:  418:    fprintf(file_name,"P80,");
+308533003395014:  418:    fprintf(file_name,"P80,");
    224614:  419:    *job = *next;
    224614:  420:    if(*job)
         -:  421:    {
