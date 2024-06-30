@@ -163,8 +163,8 @@ token_stream tp;
     {
       unget_error(tp);
     }
-        return(buffer);
-      }
+    return(buffer);
+  }
   if(id==1)                  /* if end character is " and is string */
   { 
     i++;                     /* case,hold the second " in buffer    */

@@ -245,52 +245,52 @@ cd optimize.instrumentations
 
 echo -e ""
 python3 compare.files.py v0.txt v1.txt cmp.v0.v1.csv
-python3 removing.duplicate.testcases.py cmp.v0.v1.csv cmp.v0.v1.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v1.csv cmp.v0.v1.printtoken2.csv
 rm v1.txt cmp.v0.v1.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v2.txt cmp.v0.v2.csv
-python3 removing.duplicate.testcases.py cmp.v0.v2.csv cmp.v0.v2.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v2.csv cmp.v0.v2.printtoken2.csv
 rm v2.txt cmp.v0.v2.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v3.txt cmp.v0.v3.csv
-python3 removing.duplicate.testcases.py cmp.v0.v3.csv cmp.v0.v3.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v3.csv cmp.v0.v3.printtoken2.csv
 rm v3.txt cmp.v0.v3.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v4.txt cmp.v0.v4.csv
-python3 removing.duplicate.testcases.py cmp.v0.v4.csv cmp.v0.v4.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v4.csv cmp.v0.v4.printtoken2.csv
 rm v4.txt cmp.v0.v4.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v5.txt cmp.v0.v5.csv
-python3 removing.duplicate.testcases.py cmp.v0.v5.csv cmp.v0.v5.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v5.csv cmp.v0.v5.printtoken2.csv
 rm v5.txt cmp.v0.v5.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v6.txt cmp.v0.v6.csv
-python3 removing.duplicate.testcases.py cmp.v0.v6.csv cmp.v0.v6.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v6.csv cmp.v0.v6.printtoken2.csv
 rm v6.txt cmp.v0.v6.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v7.txt cmp.v0.v7.csv
-python3 removing.duplicate.testcases.py cmp.v0.v7.csv cmp.v0.v7.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v7.csv cmp.v0.v7.printtoken2.csv
 rm v7.txt cmp.v0.v7.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v8.txt cmp.v0.v8.csv
-python3 removing.duplicate.testcases.py cmp.v0.v8.csv cmp.v0.v8.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v8.csv cmp.v0.v8.printtoken2.csv
 rm v8.txt cmp.v0.v8.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v9.txt cmp.v0.v9.csv
-python3 removing.duplicate.testcases.py cmp.v0.v9.csv cmp.v0.v9.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v9.csv cmp.v0.v9.printtoken2.csv
 rm v9.txt cmp.v0.v9.csv
 
 echo -e ""
 python3 compare.files.py v0.txt v10.txt cmp.v0.v10.csv
-python3 removing.duplicate.testcases.py cmp.v0.v10.csv cmp.v0.v10.optimized.csv
+python3 removing.duplicate.testcases.py cmp.v0.v10.csv cmp.v0.v10.printtoken2.csv
 rm v0.txt v10.txt cmp.v0.v10.csv
 
 
