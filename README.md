@@ -1,2 +1,2 @@
-# seimens_benchmark
-Review and test Siemens Benchmark
+# Seimens Benchmark
+Review, Instrument and test Siemens Benchmark and generate result
