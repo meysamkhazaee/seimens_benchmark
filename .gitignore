@@ -1,47 +1,47 @@
 .vscode/
 
-printtokens/source.alt/source.orig/result
+printtokens/source.alt/source.orig/result/outputs
 printtokens/source.alt/source.orig/result_instrumented/outputs
-printtokens/versions.alt/versions.orig/v1/result
+printtokens/versions.alt/versions.orig/v1/result/outputs
 printtokens/versions.alt/versions.orig/v1/result_instrumented/outputs
-printtokens/versions.alt/versions.orig/v2/result
+printtokens/versions.alt/versions.orig/v2/result/outputs
 printtokens/versions.alt/versions.orig/v2/result_instrumented/outputs
-printtokens/versions.alt/versions.orig/v3/result
+printtokens/versions.alt/versions.orig/v3/result/outputs
 printtokens/versions.alt/versions.orig/v3/result_instrumented/outputs
-printtokens/versions.alt/versions.orig/v4/result
+printtokens/versions.alt/versions.orig/v4/result/outputs
 printtokens/versions.alt/versions.orig/v4/result_instrumented/outputs
-printtokens/versions.alt/versions.orig/v5/result
+printtokens/versions.alt/versions.orig/v5/result/outputs
 printtokens/versions.alt/versions.orig/v5/result_instrumented/outputs
-printtokens/versions.alt/versions.orig/v6/result
+printtokens/versions.alt/versions.orig/v6/result/outputs
 printtokens/versions.alt/versions.orig/v6/result_instrumented/outputs
-printtokens/versions.alt/versions.orig/v7/result
+printtokens/versions.alt/versions.orig/v7/result/outputs
 printtokens/versions.alt/versions.orig/v7/result_instrumented/outputs
 # printtokens/optimize.instrumentations/*.txt
 # printtokens/optimize.instrumentations/*.csv
 
 
 printtokens2/source.alt/source.orig/result_instrumented/outputs
-printtokens2/source.alt/source.orig/result
+printtokens2/source.alt/source.orig/result/outputs
 printtokens2/versions.alt/versions.orig/v1/result_instrumented/outputs
-printtokens2/versions.alt/versions.orig/v1/result
+printtokens2/versions.alt/versions.orig/v1/result/outputs
 printtokens2/versions.alt/versions.orig/v2/result_instrumented/outputs
-printtokens2/versions.alt/versions.orig/v2/result
+printtokens2/versions.alt/versions.orig/v2/result/outputs
 printtokens2/versions.alt/versions.orig/v3/result_instrumented/outputs
-printtokens2/versions.alt/versions.orig/v3/result
+printtokens2/versions.alt/versions.orig/v3/result/outputs
 printtokens2/versions.alt/versions.orig/v4/result_instrumented/outputs
-printtokens2/versions.alt/versions.orig/v4/result
+printtokens2/versions.alt/versions.orig/v4/result/outputs
 printtokens2/versions.alt/versions.orig/v5/result_instrumented/outputs
-printtokens2/versions.alt/versions.orig/v5/result
+printtokens2/versions.alt/versions.orig/v5/result/outputs
 printtokens2/versions.alt/versions.orig/v6/result_instrumented/outputs
-printtokens2/versions.alt/versions.orig/v6/result
+printtokens2/versions.alt/versions.orig/v6/result/outputs
 printtokens2/versions.alt/versions.orig/v7/result_instrumented/outputs
-printtokens2/versions.alt/versions.orig/v7/result
+printtokens2/versions.alt/versions.orig/v7/result/outputs
 printtokens2/versions.alt/versions.orig/v8/result_instrumented/outputs
-printtokens2/versions.alt/versions.orig/v8/result
+printtokens2/versions.alt/versions.orig/v8/result/outputs
 printtokens2/versions.alt/versions.orig/v9/result_instrumented/outputs
-printtokens2/versions.alt/versions.orig/v9/result
+printtokens2/versions.alt/versions.orig/v9/result/outputs
 printtokens2/versions.alt/versions.orig/v10/result_instrumented/outputs
-printtokens2/versions.alt/versions.orig/v10/result
+printtokens2/versions.alt/versions.orig/v10/result/outputs
 # printtokens2/optimize.instrumentations/*.txt
 # printtokens2/optimize.instrumentations/*.csv
 
@@ -190,3 +190,4 @@ replace/versions.alt/versions.orig/v31/result_instrumented/outputs
 replace/versions.alt/versions.orig/v32/result_instrumented/outputs
 # replace/optimize.instrumentations/*.txt
 # replace/optimize.instrumentations/*.csv
+.vscode/settings.json
