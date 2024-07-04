@@ -743,14 +743,14 @@ char *pat, *sub;
 {
     string  line;
     bool result;
-    result = get_line(line, MAXSTR);
+    get_line(line, MAXSTR, &result);
 	
     fprintf(file_name,"P139,");
 	while ((result)) 
 	{
 		fprintf(file_name,"P140,");
 		subline(line, pat, sub);
-		result = get_line(line, MAXSTR);
+		get_line(line, MAXSTR, &result);
     }
 }
 
