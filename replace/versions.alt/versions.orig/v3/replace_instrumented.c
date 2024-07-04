@@ -713,7 +713,7 @@ char *sub;
 	{
 	    m = amatch(lin, i, pat, 0);
 	    fprintf(file_name,"P134,");
-	    if ((m >= 0) /* && (lastm != m) */) {
+	    if ((m >= 0) /* && (lastm != m) */)
 		{
 			fprintf(file_name,"P135,");
 			putsub(lin, i, m, sub);
