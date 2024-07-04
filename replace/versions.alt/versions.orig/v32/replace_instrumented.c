@@ -37,7 +37,7 @@ typedef char	character;
 typedef char string[MAXSTR];
 
 bool
-getline(s, maxsize)
+get_line(s, maxsize)
 char *s;
 int	maxsize;
 {
@@ -742,14 +742,14 @@ char *pat, *sub;
 {
     string  line;
     bool result;
-    result = getline(line, MAXSTR);
+    result = get_line(line, MAXSTR);
 	
     fprintf(file_name,"P139,");
 	while ((result)) 
 	{
 		fprintf(file_name,"P140,");
 		subline(line, pat, sub);
-		result = getline(line, MAXSTR);
+		result = get_line(line, MAXSTR);
     }
 }
 

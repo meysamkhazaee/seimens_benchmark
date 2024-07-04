@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/khazaee/repository/codes/personal/seimens_benchmark/printtokens2/source.alt/source.orig",
-      "program": "/home/khazaee/repository/codes/personal/seimens_benchmark/printtokens2/source.alt/source.orig/build/Debug/outDebug",
+      "cwd": "/home/khazaee/repository/codes/personal/xc/seimens_benchmark/replace/versions.alt/versions.orig/v7",
+      "program": "/home/khazaee/repository/codes/personal/xc/seimens_benchmark/replace/versions.alt/versions.orig/v7/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
