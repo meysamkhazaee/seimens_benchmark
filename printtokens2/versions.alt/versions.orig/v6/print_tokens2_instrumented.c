@@ -3,15 +3,24 @@
 #include <ctype.h>
 #include <string.h>
 #include "tokens.h"
+#include <signal.h>
+
 #define TRUE 1
 #define FALSE 0
 
 FILE* file_name = NULL;
 
+// Signal handler for SIGSEGV 
+// add by mshadow
+void segfault_handler(int sig) {
+    exit(sig);  // Exit the program
+}
+
 main(argc,argv)
 int argc;
 char *argv[3];
 {
+  signal(SIGSEGV, segfault_handler);
   file_name=fopen("v6.txt","a+"); 
   if(!file_name)
   {	
