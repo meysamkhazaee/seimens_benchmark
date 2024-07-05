@@ -1,6 +1,7 @@
 
 
 # include <ctype.h>
+#include <signal.h>
 
 # define START  5
 # define TRUE  1
@@ -24,11 +25,18 @@ static get_actual_token(char token_str[],int token_ind);
 
 FILE* file_name = NULL;
 
+// Signal handler for SIGSEGV 
+// add by mshadow
+void segfault_handler(int sig) {
+    exit(sig);  // Exit the program
+}
+
 
 main(argc,argv)
 int argc;
 char *argv[];
 {   
+    signal(SIGSEGV, segfault_handler);
     file_name=fopen("v2.txt","a+"); 
     if(!file_name)
     {	
