@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <signal.h>
+
 #define NULL 0
 
 #define NEW_JOB        1
@@ -12,6 +14,12 @@
 #define MAXPRIO 3
 
 FILE* file_name = NULL;
+
+// Signal handler for SIGSEGV 
+// add by mshadow
+void segfault_handler(int sig) {
+    exit(sig);  // Exit the program
+}
 
 typedef struct _job {
     struct  _job *next, *prev; /* Next and Previous in job list. */
@@ -339,7 +347,7 @@ main(argc, argv)
 int argc;
 char *argv[];
 {
-
+    signal(SIGSEGV, segfault_handler);
     file_name=fopen("v5.txt","a+"); 
     if(!file_name)
     {	
