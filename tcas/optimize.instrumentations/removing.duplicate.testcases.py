@@ -27,9 +27,10 @@ def main():
   
   with open(infile, 'r') as input:
     rows = csv.reader(input)
-    process_csv(rows, outfile)
-  
-  print("\tOptimization: duplicated testcases has been Identified and removed successfully.\n\tOptimized {} file saved into {}".format(infile, outfile))
+    if rows:
+      process_csv(rows, outfile)
+      print("\tOptimization: duplicated testcases has been Identified and removed successfully.")
+      print(f"\n\tOptimized file saved into {outfile}")     
 
 if __name__ == "__main__":
   main()
