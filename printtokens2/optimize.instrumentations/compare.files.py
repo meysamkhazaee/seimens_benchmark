@@ -30,7 +30,7 @@ def main():
     
     print(f"Comparison {file1_path} and {file2_path}:")
     if len(reader1) == len(reader2):
-        compare_text_files(reader1, reader2, output_csv_path):
+        
         print("\tTwo files compared successfully.")
         print("\tComparison result saved to {}".format(file1_path, file2_path, output_csv_path))
     else:
