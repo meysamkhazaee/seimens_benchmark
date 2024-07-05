@@ -6,11 +6,16 @@ def compare_text_files(reader1, reader2, output_csv_path):
     with open(output_csv_path, 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
         
+        if len(reader1) != len(reader2):
+            return False
+        
         for line_number, line_content in enumerate(reader2):
             if reader1[line_number] != line_content:
                 writer.writerow([f"T{line_number+1}", "F", line_content.rstrip()[:-1]])
             else:
                 writer.writerow([f"T{line_number+1}", "T", line_content.rstrip()[:-1]])
+        
+        return True
 
 def main():
     # Check for enough arguments passed
@@ -28,8 +33,12 @@ def main():
     reader1.pop(0) # delete first line because first line of all paths instrument files are empty line at the start of file
     reader2.pop(0)
     
-    compare_text_files(reader1, reader2, output_csv_path)
-    print("{} and {} have been compared successfully. \nComparison result saved to {}".format(file1_path, file2_path, output_csv_path))
+    print(f"Comparison {file1_path} and {file2_path}:")
+    if True == compare_text_files(reader1, reader2, output_csv_path):
+        print("\tTwo files compared successfully.")
+        print("\tComparison result saved to {}".format(file1_path, file2_path, output_csv_path))
+    else:
+        print("\033[91m Error: Files Lines not equal. \033[0m")
     
 if __name__ == "__main__":
   main()

@@ -29,7 +29,7 @@ def main():
     rows = csv.reader(input)
     process_csv(rows, outfile)
   
-  print("Optimization: duplicated testcases has been Identified and removed successfully ...\nOptimized {} file saved into {}".format(infile, outfile))
+  print("\tOptimization: duplicated testcases has been Identified and removed successfully.\n\tOptimized {} file saved into {}".format(infile, outfile))
 
 if __name__ == "__main__":
   main()
