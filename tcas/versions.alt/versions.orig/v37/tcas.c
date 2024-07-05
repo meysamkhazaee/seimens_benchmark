@@ -50,7 +50,7 @@ void initialize()
 int ALIM ()
 {
     fprintf(file_name,"P5,");
- return Positive_RA_Alt_Thresh[0];
+ 	return Positive_RA_Alt_Thresh[0];
 }
 
 int Inhibit_Biased_Climb ()

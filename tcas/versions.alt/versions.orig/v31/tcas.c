@@ -135,7 +135,7 @@ int alt_sep_test()
     if (enabled && ((tcas_equipped && intent_not_known) || !tcas_equipped))
     {
         fprintf(file_name,"P21,");
-	need_upward_RA = Non_Crossing_Biased_Climb();
+		need_upward_RA = Non_Crossing_Biased_Climb();
         need_downward_RA = Non_Crossing_Biased_Descend() && Own_Above_Threat();
         fprintf(file_name,"P22,");
         if (need_upward_RA && need_downward_RA)
