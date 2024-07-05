@@ -7,677 +7,686 @@
         -:    3:#include <ctype.h>
         -:    4:#include <string.h>
         -:    5:#include "tokens.h"
-        -:    6:#define TRUE 1
-        -:    7:#define FALSE 0
-        -:    8:
-        -:    9:FILE* file_name = NULL;
+        -:    6:#include <signal.h>
+        -:    7:
+        -:    8:#define TRUE 1
+        -:    9:#define FALSE 0
         -:   10:
-     4115:   11:main(argc,argv)
-        -:   12:int argc;
-        -:   13:char *argv[3];
-        -:   14:{
-     4115:   15:  file_name=fopen("v9.txt","a+"); 
-     4115:   16:  if(!file_name)
-        -:   17:  {	
-    #####:   18:      printf("File could not be opened! \n");
-    #####:   19:      fclose(file_name);
-    #####:   20:      exit(0);
-        -:   21:  }
-        -:   22:
-        -:   23:  char *fname;
-        -:   24:  token tok;
-        -:   25:  token_stream tp;
-     4115:   26:  fprintf(file_name,"\nP1,");
-     4115:   27:  if(argc==1)                  /* if not given filename,take as '""' */
-        -:   28:  {
-     2955:   29:    fprintf(file_name,"P2,");
-     2955:   30:    fname= (char *) malloc(sizeof(char));
-     2955:   31:    *fname = '\0';
-        -:   32:  }
-     1160:   33:  else if(argc==2)
-        -:   34:  {
-     1130:   35:    fprintf(file_name,"P3,");
-     1130:   36:    fname= argv[1];
-        -:   37:  }
-        -:   38:  else
-        -:   39:  { 
-       30:   40:    fprintf(file_name,"P4,");
-       30:   41:    fprintf(stdout, "Error!,please give the token stream\n");
-       30:   42:    exit(0);
-        -:   43:  }
-     4085:   44:  tp=open_token_stream(fname);  /* open token stream */
-     4055:   45:  tok=get_token(tp);
-     4055:   46:  fprintf(file_name,"P5,");
-    23375:   47:  while (is_eof_token(tok) ==FALSE) /* take one token each time until eof */
-        -:   48:  {
-    19320:   49:    fprintf(file_name,"P6,");
-    19320:   50:    print_token(tok);
-    19320:   51:    tok=get_token(tp);
+        -:   11:FILE* file_name = NULL;
+        -:   12:
+        -:   13:// Signal handler for SIGSEGV 
+        -:   14:// add by mshadow
+    #####:   15:void segfault_handler(int sig) {
+    #####:   16:    exit(sig);  // Exit the program
+        -:   17:}
+        -:   18:
+     4115:   19:main(argc,argv)
+        -:   20:int argc;
+        -:   21:char *argv[3];
+        -:   22:{
+     4115:   23:  signal(SIGSEGV, segfault_handler);
+     4115:   24:  file_name=fopen("v9.txt","a+"); 
+     4115:   25:  if(!file_name)
+        -:   26:  {	
+    #####:   27:      printf("File could not be opened! \n");
+    #####:   28:      fclose(file_name);
+    #####:   29:      exit(0);
+        -:   30:  }
+        -:   31:
+        -:   32:  char *fname;
+        -:   33:  token tok;
+        -:   34:  token_stream tp;
+     4115:   35:  fprintf(file_name,"\nP1,");
+     4115:   36:  if(argc==1)                  /* if not given filename,take as '""' */
+        -:   37:  {
+     2955:   38:    fprintf(file_name,"P2,");
+     2955:   39:    fname= (char *) malloc(sizeof(char));
+     2955:   40:    *fname = '\0';
+        -:   41:  }
+     1160:   42:  else if(argc==2)
+        -:   43:  {
+     1130:   44:    fprintf(file_name,"P3,");
+     1130:   45:    fname= argv[1];
+        -:   46:  }
+        -:   47:  else
+        -:   48:  { 
+       30:   49:    fprintf(file_name,"P4,");
+       30:   50:    fprintf(stdout, "Error!,please give the token stream\n");
+       30:   51:    exit(0);
         -:   52:  }
-     4055:   53:  fprintf(file_name,"P7,");
-     4055:   54:  print_token(tok); /* print eof signal */
-     4055:   55:  exit(0);
-        -:   56:}
-        -:   57:
-     4085:   58:character_stream open_character_stream(fname)
-        -:   59:char *fname;
-        -:   60:{ 
-        -:   61:  character_stream fp;
-     4085:   62:  fprintf(file_name,"P8,");
-     4085:   63:  if(fname == NULL)
-        -:   64:  {
-     2955:   65:    fprintf(file_name,"P9,");
-     2955:   66:    fp=stdin;
-        -:   67:  }
-     1130:   68:  else if ((fp=fopen(fname,"r"))== NULL)
-        -:   69:  {
-       30:   70:    fprintf(file_name,"P10,");
-       30:   71:    fprintf(stdout, "The file %s doesn't exists\n",fname);
-       30:   72:    exit(0);
-        -:   73:  }
-     4055:   74:  fprintf(file_name,"P11,");
-     4055:   75:  return(fp);
-        -:   76:}
-        -:   77:
-   158461:   78:char get_char(fp)
-        -:   79:character_stream fp;
-        -:   80:{
-   158461:   81:  fprintf(file_name,"P12,");
-        -:   82:  char ch;
-   158461:   83:  ch=getc(fp);
-   158461:   84:  return(ch);
+     4085:   53:  tp=open_token_stream(fname);  /* open token stream */
+     4055:   54:  tok=get_token(tp);
+     4055:   55:  fprintf(file_name,"P5,");
+    23375:   56:  while (is_eof_token(tok) ==FALSE) /* take one token each time until eof */
+        -:   57:  {
+    19320:   58:    fprintf(file_name,"P6,");
+    19320:   59:    print_token(tok);
+    19320:   60:    tok=get_token(tp);
+        -:   61:  }
+     4055:   62:  fprintf(file_name,"P7,");
+     4055:   63:  print_token(tok); /* print eof signal */
+     4055:   64:  exit(0);
+        -:   65:}
+        -:   66:
+     4085:   67:character_stream open_character_stream(fname)
+        -:   68:char *fname;
+        -:   69:{ 
+        -:   70:  character_stream fp;
+     4085:   71:  fprintf(file_name,"P8,");
+     4085:   72:  if(fname == NULL)
+        -:   73:  {
+     2955:   74:    fprintf(file_name,"P9,");
+     2955:   75:    fp=stdin;
+        -:   76:  }
+     1130:   77:  else if ((fp=fopen(fname,"r"))== NULL)
+        -:   78:  {
+       30:   79:    fprintf(file_name,"P10,");
+       30:   80:    fprintf(stdout, "The file %s doesn't exists\n",fname);
+       30:   81:    exit(0);
+        -:   82:  }
+     4055:   83:  fprintf(file_name,"P11,");
+     4055:   84:  return(fp);
         -:   85:}
         -:   86:
-     3475:   87:char unget_char(ch,fp)
+   158461:   87:char get_char(fp)
         -:   88:character_stream fp;
-        -:   89:char ch;
-        -:   90:{
-        -:   91:  char c;
-     3475:   92:  c=ungetc(ch,fp);
-     3475:   93:  fprintf(file_name,"P13,");
-     3475:   94:  if(c ==EOF)
-        -:   95:  {
-      757:   96:    fprintf(file_name,"P14,");
-      757:   97:    return(c);
-        -:   98:  }
-        -:   99:  else
-        -:  100:  {
-     2718:  101:    fprintf(file_name,"P15,");
-     2718:  102:    return(c);
-        -:  103:  }
-        -:  104:}
-        -:  105:
-        -:  106:char buffer[81];  /* fixed array length MONI */ /* to store the token temporar */
-        -:  107:static int is_spec_symbol();
-        -:  108:static int is_token_end();
-        -:  109:static unget_error();
-        -:  110:static int is_keyword();
-        -:  111:static int is_identifier();
-        -:  112:static int is_num_constant();
-        -:  113:static int is_char_constant();
-        -:  114:static int is_str_constant();
-        -:  115:static int is_comment();
-        -:  116:static void print_spec_symbol();
-        -:  117:
-     4085:  118:token_stream open_token_stream(fname)
-        -:  119:char *fname;
-        -:  120:{
-        -:  121:  token_stream fp;
-     4085:  122:  fprintf(file_name,"P16,");
-     4085:  123:  if(strcmp(fname,"")==0)
-        -:  124:  {
-     2955:  125:    fprintf(file_name,"P17,");
-     2955:  126:    fp=open_character_stream(NULL);
-        -:  127:  }
-        -:  128:  else
-        -:  129:  {
-     1130:  130:    fprintf(file_name,"P18,");
-     1130:  131:    fp=open_character_stream(fname);
-        -:  132:  }
-     4055:  133:  fprintf(file_name,"P19,");
-     4055:  134:  return(fp);
-        -:  135:}
-        -:  136:
-    23375:  137:token get_token(tp)
-        -:  138:token_stream tp;
-        -:  139:{
-    23375:  140:  int i=0,j;
-    23375:  141:  int id=0;
-        -:  142:  char ch,ch1[2];
-    23375:  143:  fprintf(file_name,"P20,");
-  1916750:  144:  for (j=0;j<=80;j++)          /* initial the buffer   */
-        -:  145:  {
-  1893375:  146:    fprintf(file_name,"P21,");
-  1893375:  147:    buffer[j]='\0';
-        -:  148:  }
-    23375:  149:  ch1[0]='\0';
-    23375:  150:  ch1[1]='\0';
-    23375:  151:  ch=get_char(tp);
-    23375:  152:  fprintf(file_name,"P22,");
-    55160:  153:  while(ch==' '||ch=='\n')      /* strip all blanks until meet characters */
+        -:   89:{
+   158461:   90:  fprintf(file_name,"P12,");
+        -:   91:  char ch;
+   158461:   92:  ch=getc(fp);
+   158461:   93:  return(ch);
+        -:   94:}
+        -:   95:
+     3475:   96:char unget_char(ch,fp)
+        -:   97:character_stream fp;
+        -:   98:char ch;
+        -:   99:{
+        -:  100:  char c;
+     3475:  101:  c=ungetc(ch,fp);
+     3475:  102:  fprintf(file_name,"P13,");
+     3475:  103:  if(c ==EOF)
+        -:  104:  {
+      757:  105:    fprintf(file_name,"P14,");
+      757:  106:    return(c);
+        -:  107:  }
+        -:  108:  else
+        -:  109:  {
+     2718:  110:    fprintf(file_name,"P15,");
+     2718:  111:    return(c);
+        -:  112:  }
+        -:  113:}
+        -:  114:
+        -:  115:char buffer[81];  /* fixed array length MONI */ /* to store the token temporar */
+        -:  116:static int is_spec_symbol();
+        -:  117:static int is_token_end();
+        -:  118:static unget_error();
+        -:  119:static int is_keyword();
+        -:  120:static int is_identifier();
+        -:  121:static int is_num_constant();
+        -:  122:static int is_char_constant();
+        -:  123:static int is_str_constant();
+        -:  124:static int is_comment();
+        -:  125:static void print_spec_symbol();
+        -:  126:
+     4085:  127:token_stream open_token_stream(fname)
+        -:  128:char *fname;
+        -:  129:{
+        -:  130:  token_stream fp;
+     4085:  131:  fprintf(file_name,"P16,");
+     4085:  132:  if(strcmp(fname,"")==0)
+        -:  133:  {
+     2955:  134:    fprintf(file_name,"P17,");
+     2955:  135:    fp=open_character_stream(NULL);
+        -:  136:  }
+        -:  137:  else
+        -:  138:  {
+     1130:  139:    fprintf(file_name,"P18,");
+     1130:  140:    fp=open_character_stream(fname);
+        -:  141:  }
+     4055:  142:  fprintf(file_name,"P19,");
+     4055:  143:  return(fp);
+        -:  144:}
+        -:  145:
+    23375:  146:token get_token(tp)
+        -:  147:token_stream tp;
+        -:  148:{
+    23375:  149:  int i=0,j;
+    23375:  150:  int id=0;
+        -:  151:  char ch,ch1[2];
+    23375:  152:  fprintf(file_name,"P20,");
+  1916750:  153:  for (j=0;j<=80;j++)          /* initial the buffer   */
         -:  154:  {
-    31785:  155:    fprintf(file_name,"P23,");
-    31785:  156:    ch=get_char(tp);
+  1893375:  155:    fprintf(file_name,"P21,");
+  1893375:  156:    buffer[j]='\0';
         -:  157:  }
-    23375:  158:  buffer[i]=ch;
-    23375:  159:  fprintf(file_name,"P24,");
-    23375:  160:  if(is_eof_token(buffer)==TRUE)
-        -:  161:  {
-     4055:  162:    fprintf(file_name,"P25,");
-     4055:  163:    return(buffer);
-        -:  164:  }
-    19320:  165:  fprintf(file_name,"P26,");
-    19320:  166:  if(is_spec_symbol(buffer)==TRUE)
-        -:  167:  {
-     4881:  168:    fprintf(file_name,"P27,");
-     4881:  169:    return(buffer); 
-        -:  170:  }
-    14439:  171:  fprintf(file_name,"P28,");
-    14439:  172:  if(ch =='"')
-        -:  173:  {
-     1568:  174:    fprintf(file_name,"P29,");
-     1568:  175:    id=1;    /* prepare for string */
-        -:  176:  }
-    14439:  177:  fprintf(file_name,"P30,");
-    14439:  178:  if(ch ==59)
-        -:  179:  {
-     1931:  180:    fprintf(file_name,"P31,");
-     1931:  181:    id=2;    /* prepare for comment */
-        -:  182:  }
-    14439:  183:  ch=get_char(tp);
-    14439:  184:  fprintf(file_name,"P32,");
-   103301:  185:  while (is_token_end(id,ch) == FALSE)/* until meet the end character */
-        -:  186:  {
-    88862:  187:    fprintf(file_name,"P33,");
-    88862:  188:    i++;
-    88862:  189:    buffer[i]=ch;
-    88862:  190:    ch=get_char(tp);
+    23375:  158:  ch1[0]='\0';
+    23375:  159:  ch1[1]='\0';
+    23375:  160:  ch=get_char(tp);
+    23375:  161:  fprintf(file_name,"P22,");
+    55160:  162:  while(ch==' '||ch=='\n')      /* strip all blanks until meet characters */
+        -:  163:  {
+    31785:  164:    fprintf(file_name,"P23,");
+    31785:  165:    ch=get_char(tp);
+        -:  166:  }
+    23375:  167:  buffer[i]=ch;
+    23375:  168:  fprintf(file_name,"P24,");
+    23375:  169:  if(is_eof_token(buffer)==TRUE)
+        -:  170:  {
+     4055:  171:    fprintf(file_name,"P25,");
+     4055:  172:    return(buffer);
+        -:  173:  }
+    19320:  174:  fprintf(file_name,"P26,");
+    19320:  175:  if(is_spec_symbol(buffer)==TRUE)
+        -:  176:  {
+     4881:  177:    fprintf(file_name,"P27,");
+     4881:  178:    return(buffer); 
+        -:  179:  }
+    14439:  180:  fprintf(file_name,"P28,");
+    14439:  181:  if(ch =='"')
+        -:  182:  {
+     1568:  183:    fprintf(file_name,"P29,");
+     1568:  184:    id=1;    /* prepare for string */
+        -:  185:  }
+    14439:  186:  fprintf(file_name,"P30,");
+    14439:  187:  if(ch ==59)
+        -:  188:  {
+     1931:  189:    fprintf(file_name,"P31,");
+     1931:  190:    id=2;    /* prepare for comment */
         -:  191:  }
-    14439:  192:  ch1[0]=ch;                        /* hold the end charcater          */
-    14439:  193:  fprintf(file_name,"P34,");
-    14439:  194:  if(is_eof_token(ch1)==TRUE)       /* if end character is eof token    */
+    14439:  192:  ch=get_char(tp);
+    14439:  193:  fprintf(file_name,"P32,");
+   103301:  194:  while (is_token_end(id,ch) == FALSE)/* until meet the end character */
         -:  195:  {
-      757:  196:    ch=unget_char(ch,tp);        /* then put back eof on token_stream */
-      757:  197:    fprintf(file_name,"P35,");
-      757:  198:    if(ch==EOF)
-        -:  199:    {
-      757:  200:      fprintf(file_name,"P36,");
-      757:  201:      unget_error(tp);
-        -:  202:    }
-      757:  203:    fprintf(file_name,"P37,");
-      757:  204:    return(buffer);
-        -:  205:  }
-    13682:  206:  fprintf(file_name,"P38,");
-    13682:  207:  if(is_spec_symbol(ch1)==TRUE)     /* if end character is special_symbol */
-        -:  208:  {
-     2440:  209:    ch=unget_char(ch,tp);        /* then put back this character       */
-     2440:  210:    fprintf(file_name,"P39,"); 
-     2440:  211:    if(ch==EOF)
-        -:  212:    {
-    #####:  213:      fprintf(file_name,"P40,");
-    #####:  214:      unget_error(tp);
-        -:  215:    }
-     2440:  216:    fprintf(file_name,"P41,");
-     2440:  217:    return(buffer);
-        -:  218:  }
-    11242:  219:  fprintf(file_name,"P42,");
-    11242:  220:  if(id==1)                  /* if end character is " and is string */
-        -:  221:  { 
-     1535:  222:    fprintf(file_name,"P43,");
-     1535:  223:    i++;                     /* case,hold the second " in buffer    */
-     1535:  224:    buffer[i]=ch;
-     1535:  225:    return(buffer); 
-        -:  226:  }
-     9707:  227:  fprintf(file_name,"P44,");
-     9707:  228:  if(id==0 && ch==59)
-        -:  229:  { 
-      278:  230:    ch=unget_char(ch,tp);       /* then put back this character         */
-      278:  231:    fprintf(file_name,"P45,");
-      278:  232:    if(ch==EOF)
-        -:  233:    {
-    #####:  234:      fprintf(file_name,"P46,");
-    #####:  235:      unget_error(tp);
-        -:  236:    }
-      278:  237:    fprintf(file_name,"P47,");
-      278:  238:    return(buffer); 
-        -:  239:  }
-     9429:  240:  fprintf(file_name,"P48,");
-     9429:  241:  return(buffer);                   /* return nomal case token             */
-        -:  242:}
-        -:  243:
-   103301:  244:static int is_token_end(str_com_id,ch)
-        -:  245:char ch;
-        -:  246:int str_com_id;
-        -:  247:{
-        -:  248:  char ch1[2];  /* fixed array declaration MONI */
-   103301:  249:  ch1[0]=ch;
-   103301:  250:  ch1[1]='\0';
-   103301:  251:  fprintf(file_name,"P49,");
-   103301:  252:  if(is_eof_token(ch1)==TRUE)
-        -:  253:  {
-      757:  254:    fprintf(file_name,"P50,");
-      757:  255:    return(TRUE); /* is eof token? */
-        -:  256:  }
-   102544:  257:  fprintf(file_name,"P51,");
-   102544:  258:  if(str_com_id==1)          /* is string token */
-        -:  259:  {
-    21521:  260:    fprintf(file_name,"P52,"); 
-    21521:  261:    if(ch=='"' | ch=='\n')   /* for string until meet another " */
-        -:  262:    {
-     1535:  263:      fprintf(file_name,"P53,");
-     1535:  264:      return(TRUE);
-        -:  265:    }  
-        -:  266:    else
-        -:  267:    {
-    19986:  268:      fprintf(file_name,"P54,");
-    19986:  269:      return(FALSE);
-        -:  270:    }  
-        -:  271:  }
-    81023:  272:  fprintf(file_name,"P55,");
-    81023:  273:  if(str_com_id==2)    /* is comment token */
-        -:  274:  { 
-    18024:  275:    fprintf(file_name,"P56,");
-    18024:  276:    if(ch=='\n' || ch == '\t')     /* for comment until meet end of line */
-        -:  277:    {
-     1890:  278:      fprintf(file_name,"P57,");
-     1890:  279:      return(TRUE);
-        -:  280:    }
-        -:  281:    else
-        -:  282:    {
-    16134:  283:      fprintf(file_name,"P58,");
-    16134:  284:      return(FALSE);
-        -:  285:    }
-        -:  286:  }
-    62999:  287:  fprintf(file_name,"P59,");
-    62999:  288:  if(is_spec_symbol(ch1)==TRUE)
-        -:  289:  {
-     2440:  290:    fprintf(file_name,"P60,");
-     2440:  291:    return(TRUE); /* is special_symbol? */
-        -:  292:  }
-    60559:  293:  fprintf(file_name,"P61,");
-    60559:  294:  if(ch ==' ' || ch=='\n' || ch==59) 
-        -:  295:  {
-     7817:  296:    fprintf(file_name,"P62,");
-     7817:  297:    return(TRUE); 
-        -:  298:  }
-    52742:  299:  fprintf(file_name,"P63,");
-    52742:  300:  return(FALSE);               
-        -:  301:}
-        -:  302:
-    23375:  303:static int token_type(tok)
-        -:  304:token tok;
-        -:  305:{
-    23375:  306:  fprintf(file_name,"P64,");
-    23375:  307:  if(is_keyword(tok))
-        -:  308:  {
-     2341:  309:    fprintf(file_name,"P65,");
-     2341:  310:    return(keyword);
-        -:  311:  }
-    21034:  312:  fprintf(file_name,"P66,");
-    21034:  313:  if(is_spec_symbol(tok))
-        -:  314:  {
-     4881:  315:    fprintf(file_name,"P67,");
-     4881:  316:    return(spec_symbol);
-        -:  317:  }
-    16153:  318:  fprintf(file_name,"P68,");
-    16153:  319:  if(is_identifier(tok))
-        -:  320:  {
-     2812:  321:    fprintf(file_name,"P69,");
-     2812:  322:    return(identifier);
-        -:  323:  }
-    13341:  324:  fprintf(file_name,"P70,");
-    13341:  325:  if(is_num_constant(tok))
-        -:  326:  {
-     1258:  327:    fprintf(file_name,"P71,");
-     1258:  328:    return(num_constant);
-        -:  329:  }
-    12083:  330:  fprintf(file_name,"P72,");
-    12083:  331:  if(is_str_constant(tok))
-        -:  332:  {
-     1391:  333:    fprintf(file_name,"P73,");
-     1391:  334:    return(str_constant);
-        -:  335:  }
-    10692:  336:  fprintf(file_name,"P74,");
-    10692:  337:  if(is_char_constant(tok))
-        -:  338:  {
-      554:  339:    fprintf(file_name,"P75,");
-      554:  340:    return(char_constant);
-        -:  341:  }
-    10138:  342:  fprintf(file_name,"P76,");
-    10138:  343:  if(is_comment(tok))
-        -:  344:  {
-     1931:  345:    fprintf(file_name,"P77,");
-     1931:  346:    return(comment);
-        -:  347:  }
-     8207:  348:  fprintf(file_name,"P78,");
-     8207:  349:  if(is_eof_token(tok))
-        -:  350:  {
-     4055:  351:    fprintf(file_name,"P79,");
-     4055:  352:    return(end);
-        -:  353:  }
-     4152:  354:  fprintf(file_name,"P80,");
-     4152:  355:  return(error);
-        -:  356:}
-        -:  357:
-        -:  358:
-    23375:  359:int print_token(tok)
-        -:  360:token tok;
-        -:  361:{
-        -:  362:  int type;
-    23375:  363:  type=token_type(tok);
-    23375:  364:  fprintf(file_name,"P81,");
-    23375:  365:  if(type==error)
-        -:  366:  {
-     4152:  367:    fprintf(file_name,"P82,");
-     4152:  368:    fprintf(stdout, "error,\"%s\".\n",tok);
-        -:  369:  }
-    23375:  370:  fprintf(file_name,"P83,");
-    23375:  371:  if(type==keyword)
-        -:  372:  {
-     2341:  373:    fprintf(file_name,"P84,");
-     2341:  374:    fprintf(stdout, "keyword,\"%s\".\n",tok);
-        -:  375:  }
-    23375:  376:  fprintf(file_name,"P85,");
-    23375:  377:  if(type==spec_symbol)
-        -:  378:  {
-     4881:  379:    fprintf(file_name,"P86,");
-     4881:  380:    print_spec_symbol(tok);
-        -:  381:  }
-    23375:  382:  fprintf(file_name,"P87,");
-    23375:  383:  if(type==identifier)
-        -:  384:  {
-     2812:  385:    fprintf(file_name,"P88,");
-     2812:  386:    fprintf(stdout, "identifier,\"%s\".\n",tok);
-        -:  387:  }
-    23375:  388:  fprintf(file_name,"P89,");
-    23375:  389:  if(type==num_constant)
-        -:  390:  {
-     1258:  391:    fprintf(file_name,"P90,");
-     1258:  392:    fprintf(stdout, "numeric,%s.\n",tok);
-        -:  393:  }
-    23375:  394:  fprintf(file_name,"P91,");
-    23375:  395:  if(type==str_constant)
-        -:  396:  {
-     1391:  397:    fprintf(file_name,"P92,");
-     1391:  398:    fprintf(stdout, "string,%s.\n",tok);
-        -:  399:  }
-    23375:  400:  fprintf(file_name,"P93,");
-    23375:  401:  if(type==char_constant)
-        -:  402:  {
-      554:  403:    fprintf(file_name,"P94,");
-      554:  404:    tok=tok+1;
-      554:  405:    fprintf(stdout, "character,\"%s\".\n",tok);
-        -:  406:  }
-    23375:  407:  fprintf(file_name,"P95,");
-    23375:  408:  if(type==end)
-        -:  409:  {
-     4055:  410:    fprintf(file_name,"P96,");
-     4055:  411:    fprintf(stdout, "eof.\n");
-        -:  412:  }
-    23375:  413:}
-        -:  414:
-   172697:  415:int is_eof_token(tok)
-        -:  416:token tok;
-        -:  417:{ 
-   172697:  418:  fprintf(file_name,"P97,");
-   172697:  419:  if( *tok==EOF)
-        -:  420:  {
-    13679:  421:    fprintf(file_name,"P98,");
-    13679:  422:    return(TRUE);  
-        -:  423:  }
-        -:  424:  else
-        -:  425:  {
-   159018:  426:    fprintf(file_name,"P99,");
-   159018:  427:    return(FALSE);
-        -:  428:  }
-        -:  429:}
-        -:  430:
-    10138:  431:static int is_comment(ident)
-        -:  432:token ident;
-        -:  433:{
-    10138:  434:  fprintf(file_name,"P100,");
-    10138:  435:  if( (*ident) ==59 )   /* the char is 59   */
-        -:  436:  {
-     1931:  437:    fprintf(file_name,"P101,");
-     1931:  438:    return(TRUE);
-        -:  439:  }
-        -:  440:  else
-        -:  441:  {
-     8207:  442:    fprintf(file_name,"P102,");
-     8207:  443:    return(FALSE);
-        -:  444:  }
-        -:  445:}
-        -:  446:
-    23375:  447:static int is_keyword(str)
-        -:  448:    token  str;
-        -:  449:{ 
-    23375:  450:  fprintf(file_name,"P103,");
-    23375:  451:  if (!strcmp(str,"and") || !strcmp(str,"or") || !strcmp(str,"if") || 
-    22232:  452:  	  !strcmp(str,"xor")||!strcmp(str,"lambda")||!strcmp(str,"=>"))
-        -:  453:  {
-     2341:  454:    fprintf(file_name,"P104,");
-     2341:  455:    return(TRUE);
-        -:  456:  }
-        -:  457:  else
-        -:  458:  {
-    21034:  459:    fprintf(file_name,"P105,");
-    21034:  460:    return(FALSE);
-        -:  461:  }
-        -:  462:}
-        -:  463:
-    10692:  464:static int is_char_constant(str)
-        -:  465:    token str;
-        -:  466:{
-    10692:  467:  fprintf(file_name,"P106,");
-    10692:  468:  if ((*str)=='#' && isalpha(*(str+1)))
-        -:  469:  {
-      554:  470:    fprintf(file_name,"P107,");
-      554:  471:    return(TRUE);
-        -:  472:  } 
-        -:  473:  else
-        -:  474:  {
-    10138:  475:    fprintf(file_name,"P108,");
-    10138:  476:    return(FALSE);
-        -:  477:  }
-        -:  478:}
-        -:  479:
-    13341:  480:static int is_num_constant(str)
-        -:  481:    token  str;
-        -:  482:{
-    13341:  483:  int i=1;
-    13341:  484:  fprintf(file_name,"P109,");
-    13341:  485:  if ( isdigit(*str)) 
-        -:  486:  {
-     1656:  487:    fprintf(file_name,"P110,");
-     2581:  488:    while ( *(str+i) != '\0' )   /* until meet token end sign */
-        -:  489:    {
-     1323:  490:      fprintf(file_name,"P111,");
-     1323:  491:      if(isdigit(*(str+i)))
-        -:  492:      {
-      925:  493:        fprintf(file_name,"P112,");
-      925:  494:        i++;
-        -:  495:      }
-        -:  496:      else
-        -:  497:      {
-      398:  498:        fprintf(file_name,"P113,");
-      398:  499:        return(FALSE);
-        -:  500:      }
-        -:  501:    }                         /* end WHILE */
-     1258:  502:    fprintf(file_name,"P114,");
-     1258:  503:    return(TRUE);
-        -:  504:  }
-        -:  505:  else
-        -:  506:  {
-    11685:  507:    fprintf(file_name,"P115,");
-    11685:  508:    return(FALSE);               /* other return FALSE */
-        -:  509:  }
-        -:  510:}
-        -:  511:
-    12083:  512:static int is_str_constant(str)
-        -:  513:    token str;
-        -:  514:{
-    12083:  515:  int i=1;
-    12083:  516:  fprintf(file_name,"P116,");
-    12083:  517:  if ( *str =='"')
-        -:  518:  {
-     1568:  519:    fprintf(file_name,"P117,"); 
-    21698:  520:    while (*(str+i)!='\0')  /* until meet the token end sign */
-        -:  521:    {
-    21521:  522:      fprintf(file_name,"P118,");
-    21521:  523:      if(*(str+i)=='"')
-        -:  524:      {
-     1391:  525:        fprintf(file_name,"P119,");
-     1391:  526:        return(TRUE);        /* meet the second '"'           */
-        -:  527:      }
-        -:  528:      else
-        -:  529:      {
-    20130:  530:        fprintf(file_name,"P120,");
-    20130:  531:        i++;
-        -:  532:      }     
-        -:  533:    }               /* end WHILE */
-      177:  534:    fprintf(file_name,"P121,");
-      177:  535:    return(FALSE);
-        -:  536:  }
-        -:  537:  else
-        -:  538:  {
-    10515:  539:    fprintf(file_name,"P122,");
-    10515:  540:    return(FALSE);       /* other return FALSE */
-        -:  541:  }
-        -:  542:}
-        -:  543:
-    16153:  544:static int is_identifier(str)
-        -:  545:    token  str;
-        -:  546:{
-    16153:  547:  int i=1;
-    16153:  548:  fprintf(file_name,"P123,");
-    16153:  549:  if ( isalpha( *str) ) 
-        -:  550:  {
-     4484:  551:    fprintf(file_name,"P124,");
-    22390:  552:    while(  *(str+i) !='\0' )   /* unti meet the end token sign */
-        -:  553:    {
-    19578:  554:      fprintf(file_name,"P125,");
-    19578:  555:      if(isalpha(*(str+i)) || isdigit(*(str+i)))
-        -:  556:      {
-    17906:  557:        fprintf(file_name,"P126,");
-    17906:  558:        i++;
-        -:  559:      } 
-        -:  560:      else
-        -:  561:      {
-     1672:  562:        fprintf(file_name,"P127,");
-     1672:  563:        return(FALSE);
-        -:  564:      }
-        -:  565:    }      /* end WHILE */
-     2812:  566:    fprintf(file_name,"P128,");
-     2812:  567:    return(TRUE);
-        -:  568:  }
-        -:  569:  else
-        -:  570:  {
-    11669:  571:    fprintf(file_name,"P129,");
-    11669:  572:    return(FALSE);
-        -:  573:  }
-        -:  574:}
-        -:  575:
-      757:  576:static unget_error(fp)
-        -:  577:character_stream *fp;
-        -:  578:{
-      757:  579:  fprintf(file_name,"P130,");
-      757:  580:  fprintf(stdout,"It can not get charcter\n");
-      757:  581:}
-        -:  582:
-     4881:  583:static void print_spec_symbol(str)
-        -:  584:token str;
-        -:  585:{
-     4881:  586:  fprintf(file_name,"P131,");
-     4881:  587:  if (!strcmp(str,"("))
-        -:  588:  {
-      641:  589:    fprintf(file_name,"P132,");
-      641:  590:    fprintf(stdout, "%s\n","lparen.");
-      641:  591:    return;
-        -:  592:  }
-     4240:  593:  fprintf(file_name,"P133,"); 
-     4240:  594:  if (!strcmp(str,")"))
-        -:  595:  {
-      701:  596:    fprintf(file_name,"P134,");
-      701:  597:    fprintf(stdout, "%s\n","rparen.");
-      701:  598:    return;
-        -:  599:  }
-     3539:  600:  fprintf(file_name,"P135,");
-     3539:  601:  if (!strcmp(str,"["))
-        -:  602:  {
-      689:  603:    fprintf(file_name,"P136,");
-      689:  604:    fprintf(stdout, "%s\n","lsquare.");
-      689:  605:    return;
-        -:  606:  }
-     2850:  607:  fprintf(file_name,"P137,");
-     2850:  608:  if (!strcmp(str,"]"))
-        -:  609:  {
-      747:  610:    fprintf(file_name,"P138,");
-      747:  611:    fprintf(stdout, "%s\n","rsquare.");
-      747:  612:    return;
-        -:  613:  }
-     2103:  614:  fprintf(file_name,"P139,");
-     2103:  615:  if (!strcmp(str,"'"))
-        -:  616:  {
-      684:  617:    fprintf(file_name,"P140,");
-      684:  618:    fprintf(stdout, "%s\n","quote.");
-      684:  619:    return;
-        -:  620:  }
-     1419:  621:  fprintf(file_name,"P141,");
-     1419:  622:  if (!strcmp(str,"`"))
-        -:  623:  {
-      724:  624:    fprintf(file_name,"P142,");
-      724:  625:    fprintf(stdout, "%s\n","bquote.");
-      724:  626:    return;
-        -:  627:  }
-      695:  628:  fprintf(file_name,"P143,");
-      695:  629:  fprintf(stdout, "%s\n","comma.");
-        -:  630:}
-        -:  631:
-   117035:  632:static int is_spec_symbol(str)
-        -:  633:    token str;
-        -:  634:{
-   117035:  635:  fprintf(file_name,"P144,");
-   117035:  636:  if (!strcmp(str,"("))
-        -:  637:  {
-     1904:  638:    fprintf(file_name,"P145,");  
-     1904:  639:    return(TRUE);
-        -:  640:  }
-   115131:  641:  fprintf(file_name,"P146,");
-   115131:  642:  if (!strcmp(str,")"))
-        -:  643:  {
-     2070:  644:    fprintf(file_name,"P147,");
-     2070:  645:    return(TRUE);
-        -:  646:  }
-   113061:  647:  fprintf(file_name,"P148,");
-   113061:  648:  if (!strcmp(str,"["))
-        -:  649:  {
-     2088:  650:    fprintf(file_name,"P149,");
-     2088:  651:    return(TRUE);
-        -:  652:  }
-   110973:  653:  fprintf(file_name,"P150,");
-   110973:  654:  if (!strcmp(str,"]"))
-        -:  655:  {
-     2232:  656:    fprintf(file_name,"P151,");
-     2232:  657:    return(TRUE);
-        -:  658:  }
-   108741:  659:  fprintf(file_name,"P152,");
-   108741:  660:  if (!strcmp(str,"'"))
-        -:  661:  {
-     2054:  662:    fprintf(file_name,"P153,");
-     2054:  663:    return(TRUE);
-        -:  664:  }
-   106687:  665:  fprintf(file_name,"P154,");
-   106687:  666:  if (!strcmp(str,"`"))
-        -:  667:  {
-     2166:  668:    fprintf(file_name,"P155,");
-     2166:  669:    return(TRUE);
-        -:  670:  }
-   104521:  671:  fprintf(file_name,"P156,");
-   104521:  672:  if (!strcmp(str,","))
-        -:  673:  {
-     2128:  674:    fprintf(file_name,"P157,");
-     2128:  675:    return(TRUE);
-        -:  676:  }
-   102393:  677:  fprintf(file_name,"P158,");
-   102393:  678:  return(FALSE);     /* others return FALSE */
-        -:  679:}
+    88862:  196:    fprintf(file_name,"P33,");
+    88862:  197:    i++;
+    88862:  198:    buffer[i]=ch;
+    88862:  199:    ch=get_char(tp);
+        -:  200:  }
+    14439:  201:  ch1[0]=ch;                        /* hold the end charcater          */
+    14439:  202:  fprintf(file_name,"P34,");
+    14439:  203:  if(is_eof_token(ch1)==TRUE)       /* if end character is eof token    */
+        -:  204:  {
+      757:  205:    ch=unget_char(ch,tp);        /* then put back eof on token_stream */
+      757:  206:    fprintf(file_name,"P35,");
+      757:  207:    if(ch==EOF)
+        -:  208:    {
+      757:  209:      fprintf(file_name,"P36,");
+      757:  210:      unget_error(tp);
+        -:  211:    }
+      757:  212:    fprintf(file_name,"P37,");
+      757:  213:    return(buffer);
+        -:  214:  }
+    13682:  215:  fprintf(file_name,"P38,");
+    13682:  216:  if(is_spec_symbol(ch1)==TRUE)     /* if end character is special_symbol */
+        -:  217:  {
+     2440:  218:    ch=unget_char(ch,tp);        /* then put back this character       */
+     2440:  219:    fprintf(file_name,"P39,"); 
+     2440:  220:    if(ch==EOF)
+        -:  221:    {
+    #####:  222:      fprintf(file_name,"P40,");
+    #####:  223:      unget_error(tp);
+        -:  224:    }
+     2440:  225:    fprintf(file_name,"P41,");
+     2440:  226:    return(buffer);
+        -:  227:  }
+    11242:  228:  fprintf(file_name,"P42,");
+    11242:  229:  if(id==1)                  /* if end character is " and is string */
+        -:  230:  { 
+     1535:  231:    fprintf(file_name,"P43,");
+     1535:  232:    i++;                     /* case,hold the second " in buffer    */
+     1535:  233:    buffer[i]=ch;
+     1535:  234:    return(buffer); 
+        -:  235:  }
+     9707:  236:  fprintf(file_name,"P44,");
+     9707:  237:  if(id==0 && ch==59)
+        -:  238:  { 
+      278:  239:    ch=unget_char(ch,tp);       /* then put back this character         */
+      278:  240:    fprintf(file_name,"P45,");
+      278:  241:    if(ch==EOF)
+        -:  242:    {
+    #####:  243:      fprintf(file_name,"P46,");
+    #####:  244:      unget_error(tp);
+        -:  245:    }
+      278:  246:    fprintf(file_name,"P47,");
+      278:  247:    return(buffer); 
+        -:  248:  }
+     9429:  249:  fprintf(file_name,"P48,");
+     9429:  250:  return(buffer);                   /* return nomal case token             */
+        -:  251:}
+        -:  252:
+   103301:  253:static int is_token_end(str_com_id,ch)
+        -:  254:char ch;
+        -:  255:int str_com_id;
+        -:  256:{
+        -:  257:  char ch1[2];  /* fixed array declaration MONI */
+   103301:  258:  ch1[0]=ch;
+   103301:  259:  ch1[1]='\0';
+   103301:  260:  fprintf(file_name,"P49,");
+   103301:  261:  if(is_eof_token(ch1)==TRUE)
+        -:  262:  {
+      757:  263:    fprintf(file_name,"P50,");
+      757:  264:    return(TRUE); /* is eof token? */
+        -:  265:  }
+   102544:  266:  fprintf(file_name,"P51,");
+   102544:  267:  if(str_com_id==1)          /* is string token */
+        -:  268:  {
+    21521:  269:    fprintf(file_name,"P52,"); 
+    21521:  270:    if(ch=='"' | ch=='\n')   /* for string until meet another " */
+        -:  271:    {
+     1535:  272:      fprintf(file_name,"P53,");
+     1535:  273:      return(TRUE);
+        -:  274:    }  
+        -:  275:    else
+        -:  276:    {
+    19986:  277:      fprintf(file_name,"P54,");
+    19986:  278:      return(FALSE);
+        -:  279:    }  
+        -:  280:  }
+    81023:  281:  fprintf(file_name,"P55,");
+    81023:  282:  if(str_com_id==2)    /* is comment token */
+        -:  283:  { 
+    18024:  284:    fprintf(file_name,"P56,");
+    18024:  285:    if(ch=='\n' || ch == '\t')     /* for comment until meet end of line */
+        -:  286:    {
+     1890:  287:      fprintf(file_name,"P57,");
+     1890:  288:      return(TRUE);
+        -:  289:    }
+        -:  290:    else
+        -:  291:    {
+    16134:  292:      fprintf(file_name,"P58,");
+    16134:  293:      return(FALSE);
+        -:  294:    }
+        -:  295:  }
+    62999:  296:  fprintf(file_name,"P59,");
+    62999:  297:  if(is_spec_symbol(ch1)==TRUE)
+        -:  298:  {
+     2440:  299:    fprintf(file_name,"P60,");
+     2440:  300:    return(TRUE); /* is special_symbol? */
+        -:  301:  }
+    60559:  302:  fprintf(file_name,"P61,");
+    60559:  303:  if(ch ==' ' || ch=='\n' || ch==59) 
+        -:  304:  {
+     7817:  305:    fprintf(file_name,"P62,");
+     7817:  306:    return(TRUE); 
+        -:  307:  }
+    52742:  308:  fprintf(file_name,"P63,");
+    52742:  309:  return(FALSE);               
+        -:  310:}
+        -:  311:
+    23375:  312:static int token_type(tok)
+        -:  313:token tok;
+        -:  314:{
+    23375:  315:  fprintf(file_name,"P64,");
+    23375:  316:  if(is_keyword(tok))
+        -:  317:  {
+     2341:  318:    fprintf(file_name,"P65,");
+     2341:  319:    return(keyword);
+        -:  320:  }
+    21034:  321:  fprintf(file_name,"P66,");
+    21034:  322:  if(is_spec_symbol(tok))
+        -:  323:  {
+     4881:  324:    fprintf(file_name,"P67,");
+     4881:  325:    return(spec_symbol);
+        -:  326:  }
+    16153:  327:  fprintf(file_name,"P68,");
+    16153:  328:  if(is_identifier(tok))
+        -:  329:  {
+     2812:  330:    fprintf(file_name,"P69,");
+     2812:  331:    return(identifier);
+        -:  332:  }
+    13341:  333:  fprintf(file_name,"P70,");
+    13341:  334:  if(is_num_constant(tok))
+        -:  335:  {
+     1258:  336:    fprintf(file_name,"P71,");
+     1258:  337:    return(num_constant);
+        -:  338:  }
+    12083:  339:  fprintf(file_name,"P72,");
+    12083:  340:  if(is_str_constant(tok))
+        -:  341:  {
+     1391:  342:    fprintf(file_name,"P73,");
+     1391:  343:    return(str_constant);
+        -:  344:  }
+    10692:  345:  fprintf(file_name,"P74,");
+    10692:  346:  if(is_char_constant(tok))
+        -:  347:  {
+      554:  348:    fprintf(file_name,"P75,");
+      554:  349:    return(char_constant);
+        -:  350:  }
+    10138:  351:  fprintf(file_name,"P76,");
+    10138:  352:  if(is_comment(tok))
+        -:  353:  {
+     1931:  354:    fprintf(file_name,"P77,");
+     1931:  355:    return(comment);
+        -:  356:  }
+     8207:  357:  fprintf(file_name,"P78,");
+     8207:  358:  if(is_eof_token(tok))
+        -:  359:  {
+     4055:  360:    fprintf(file_name,"P79,");
+     4055:  361:    return(end);
+        -:  362:  }
+     4152:  363:  fprintf(file_name,"P80,");
+     4152:  364:  return(error);
+        -:  365:}
+        -:  366:
+        -:  367:
+    23375:  368:int print_token(tok)
+        -:  369:token tok;
+        -:  370:{
+        -:  371:  int type;
+    23375:  372:  type=token_type(tok);
+    23375:  373:  fprintf(file_name,"P81,");
+    23375:  374:  if(type==error)
+        -:  375:  {
+     4152:  376:    fprintf(file_name,"P82,");
+     4152:  377:    fprintf(stdout, "error,\"%s\".\n",tok);
+        -:  378:  }
+    23375:  379:  fprintf(file_name,"P83,");
+    23375:  380:  if(type==keyword)
+        -:  381:  {
+     2341:  382:    fprintf(file_name,"P84,");
+     2341:  383:    fprintf(stdout, "keyword,\"%s\".\n",tok);
+        -:  384:  }
+    23375:  385:  fprintf(file_name,"P85,");
+    23375:  386:  if(type==spec_symbol)
+        -:  387:  {
+     4881:  388:    fprintf(file_name,"P86,");
+     4881:  389:    print_spec_symbol(tok);
+        -:  390:  }
+    23375:  391:  fprintf(file_name,"P87,");
+    23375:  392:  if(type==identifier)
+        -:  393:  {
+     2812:  394:    fprintf(file_name,"P88,");
+     2812:  395:    fprintf(stdout, "identifier,\"%s\".\n",tok);
+        -:  396:  }
+    23375:  397:  fprintf(file_name,"P89,");
+    23375:  398:  if(type==num_constant)
+        -:  399:  {
+     1258:  400:    fprintf(file_name,"P90,");
+     1258:  401:    fprintf(stdout, "numeric,%s.\n",tok);
+        -:  402:  }
+    23375:  403:  fprintf(file_name,"P91,");
+    23375:  404:  if(type==str_constant)
+        -:  405:  {
+     1391:  406:    fprintf(file_name,"P92,");
+     1391:  407:    fprintf(stdout, "string,%s.\n",tok);
+        -:  408:  }
+    23375:  409:  fprintf(file_name,"P93,");
+    23375:  410:  if(type==char_constant)
+        -:  411:  {
+      554:  412:    fprintf(file_name,"P94,");
+      554:  413:    tok=tok+1;
+      554:  414:    fprintf(stdout, "character,\"%s\".\n",tok);
+        -:  415:  }
+    23375:  416:  fprintf(file_name,"P95,");
+    23375:  417:  if(type==end)
+        -:  418:  {
+     4055:  419:    fprintf(file_name,"P96,");
+     4055:  420:    fprintf(stdout, "eof.\n");
+        -:  421:  }
+    23375:  422:}
+        -:  423:
+   172697:  424:int is_eof_token(tok)
+        -:  425:token tok;
+        -:  426:{ 
+   172697:  427:  fprintf(file_name,"P97,");
+   172697:  428:  if( *tok==EOF)
+        -:  429:  {
+    13679:  430:    fprintf(file_name,"P98,");
+    13679:  431:    return(TRUE);  
+        -:  432:  }
+        -:  433:  else
+        -:  434:  {
+   159018:  435:    fprintf(file_name,"P99,");
+   159018:  436:    return(FALSE);
+        -:  437:  }
+        -:  438:}
+        -:  439:
+    10138:  440:static int is_comment(ident)
+        -:  441:token ident;
+        -:  442:{
+    10138:  443:  fprintf(file_name,"P100,");
+    10138:  444:  if( (*ident) ==59 )   /* the char is 59   */
+        -:  445:  {
+     1931:  446:    fprintf(file_name,"P101,");
+     1931:  447:    return(TRUE);
+        -:  448:  }
+        -:  449:  else
+        -:  450:  {
+     8207:  451:    fprintf(file_name,"P102,");
+     8207:  452:    return(FALSE);
+        -:  453:  }
+        -:  454:}
+        -:  455:
+    23375:  456:static int is_keyword(str)
+        -:  457:    token  str;
+        -:  458:{ 
+    23375:  459:  fprintf(file_name,"P103,");
+    23375:  460:  if (!strcmp(str,"and") || !strcmp(str,"or") || !strcmp(str,"if") || 
+    22232:  461:  	  !strcmp(str,"xor")||!strcmp(str,"lambda")||!strcmp(str,"=>"))
+        -:  462:  {
+     2341:  463:    fprintf(file_name,"P104,");
+     2341:  464:    return(TRUE);
+        -:  465:  }
+        -:  466:  else
+        -:  467:  {
+    21034:  468:    fprintf(file_name,"P105,");
+    21034:  469:    return(FALSE);
+        -:  470:  }
+        -:  471:}
+        -:  472:
+    10692:  473:static int is_char_constant(str)
+        -:  474:    token str;
+        -:  475:{
+    10692:  476:  fprintf(file_name,"P106,");
+    10692:  477:  if ((*str)=='#' && isalpha(*(str+1)))
+        -:  478:  {
+      554:  479:    fprintf(file_name,"P107,");
+      554:  480:    return(TRUE);
+        -:  481:  } 
+        -:  482:  else
+        -:  483:  {
+    10138:  484:    fprintf(file_name,"P108,");
+    10138:  485:    return(FALSE);
+        -:  486:  }
+        -:  487:}
+        -:  488:
+    13341:  489:static int is_num_constant(str)
+        -:  490:    token  str;
+        -:  491:{
+    13341:  492:  int i=1;
+    13341:  493:  fprintf(file_name,"P109,");
+    13341:  494:  if ( isdigit(*str)) 
+        -:  495:  {
+     1656:  496:    fprintf(file_name,"P110,");
+     2581:  497:    while ( *(str+i) != '\0' )   /* until meet token end sign */
+        -:  498:    {
+     1323:  499:      fprintf(file_name,"P111,");
+     1323:  500:      if(isdigit(*(str+i)))
+        -:  501:      {
+      925:  502:        fprintf(file_name,"P112,");
+      925:  503:        i++;
+        -:  504:      }
+        -:  505:      else
+        -:  506:      {
+      398:  507:        fprintf(file_name,"P113,");
+      398:  508:        return(FALSE);
+        -:  509:      }
+        -:  510:    }                         /* end WHILE */
+     1258:  511:    fprintf(file_name,"P114,");
+     1258:  512:    return(TRUE);
+        -:  513:  }
+        -:  514:  else
+        -:  515:  {
+    11685:  516:    fprintf(file_name,"P115,");
+    11685:  517:    return(FALSE);               /* other return FALSE */
+        -:  518:  }
+        -:  519:}
+        -:  520:
+    12083:  521:static int is_str_constant(str)
+        -:  522:    token str;
+        -:  523:{
+    12083:  524:  int i=1;
+    12083:  525:  fprintf(file_name,"P116,");
+    12083:  526:  if ( *str =='"')
+        -:  527:  {
+     1568:  528:    fprintf(file_name,"P117,"); 
+    21698:  529:    while (*(str+i)!='\0')  /* until meet the token end sign */
+        -:  530:    {
+    21521:  531:      fprintf(file_name,"P118,");
+    21521:  532:      if(*(str+i)=='"')
+        -:  533:      {
+     1391:  534:        fprintf(file_name,"P119,");
+     1391:  535:        return(TRUE);        /* meet the second '"'           */
+        -:  536:      }
+        -:  537:      else
+        -:  538:      {
+    20130:  539:        fprintf(file_name,"P120,");
+    20130:  540:        i++;
+        -:  541:      }     
+        -:  542:    }               /* end WHILE */
+      177:  543:    fprintf(file_name,"P121,");
+      177:  544:    return(FALSE);
+        -:  545:  }
+        -:  546:  else
+        -:  547:  {
+    10515:  548:    fprintf(file_name,"P122,");
+    10515:  549:    return(FALSE);       /* other return FALSE */
+        -:  550:  }
+        -:  551:}
+        -:  552:
+    16153:  553:static int is_identifier(str)
+        -:  554:    token  str;
+        -:  555:{
+    16153:  556:  int i=1;
+    16153:  557:  fprintf(file_name,"P123,");
+    16153:  558:  if ( isalpha( *str) ) 
+        -:  559:  {
+     4484:  560:    fprintf(file_name,"P124,");
+    22390:  561:    while(  *(str+i) !='\0' )   /* unti meet the end token sign */
+        -:  562:    {
+    19578:  563:      fprintf(file_name,"P125,");
+    19578:  564:      if(isalpha(*(str+i)) || isdigit(*(str+i)))
+        -:  565:      {
+    17906:  566:        fprintf(file_name,"P126,");
+    17906:  567:        i++;
+        -:  568:      } 
+        -:  569:      else
+        -:  570:      {
+     1672:  571:        fprintf(file_name,"P127,");
+     1672:  572:        return(FALSE);
+        -:  573:      }
+        -:  574:    }      /* end WHILE */
+     2812:  575:    fprintf(file_name,"P128,");
+     2812:  576:    return(TRUE);
+        -:  577:  }
+        -:  578:  else
+        -:  579:  {
+    11669:  580:    fprintf(file_name,"P129,");
+    11669:  581:    return(FALSE);
+        -:  582:  }
+        -:  583:}
+        -:  584:
+      757:  585:static unget_error(fp)
+        -:  586:character_stream *fp;
+        -:  587:{
+      757:  588:  fprintf(file_name,"P130,");
+      757:  589:  fprintf(stdout,"It can not get charcter\n");
+      757:  590:}
+        -:  591:
+     4881:  592:static void print_spec_symbol(str)
+        -:  593:token str;
+        -:  594:{
+     4881:  595:  fprintf(file_name,"P131,");
+     4881:  596:  if (!strcmp(str,"("))
+        -:  597:  {
+      641:  598:    fprintf(file_name,"P132,");
+      641:  599:    fprintf(stdout, "%s\n","lparen.");
+      641:  600:    return;
+        -:  601:  }
+     4240:  602:  fprintf(file_name,"P133,"); 
+     4240:  603:  if (!strcmp(str,")"))
+        -:  604:  {
+      701:  605:    fprintf(file_name,"P134,");
+      701:  606:    fprintf(stdout, "%s\n","rparen.");
+      701:  607:    return;
+        -:  608:  }
+     3539:  609:  fprintf(file_name,"P135,");
+     3539:  610:  if (!strcmp(str,"["))
+        -:  611:  {
+      689:  612:    fprintf(file_name,"P136,");
+      689:  613:    fprintf(stdout, "%s\n","lsquare.");
+      689:  614:    return;
+        -:  615:  }
+     2850:  616:  fprintf(file_name,"P137,");
+     2850:  617:  if (!strcmp(str,"]"))
+        -:  618:  {
+      747:  619:    fprintf(file_name,"P138,");
+      747:  620:    fprintf(stdout, "%s\n","rsquare.");
+      747:  621:    return;
+        -:  622:  }
+     2103:  623:  fprintf(file_name,"P139,");
+     2103:  624:  if (!strcmp(str,"'"))
+        -:  625:  {
+      684:  626:    fprintf(file_name,"P140,");
+      684:  627:    fprintf(stdout, "%s\n","quote.");
+      684:  628:    return;
+        -:  629:  }
+     1419:  630:  fprintf(file_name,"P141,");
+     1419:  631:  if (!strcmp(str,"`"))
+        -:  632:  {
+      724:  633:    fprintf(file_name,"P142,");
+      724:  634:    fprintf(stdout, "%s\n","bquote.");
+      724:  635:    return;
+        -:  636:  }
+      695:  637:  fprintf(file_name,"P143,");
+      695:  638:  fprintf(stdout, "%s\n","comma.");
+        -:  639:}
+        -:  640:
+   117035:  641:static int is_spec_symbol(str)
+        -:  642:    token str;
+        -:  643:{
+   117035:  644:  fprintf(file_name,"P144,");
+   117035:  645:  if (!strcmp(str,"("))
+        -:  646:  {
+     1904:  647:    fprintf(file_name,"P145,");  
+     1904:  648:    return(TRUE);
+        -:  649:  }
+   115131:  650:  fprintf(file_name,"P146,");
+   115131:  651:  if (!strcmp(str,")"))
+        -:  652:  {
+     2070:  653:    fprintf(file_name,"P147,");
+     2070:  654:    return(TRUE);
+        -:  655:  }
+   113061:  656:  fprintf(file_name,"P148,");
+   113061:  657:  if (!strcmp(str,"["))
+        -:  658:  {
+     2088:  659:    fprintf(file_name,"P149,");
+     2088:  660:    return(TRUE);
+        -:  661:  }
+   110973:  662:  fprintf(file_name,"P150,");
+   110973:  663:  if (!strcmp(str,"]"))
+        -:  664:  {
+     2232:  665:    fprintf(file_name,"P151,");
+     2232:  666:    return(TRUE);
+        -:  667:  }
+   108741:  668:  fprintf(file_name,"P152,");
+   108741:  669:  if (!strcmp(str,"'"))
+        -:  670:  {
+     2054:  671:    fprintf(file_name,"P153,");
+     2054:  672:    return(TRUE);
+        -:  673:  }
+   106687:  674:  fprintf(file_name,"P154,");
+   106687:  675:  if (!strcmp(str,"`"))
+        -:  676:  {
+     2166:  677:    fprintf(file_name,"P155,");
+     2166:  678:    return(TRUE);
+        -:  679:  }
+   104521:  680:  fprintf(file_name,"P156,");
+   104521:  681:  if (!strcmp(str,","))
+        -:  682:  {
+     2128:  683:    fprintf(file_name,"P157,");
+     2128:  684:    return(TRUE);
+        -:  685:  }
+   102393:  686:  fprintf(file_name,"P158,");
+   102393:  687:  return(FALSE);     /* others return FALSE */
+        -:  688:}
