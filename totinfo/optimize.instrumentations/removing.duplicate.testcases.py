@@ -30,7 +30,7 @@ def main():
     if rows:
       process_csv(rows, outfile)
       print("\tOptimization: duplicated testcases has been Identified and removed successfully.")
-      print(f"\n\tOptimized file saved into {outfile}")     
+      print(f"\tOptimized file saved into {outfile}")    
 
 if __name__ == "__main__":
   main()
