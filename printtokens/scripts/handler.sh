@@ -4,21 +4,13 @@ cd ..
 ROOT=$PWD # set root of project
 cd $ROOT/scripts
 
-chmod +x runner.sh runner_instrumented.sh # give require access if not garunted
-cp runner.sh runner_instrumented.sh $ROOT/source.alt/source.orig
+chmod +x runner_instrumented.sh # give require access if not garunted
+cp runner_instrumented.sh $ROOT/source.alt/source.orig
 cd $ROOT/source.alt/source.orig
-
-echo -e ">>>>>>> running raw_code source.orig/v0 ..."
-echo -e ""
-./runner.sh $ROOT
-echo -e ""
-echo -e ">>>>>>> complete."
-echo -e ""
-echo -e "----------------------"
 
 echo -e ">>>>>>> running instrumented_code source.orig/v0 ..."
 ./runner_instrumented.sh $ROOT     
-rm runner.sh runner_instrumented.sh
+rm runner_instrumented.sh
 echo -e ""
 echo -e ">>>>>>> complete."
 echo -e ""
@@ -27,19 +19,12 @@ echo -e "----------------------"
 
 
 cd $ROOT/scripts
-cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v1
+cp runner_instrumented.sh $ROOT/versions.alt/versions.orig/v1
 cd $ROOT/versions.alt/versions.orig/v1
-
-echo -e ">>>>>>> running raw_code versions.orig/v1 ..."
-./runner.sh $ROOT
-echo -e ""
-echo -e ">>>>>>> complete."
-echo -e ""
-echo -e "----------------------"
 
 echo -e ">>>>>>> running instrumented_code versions.orig/v1 ..."
 ./runner_instrumented.sh $ROOT  
-rm runner.sh runner_instrumented.sh
+rm runner_instrumented.sh
 echo -e ""
 echo -e ">>>>>>> complete."
 echo -e ""
@@ -48,19 +33,12 @@ echo -e "----------------------"
 
 
 cd $ROOT/scripts
-cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v2
+cp runner_instrumented.sh $ROOT/versions.alt/versions.orig/v2
 cd $ROOT/versions.alt/versions.orig/v2
-
-echo -e ">>>>>>> running raw_code versions.orig/v2 ..."
-./runner.sh $ROOT
-echo -e ""
-echo -e ">>>>>>> complete."
-echo -e ""
-echo -e "----------------------"
 
 echo -e ">>>>>>> running instrumented_code versions.orig/v2 ..."
 ./runner_instrumented.sh $ROOT    
-rm runner.sh runner_instrumented.sh
+rm runner_instrumented.sh
 echo -e ""
 echo -e ">>>>>>> complete."
 echo -e ""
@@ -68,19 +46,12 @@ echo -e "----------------------"
 
 
 cd $ROOT/scripts
-cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v3
+cp runner_instrumented.sh $ROOT/versions.alt/versions.orig/v3
 cd $ROOT/versions.alt/versions.orig/v3
-
-echo -e ">>>>>>> running raw_code versions.orig/v3 ..."
-./runner.sh $ROOT
-echo -e ""
-echo -e ">>>>>>> complete."
-echo -e ""
-echo -e "----------------------"
 
 echo -e ">>>>>>> running instrumented_code versions.orig/v3 ..."
 ./runner_instrumented.sh $ROOT   
-rm runner.sh runner_instrumented.sh
+rm runner_instrumented.sh
 echo -e ""
 echo -e ">>>>>>> complete."
 echo -e ""
@@ -88,19 +59,12 @@ echo -e "----------------------"
 
 
 cd $ROOT/scripts
-cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v4
+cp runner_instrumented.sh $ROOT/versions.alt/versions.orig/v4
 cd $ROOT/versions.alt/versions.orig/v4
-
-echo -e ">>>>>>> running raw_code versions.orig/v4 ..."
-./runner.sh $ROOT
-echo -e ""
-echo -e ">>>>>>> complete."
-echo -e ""
-echo -e "----------------------"
 
 echo -e ">>>>>>> running instrumented_code versions.orig/v4 ..."
 ./runner_instrumented.sh $ROOT     
-rm runner.sh runner_instrumented.sh
+rm runner_instrumented.sh
 echo -e ""
 echo -e ">>>>>>> complete."
 echo -e ""
@@ -108,19 +72,12 @@ echo -e "----------------------"
 
 
 cd $ROOT/scripts
-cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v5
+cp runner_instrumented.sh $ROOT/versions.alt/versions.orig/v5
 cd $ROOT/versions.alt/versions.orig/v5
-
-echo -e ">>>>>>> running raw_code versions.orig/v5 ..."
-./runner.sh $ROOT
-echo -e ""
-echo -e ">>>>>>> complete."
-echo -e ""
-echo -e "----------------------"
 
 echo -e ">>>>>>> running instrumented_code versions.orig/v5 ..."
 ./runner_instrumented.sh $ROOT   
-rm runner.sh runner_instrumented.sh
+rm runner_instrumented.sh
 echo -e ""
 echo -e ">>>>>>> complete."
 echo -e ""
@@ -129,19 +86,12 @@ echo -e "----------------------"
 
 
 cd $ROOT/scripts
-cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v6
+cp runner_instrumented.sh $ROOT/versions.alt/versions.orig/v6
 cd $ROOT/versions.alt/versions.orig/v6
-
-echo -e ">>>>>>> running raw_code versions.orig/v6 ..."
-./runner.sh $ROOT
-echo -e ""
-echo -e ">>>>>>> complete."
-echo -e ""
-echo -e "----------------------"
 
 echo -e ">>>>>>> running instrumented_code versions.orig/v6 ..."
 ./runner_instrumented.sh $ROOT   
-rm runner.sh runner_instrumented.sh
+rm runner_instrumented.sh
 echo -e ""
 echo -e ">>>>>>> complete."
 echo -e ""
@@ -150,19 +100,12 @@ echo -e "----------------------"
 
 
 cd $ROOT/scripts
-cp runner.sh runner_instrumented.sh $ROOT/versions.alt/versions.orig/v7
+cp runner_instrumented.sh $ROOT/versions.alt/versions.orig/v7
 cd $ROOT/versions.alt/versions.orig/v7
-
-echo -e ">>>>>>> running raw_code versions.orig/v7 ..."
-./runner.sh $ROOT
-echo -e ""
-echo -e ">>>>>>> complete."
-echo -e ""
-echo -e "----------------------"
 
 echo -e ">>>>>>> running instrumented_code versions.orig/v7 ..."
 ./runner_instrumented.sh $ROOT    
-rm runner.sh runner_instrumented.sh
+rm runner_instrumented.sh
 echo -e ""
 echo -e ">>>>>>> complete."
 echo -e ""
