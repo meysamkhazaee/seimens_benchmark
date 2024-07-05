@@ -32,7 +32,7 @@ def main():
     if len(reader1) == len(reader2):
         
         print("\tTwo files compared successfully.")
-        print("\tComparison result saved to {}".format(file1_path, file2_path, output_csv_path))
+        print(f"\tComparison result saved to {output_csv_path}")
     else:
         print("\033[91m\tError: Files Lines not equal. \033[0m")
     
