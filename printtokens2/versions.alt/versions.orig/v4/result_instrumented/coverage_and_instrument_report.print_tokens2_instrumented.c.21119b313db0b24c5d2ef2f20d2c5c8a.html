@@ -27,7 +27,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2024-07-05 23:10:24</td>
+      <td>2024-07-08 20:42:46</td>
     </tr>
   </table>
 </div>
@@ -41,15 +41,15 @@
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>370</td>
-      <td>385</td>
-      <td class="coverage-high">96.1%</td>
+      <td>369</td>
+      <td>382</td>
+      <td class="coverage-high">96.6%</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
       <td>19</td>
-      <td>20</td>
-      <td class="coverage-high">95.0%</td>
+      <td>19</td>
+      <td class="coverage-high">100.0%</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
@@ -89,7 +89,6 @@
     <tr><td><a href="#l127">open_token_stream (line 127)</a></td><td>called 4085 times, returned 4044 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l592">print_spec_symbol (line 592)</a></td><td>called 5436 times, returned 5436 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l368">print_token (line 368)</a></td><td>called 24907 times, returned 24907 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l15">segfault_handler (line 15)</a></td><td>not called</td><td>0.0%</td></tr>
     <tr><td><a href="#l312">token_type (line 312)</a></td><td>called 24907 times, returned 24907 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l96">unget_char (line 96)</a></td><td>called 3920 times, returned 3920 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l585">unget_error (line 585)</a></td><td>called 747 times, returned 747 times</td><td>100.0%</td></tr>
@@ -147,7 +146,7 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;signal.h&gt;</span></td>
+      <td class="src "><span class="c1">// #include &lt;signal.h&gt;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l7" href="#l7">7</a></td>
@@ -209,22 +208,22 @@
       <td class="lineno"><a id="l15" href="#l15">15</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount uncoveredLine">&cross;</td>
-      <td class="src uncoveredLine"><span class="kt">void</span><span class="w"> </span><span class="nf">segfault_handler</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">sig</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="c1">// void segfault_handler(int sig) {</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l16" href="#l16">16</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount uncoveredLine">&cross;</td>
-      <td class="src uncoveredLine"><span class="w">    </span><span class="n">exit</span><span class="p">(</span><span class="n">sig</span><span class="p">);</span><span class="w">  </span><span class="c1">// Exit the program</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="c1">//     exit(sig);  // Exit the program</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l17" href="#l17">17</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="p">}</span></td>
+      <td class="src "><span class="c1">// }</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l18" href="#l18">18</a></td>
@@ -265,8 +264,8 @@
       <td class="lineno"><a id="l23" href="#l23">23</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4115</td>
-      <td class="src coveredLine"><span class="w">  </span><span class="n">signal</span><span class="p">(</span><span class="n">SIGSEGV</span><span class="p">,</span><span class="w"> </span><span class="n">segfault_handler</span><span class="p">);</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">  </span><span class="c1">// signal(SIGSEGV, segfault_handler);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l24" href="#l24">24</a></td>

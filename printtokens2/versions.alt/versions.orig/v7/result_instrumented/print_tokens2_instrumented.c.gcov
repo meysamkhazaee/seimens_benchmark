@@ -7,7 +7,7 @@
         -:    3:#include <ctype.h>
         -:    4:#include <string.h>
         -:    5:#include "tokens.h"
-        -:    6:#include <signal.h>
+        -:    6:// #include <signal.h>
         -:    7:
         -:    8:#define TRUE 1
         -:    9:#define FALSE 0
@@ -16,15 +16,15 @@
         -:   12:
         -:   13:// Signal handler for SIGSEGV 
         -:   14:// add by mshadow
-    #####:   15:void segfault_handler(int sig) {
-    #####:   16:    exit(sig);  // Exit the program
-        -:   17:}
+        -:   15:// void segfault_handler(int sig) {
+        -:   16://     exit(sig);  // Exit the program
+        -:   17:// }
         -:   18:
      4115:   19:main(argc,argv)
         -:   20:int argc;
         -:   21:char *argv[3];
         -:   22:{
-     4115:   23:  signal(SIGSEGV, segfault_handler);
+        -:   23:  // signal(SIGSEGV, segfault_handler);
      4115:   24:  file_name=fopen("v7.txt","a+"); 
      4115:   25:  if(!file_name)
         -:   26:  {	

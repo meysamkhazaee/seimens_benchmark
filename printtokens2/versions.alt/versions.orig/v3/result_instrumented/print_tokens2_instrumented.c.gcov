@@ -7,16 +7,16 @@
         -:    3:#include <ctype.h>
         -:    4:#include <string.h>
         -:    5:#include "tokens.h"
-        -:    6:#include <signal.h>
+        -:    6:// #include <signal.h>
         -:    7:
         -:    8:#define TRUE 1
         -:    9:#define FALSE 0
         -:   10:
         -:   11:// Signal handler for SIGSEGV 
         -:   12:// add by mshadow
-    #####:   13:void segfault_handler(int sig) {
-    #####:   14:    exit(sig);  // Exit the program
-        -:   15:}
+        -:   13:// void segfault_handler(int sig) {
+        -:   14://     exit(sig);  // Exit the program
+        -:   15:// }
         -:   16:
         -:   17:FILE* file_name = NULL;
         -:   18:
@@ -24,7 +24,7 @@
         -:   20:int argc;
         -:   21:char *argv[3];
         -:   22:{
-     4115:   23:  signal(SIGSEGV, segfault_handler);
+        -:   23:  // signal(SIGSEGV, segfault_handler);
      4115:   24:  file_name=fopen("v3.txt","a+"); 
      4115:   25:  if(!file_name)
         -:   26:  {	
