@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include "schedule2.h"
 
+#include <signal.h>
 FILE* file_name = NULL;
+// Signal handler for SIGSEGV 
+// add by mshadow
+void segfault_handler(int sig) {
+    exit(sig);  // Exit the program
+}
 
 static struct process * current_job;
 static int next_pid = 0;
@@ -34,6 +40,7 @@ main(argc, argv) /* n3, n2, n1 : # of processes at prio3 ... */
 int argc;
 char *argv[];
 {
+    signal(SIGSEGV, segfault_handler);
     file_name=fopen("v8.txt","a+"); 
     if(!file_name)
     {	
