@@ -1,5 +1,5 @@
 #include <stdio.h>
-// #include <signal.h>
+#include <signal.h>
 
 #define NULL 0
 
@@ -15,9 +15,9 @@
 
 // Signal handler for SIGSEGV 
 // add by mshadow
-// void segfault_handler(int sig) {
-//     exit(sig);  // Exit the program
-// }
+void segfault_handler(int sig) {
+    exit(sig);  // Exit the program
+}
 
 FILE* file_name = NULL;
 
@@ -349,7 +349,7 @@ main(argc, argv)
 int argc;
 char *argv[];
 {
-    // signal(SIGSEGV, segfault_handler);
+    signal(SIGSEGV, segfault_handler);
     file_name=fopen("v4.txt","a+"); 
     if(!file_name)
     {	
