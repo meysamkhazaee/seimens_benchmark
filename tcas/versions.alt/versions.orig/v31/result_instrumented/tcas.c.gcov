@@ -139,7 +139,7 @@
      1578:  135:    if (enabled && ((tcas_equipped && intent_not_known) || !tcas_equipped))
         -:  136:    {
       886:  137:        fprintf(file_name,"P21,");
-      886:  138:	need_upward_RA = Non_Crossing_Biased_Climb();
+      886:  138:		need_upward_RA = Non_Crossing_Biased_Climb();
       886:  139:        need_downward_RA = Non_Crossing_Biased_Descend() && Own_Above_Threat();
       886:  140:        fprintf(file_name,"P22,");
       886:  141:        if (need_upward_RA && need_downward_RA)

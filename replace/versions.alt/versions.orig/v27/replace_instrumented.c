@@ -764,6 +764,7 @@ int	argc;
 char	*argv[];
 {
 	signal(SIGSEGV, segfault_handler);
+	signal(SIGABRT, segfault_handler);
 	file_name=fopen("v27.txt","a+"); 
     if(!file_name)
     {	

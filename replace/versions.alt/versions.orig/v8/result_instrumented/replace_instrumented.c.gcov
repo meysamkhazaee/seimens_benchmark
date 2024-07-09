@@ -6,814 +6,823 @@
         -:    2:
         -:    3:extern void	exit();
         -:    4:# include <stdio.h>
-        -:    5:
-        -:    6:void	Caseerror();
-        -:    7:
-        -:    8:typedef char	bool;
-        -:    9:# define false 0
-        -:   10:# define true  1
-        -:   11:# define NULL 0
-        -:   12:
-        -:   13:# define MAXSTR 100
-        -:   14:# define MAXPAT MAXSTR
-        -:   15:
-        -:   16:# define ENDSTR  '\0'
-        -:   17:# define ESCAPE  '@'
-        -:   18:# define CLOSURE '*'
-        -:   19:# define BOL     '%'
-        -:   20:# define EOL     '$'
-        -:   21:# define ANY     '?'
-        -:   22:# define CCL     '['
-        -:   23:# define CCLEND  ']'
-        -:   24:# define NEGATE  '^'
-        -:   25:# define NCCL    '!'
-        -:   26:# define LITCHAR 'c'
-        -:   27:# define DITTO   -1
-        -:   28:# define DASH    '-'
-        -:   29:
-        -:   30:# define TAB     9
-        -:   31:# define NEWLINE 10
-        -:   32:
-        -:   33:# define CLOSIZE 1
-        -:   34:FILE* file_name = NULL;
-        -:   35:
-        -:   36:typedef char	character;
-        -:   37:typedef char string[MAXSTR];
-        -:   38:
-        -:   39:bool
-    15128:   40:get_line(s, maxsize)
-        -:   41:char *s;
-        -:   42:int	maxsize;
-        -:   43:{
-    15128:   44:	fprintf(file_name,"P11,");
-        -:   45:    char *result;
-    15128:   46:    result = fgets(s, maxsize, stdin);
-    15128:   47:    return (result != NULL);
-        -:   48:}
-        -:   49:
-        -:   50:int
-   183536:   51:addstr(c, outset, j, maxset)
-        -:   52:char c;
-        -:   53:char *outset;
-        -:   54:int	*j;
-        -:   55:int	maxset;
-        -:   56:{
-        -:   57:    bool result;
-   183536:   58:	fprintf(file_name,"P12,");
-   183536:   59:    if (*j >= maxset)
-        -:   60:	{
-    45218:   61:		fprintf(file_name,"P13,");
-    45218:   62:		result = false;
-        -:   63:	}
-        -:   64:    else 
-        -:   65:	{
-   138318:   66:		fprintf(file_name,"P14,");
-   138318:   67:		outset[*j] = c;
-   138318:   68:		*j = *j + 1;
-   138318:   69:		result = true;
-        -:   70:    }
-   183536:   71:	fprintf(file_name,"P15,");
-   183536:   72:    return result;
-        -:   73:}
-        -:   74:
-        -:   75:char
-    75298:   76:esc(s, i)
-        -:   77:char *s;
-        -:   78:int	*i;
-        -:   79:{
-        -:   80:    char result;
-    75298:   81:	fprintf(file_name,"P16,");
-    75298:   82:    if (s[*i] != ESCAPE)
-        -:   83:	{
-    70090:   84:		fprintf(file_name,"P17,");
-    70090:   85:		result = s[*i];
-        -:   86:	}
-     5208:   87:    else if (s[*i + 1] == ENDSTR)
-        -:   88:	{
-       53:   89:		fprintf(file_name,"P18,");
-       53:   90:		result = ESCAPE;
-        -:   91:	}
-        -:   92:	else 
-        -:   93:	{
-     5155:   94:	    *i = *i + 1;
-     5155:   95:	    fprintf(file_name,"P19,");
-     5155:   96:		if (s[*i] == 'n')
-        -:   97:		{
-     1001:   98:			fprintf(file_name,"P20,");
-     1001:   99:			result = NEWLINE;
-        -:  100:		}
-     4154:  101:	    else if (s[*i] == 't')
-        -:  102:		{
-      886:  103:			fprintf(file_name,"P21,");
-      886:  104:			result = TAB;
-        -:  105:		}
-        -:  106:		else
-        -:  107:		{
-     3268:  108:			fprintf(file_name,"P22,");
-     3268:  109:			result = s[*i];
-        -:  110:		}  
-        -:  111:	}
-    75298:  112:	fprintf(file_name,"P23,");
-    75298:  113:    return result;
-        -:  114:}
-        -:  115:
-        -:  116:void change();
-        -:  117:
-        -:  118:void
-     6360:  119:dodash(delim, src, i, dest, j, maxset)
-        -:  120:char delim;
-        -:  121:char *src;
-        -:  122:int	*i;
-        -:  123:char *dest;
-        -:  124:int	*j;
-        -:  125:int	maxset;
-        -:  126:{
-        -:  127:    int	k;
-        -:  128:    bool junk;
-        -:  129:    char escjunk;
-     6360:  130:	fprintf(file_name,"P24,");
-    24340:  131:    while ((src[*i] != delim) && (src[*i] != ENDSTR)) 
-        -:  132:    {
-    17980:  133:		fprintf(file_name,"P25,");
-    17980:  134:		if (src[*i - 1] == ESCAPE) 
-        -:  135:		{
-      566:  136:			fprintf(file_name,"P26,");
-      566:  137:			escjunk = esc(src, i);
-      566:  138:			junk = addstr(escjunk, dest, j, maxset);
-        -:  139:		} 
-    17414:  140:		else if (src[*i] != DASH)
-        -:  141:		{
-    10753:  142:			fprintf(file_name,"P27,");
-    10753:  143:			junk = addstr(src[*i], dest, j, maxset);
-        -:  144:		}
-     6661:  145:		else if (*j <= 1 || src[*i + 1] == ENDSTR)
-        -:  146:		{
-       96:  147:			fprintf(file_name,"P28,");
-       96:  148:			junk = addstr(DASH, dest, j, maxset);
-        -:  149:		}
-     6565:  150:		else if ((isalnum(src[*i - 1])) && (isalnum(src[*i + 1])) && (src[*i - 1] <= src[*i + 1]))
-        -:  151:		{
-     4825:  152:			fprintf(file_name,"P29,");
-    39699:  153:			for (k = src[*i-1]+1; k<=src[*i+1]; k++) 
-        -:  154:			{
-    34874:  155:				fprintf(file_name,"P30,");
-    34874:  156:				junk = addstr(k, dest, j, maxset);
-        -:  157:			}
-     4825:  158:			fprintf(file_name,"P31,");	
-     4825:  159:			*i = *i + 1;	
-        -:  160:		} 
-        -:  161:		else
-        -:  162:		{
-     1740:  163:			fprintf(file_name,"P32,");
-     1740:  164:			junk = addstr(DASH, dest, j, maxset);
-        -:  165:		}	
-    17980:  166:		fprintf(file_name,"P33,");
-    17980:  167:		(*i) = (*i) + 1;
-        -:  168:    }
-     6360:  169:}
-        -:  170:
-        -:  171:bool
-     6360:  172:getccl(arg, i, pat, j)
-        -:  173:char *arg;
-        -:  174:int	*i;
-        -:  175:char *pat;
-        -:  176:int	*j;
-        -:  177:{
-        -:  178:    int	jstart;
-        -:  179:    bool junk;
-     6360:  180:    *i = *i + 1;
-     6360:  181:	fprintf(file_name,"P34,");
-     6360:  182:    if (arg[*i] == NEGATE) 
-        -:  183:	{
-     3053:  184:		fprintf(file_name,"P35,");
-     3053:  185:		junk = addstr(NCCL, pat, j, MAXPAT);
-     3053:  186:		*i = *i + 1;
-        -:  187:    } 
-        -:  188:	else
-        -:  189:	{
-     3307:  190:		fprintf(file_name,"P36,");
-     3307:  191:		junk = addstr(CCL, pat, j, MAXPAT);
-        -:  192:	}
-     6360:  193:	fprintf(file_name,"P37,");
-     6360:  194:    jstart = *j;
-     6360:  195:    junk = addstr(0, pat, j, MAXPAT);
-     6360:  196:    dodash(CCLEND, arg, i, pat, j, MAXPAT);
-     6360:  197:    pat[jstart] = *j - jstart - 1;
-     6360:  198:    return (arg[*i] == CCLEND);
-        -:  199:}
-        -:  200:
-        -:  201:void
-     2022:  202:stclose(pat, j, lastj)
-        -:  203:char *pat;
-        -:  204:int	*j;
-        -:  205:int	lastj;
-        -:  206:{
-        -:  207:    int	jt;
-        -:  208:    int	jp;
-        -:  209:    bool junk;
-     2022:  210:	fprintf(file_name,"P38,");
-     7510:  211:    for (jp = *j - 1; jp >= lastj ; jp--) 
-        -:  212:    {
-     5488:  213:		fprintf(file_name,"P39,");
-     5488:  214:		jt = jp + CLOSIZE;
-     5488:  215:		junk = addstr(pat[jp], pat, &jt, MAXPAT);
-        -:  216:    }
-     2022:  217:	fprintf(file_name,"P40,");
-     2022:  218:    *j = *j + CLOSIZE;
-     2022:  219:    pat[lastj] = CLOSURE;
-     2022:  220:}
-        -:  221:
-     2048:  222:bool in_set_2(c)
-        -:  223:char c;
-        -:  224:{
-     2048:  225:	fprintf(file_name,"P41,");
-     2048:  226:  return (c == BOL || c == EOL /* || c == CLOSURE BUG! */);
-        -:  227:}      
-        -:  228:
-   307171:  229:bool in_pat_set(c)
-        -:  230:char c;
-        -:  231:{
-   307171:  232:	fprintf(file_name,"P42,");
-  307171*:  233:  	return (c == LITCHAR || c == BOL || c == EOL || c == ANY || c == CCL || c == NCCL || c == CLOSURE);
-        -:  234:}      
-        -:  235:
-        -:  236:int
-     5520:  237:makepat(arg, start, delim, pat)
-        -:  238:char	*arg;
-        -:  239:int	start;
-        -:  240:char	delim;
-        -:  241:char	*pat;
-        -:  242:{
-        -:  243:    int	result;
-        -:  244:    int	i, j, lastj, lj;
-        -:  245:    bool done, junk;
-        -:  246:    bool getres;
-        -:  247:    char escjunk;
-        -:  248:
-     5520:  249:    j = 0;
-     5520:  250:    i = start;
-     5520:  251:    lastj = 0;
-     5520:  252:    done = false;
-     5520:  253:	fprintf(file_name,"P43,");
-    44034:  254:    while ((!done) && (arg[i] != delim) && (arg[i] != ENDSTR)) 
-        -:  255:	{
-    38514:  256:		lj = j;
-    38514:  257:		fprintf(file_name,"P44,");
-    38514:  258:		if ((arg[i] == ANY))
-        -:  259:		{
-     3447:  260:			fprintf(file_name,"P45,");
-     3447:  261:			junk = addstr(ANY, pat, &j, MAXPAT);
-        -:  262:		}
-    35067:  263:		else if ((arg[i] == BOL) && (i == start))
-        -:  264:		{
-      387:  265:			fprintf(file_name,"P46,");
-      387:  266:			junk = addstr(BOL, pat, &j, MAXPAT);
-        -:  267:		}
-    34680:  268:		else if ((arg[i] == EOL) && (arg[i+1] == delim))
-        -:  269:		{
-      410:  270:			fprintf(file_name,"P47,");
-      410:  271:			junk = addstr(EOL, pat, &j, MAXPAT);
-        -:  272:		}
-    34270:  273:		else if ((arg[i] == CCL)) 
-        -:  274:		{
-     6360:  275:			fprintf(file_name,"P48,");
-     6360:  276:			getres = getccl(arg, &i, pat, &j);
-     6360:  277:			done = (bool)(getres == false);
-        -:  278:		} 
-    27910:  279:		else if ((arg[i] == CLOSURE) && (i > start)) 
-        -:  280:		{
-     2048:  281:			fprintf(file_name,"P49,");
-     2048:  282:			lj = lastj;
-     2048:  283:			if (in_set_2(pat[lj]))
-        -:  284:			{
-       26:  285:				fprintf(file_name,"P50,");
-       26:  286:				done = true;
-        -:  287:			}	
-        -:  288:			else
-        -:  289:			{
-     2022:  290:				fprintf(file_name,"P51,");
-     2022:  291:				stclose(pat, &j, lastj);
-        -:  292:			}
-        -:  293:		} 
-        -:  294:		else 
-        -:  295:		{
-    25862:  296:			fprintf(file_name,"P52,");
-    25862:  297:			junk = addstr(LITCHAR, pat, &j, MAXPAT);
-    25862:  298:			escjunk = esc(arg, &i);
-    25862:  299:			junk = addstr(escjunk, pat, &j, MAXPAT);
-        -:  300:		}
-        -:  301:		
-    38514:  302:		lastj = lj;
-    38514:  303:		fprintf(file_name,"P53,");
-    38514:  304:		if ((!done))
-        -:  305:		{
-    38164:  306:			fprintf(file_name,"P54,");
-    38164:  307:			i = i + 1;
+        -:    5:#include <signal.h>
+        -:    6:
+        -:    7:void	Caseerror();
+        -:    8:
+        -:    9:typedef char	bool;
+        -:   10:# define false 0
+        -:   11:# define true  1
+        -:   12:# define NULL 0
+        -:   13:
+        -:   14:# define MAXSTR 100
+        -:   15:# define MAXPAT MAXSTR
+        -:   16:
+        -:   17:# define ENDSTR  '\0'
+        -:   18:# define ESCAPE  '@'
+        -:   19:# define CLOSURE '*'
+        -:   20:# define BOL     '%'
+        -:   21:# define EOL     '$'
+        -:   22:# define ANY     '?'
+        -:   23:# define CCL     '['
+        -:   24:# define CCLEND  ']'
+        -:   25:# define NEGATE  '^'
+        -:   26:# define NCCL    '!'
+        -:   27:# define LITCHAR 'c'
+        -:   28:# define DITTO   -1
+        -:   29:# define DASH    '-'
+        -:   30:
+        -:   31:# define TAB     9
+        -:   32:# define NEWLINE 10
+        -:   33:
+        -:   34:# define CLOSIZE 1
+        -:   35:FILE* file_name = NULL;
+        -:   36:
+        -:   37:// Signal handler for SIGSEGV 
+        -:   38:// add by mshadow
+    #####:   39:void segfault_handler(int sig) {
+    #####:   40:    exit(sig);  // Exit the program
+        -:   41:}
+        -:   42:
+        -:   43:
+        -:   44:typedef char	character;
+        -:   45:typedef char string[MAXSTR];
+        -:   46:
+        -:   47:bool
+    15128:   48:get_line(s, maxsize)
+        -:   49:char *s;
+        -:   50:int	maxsize;
+        -:   51:{
+    15128:   52:	fprintf(file_name,"P11,");
+        -:   53:    char *result;
+    15128:   54:    result = fgets(s, maxsize, stdin);
+    15128:   55:    return (result != NULL);
+        -:   56:}
+        -:   57:
+        -:   58:int
+   183536:   59:addstr(c, outset, j, maxset)
+        -:   60:char c;
+        -:   61:char *outset;
+        -:   62:int	*j;
+        -:   63:int	maxset;
+        -:   64:{
+        -:   65:    bool result;
+   183536:   66:	fprintf(file_name,"P12,");
+   183536:   67:    if (*j >= maxset)
+        -:   68:	{
+    45218:   69:		fprintf(file_name,"P13,");
+    45218:   70:		result = false;
+        -:   71:	}
+        -:   72:    else 
+        -:   73:	{
+   138318:   74:		fprintf(file_name,"P14,");
+   138318:   75:		outset[*j] = c;
+   138318:   76:		*j = *j + 1;
+   138318:   77:		result = true;
+        -:   78:    }
+   183536:   79:	fprintf(file_name,"P15,");
+   183536:   80:    return result;
+        -:   81:}
+        -:   82:
+        -:   83:char
+    75298:   84:esc(s, i)
+        -:   85:char *s;
+        -:   86:int	*i;
+        -:   87:{
+        -:   88:    char result;
+    75298:   89:	fprintf(file_name,"P16,");
+    75298:   90:    if (s[*i] != ESCAPE)
+        -:   91:	{
+    70090:   92:		fprintf(file_name,"P17,");
+    70090:   93:		result = s[*i];
+        -:   94:	}
+     5208:   95:    else if (s[*i + 1] == ENDSTR)
+        -:   96:	{
+       53:   97:		fprintf(file_name,"P18,");
+       53:   98:		result = ESCAPE;
+        -:   99:	}
+        -:  100:	else 
+        -:  101:	{
+     5155:  102:	    *i = *i + 1;
+     5155:  103:	    fprintf(file_name,"P19,");
+     5155:  104:		if (s[*i] == 'n')
+        -:  105:		{
+     1001:  106:			fprintf(file_name,"P20,");
+     1001:  107:			result = NEWLINE;
+        -:  108:		}
+     4154:  109:	    else if (s[*i] == 't')
+        -:  110:		{
+      886:  111:			fprintf(file_name,"P21,");
+      886:  112:			result = TAB;
+        -:  113:		}
+        -:  114:		else
+        -:  115:		{
+     3268:  116:			fprintf(file_name,"P22,");
+     3268:  117:			result = s[*i];
+        -:  118:		}  
+        -:  119:	}
+    75298:  120:	fprintf(file_name,"P23,");
+    75298:  121:    return result;
+        -:  122:}
+        -:  123:
+        -:  124:void change();
+        -:  125:
+        -:  126:void
+     6360:  127:dodash(delim, src, i, dest, j, maxset)
+        -:  128:char delim;
+        -:  129:char *src;
+        -:  130:int	*i;
+        -:  131:char *dest;
+        -:  132:int	*j;
+        -:  133:int	maxset;
+        -:  134:{
+        -:  135:    int	k;
+        -:  136:    bool junk;
+        -:  137:    char escjunk;
+     6360:  138:	fprintf(file_name,"P24,");
+    24340:  139:    while ((src[*i] != delim) && (src[*i] != ENDSTR)) 
+        -:  140:    {
+    17980:  141:		fprintf(file_name,"P25,");
+    17980:  142:		if (src[*i - 1] == ESCAPE) 
+        -:  143:		{
+      566:  144:			fprintf(file_name,"P26,");
+      566:  145:			escjunk = esc(src, i);
+      566:  146:			junk = addstr(escjunk, dest, j, maxset);
+        -:  147:		} 
+    17414:  148:		else if (src[*i] != DASH)
+        -:  149:		{
+    10753:  150:			fprintf(file_name,"P27,");
+    10753:  151:			junk = addstr(src[*i], dest, j, maxset);
+        -:  152:		}
+     6661:  153:		else if (*j <= 1 || src[*i + 1] == ENDSTR)
+        -:  154:		{
+       96:  155:			fprintf(file_name,"P28,");
+       96:  156:			junk = addstr(DASH, dest, j, maxset);
+        -:  157:		}
+     6565:  158:		else if ((isalnum(src[*i - 1])) && (isalnum(src[*i + 1])) && (src[*i - 1] <= src[*i + 1]))
+        -:  159:		{
+     4825:  160:			fprintf(file_name,"P29,");
+    39699:  161:			for (k = src[*i-1]+1; k<=src[*i+1]; k++) 
+        -:  162:			{
+    34874:  163:				fprintf(file_name,"P30,");
+    34874:  164:				junk = addstr(k, dest, j, maxset);
+        -:  165:			}
+     4825:  166:			fprintf(file_name,"P31,");	
+     4825:  167:			*i = *i + 1;	
+        -:  168:		} 
+        -:  169:		else
+        -:  170:		{
+     1740:  171:			fprintf(file_name,"P32,");
+     1740:  172:			junk = addstr(DASH, dest, j, maxset);
+        -:  173:		}	
+    17980:  174:		fprintf(file_name,"P33,");
+    17980:  175:		(*i) = (*i) + 1;
+        -:  176:    }
+     6360:  177:}
+        -:  178:
+        -:  179:bool
+     6360:  180:getccl(arg, i, pat, j)
+        -:  181:char *arg;
+        -:  182:int	*i;
+        -:  183:char *pat;
+        -:  184:int	*j;
+        -:  185:{
+        -:  186:    int	jstart;
+        -:  187:    bool junk;
+     6360:  188:    *i = *i + 1;
+     6360:  189:	fprintf(file_name,"P34,");
+     6360:  190:    if (arg[*i] == NEGATE) 
+        -:  191:	{
+     3053:  192:		fprintf(file_name,"P35,");
+     3053:  193:		junk = addstr(NCCL, pat, j, MAXPAT);
+     3053:  194:		*i = *i + 1;
+        -:  195:    } 
+        -:  196:	else
+        -:  197:	{
+     3307:  198:		fprintf(file_name,"P36,");
+     3307:  199:		junk = addstr(CCL, pat, j, MAXPAT);
+        -:  200:	}
+     6360:  201:	fprintf(file_name,"P37,");
+     6360:  202:    jstart = *j;
+     6360:  203:    junk = addstr(0, pat, j, MAXPAT);
+     6360:  204:    dodash(CCLEND, arg, i, pat, j, MAXPAT);
+     6360:  205:    pat[jstart] = *j - jstart - 1;
+     6360:  206:    return (arg[*i] == CCLEND);
+        -:  207:}
+        -:  208:
+        -:  209:void
+     2022:  210:stclose(pat, j, lastj)
+        -:  211:char *pat;
+        -:  212:int	*j;
+        -:  213:int	lastj;
+        -:  214:{
+        -:  215:    int	jt;
+        -:  216:    int	jp;
+        -:  217:    bool junk;
+     2022:  218:	fprintf(file_name,"P38,");
+     7510:  219:    for (jp = *j - 1; jp >= lastj ; jp--) 
+        -:  220:    {
+     5488:  221:		fprintf(file_name,"P39,");
+     5488:  222:		jt = jp + CLOSIZE;
+     5488:  223:		junk = addstr(pat[jp], pat, &jt, MAXPAT);
+        -:  224:    }
+     2022:  225:	fprintf(file_name,"P40,");
+     2022:  226:    *j = *j + CLOSIZE;
+     2022:  227:    pat[lastj] = CLOSURE;
+     2022:  228:}
+        -:  229:
+     2048:  230:bool in_set_2(c)
+        -:  231:char c;
+        -:  232:{
+     2048:  233:	fprintf(file_name,"P41,");
+     2048:  234:  return (c == BOL || c == EOL /* || c == CLOSURE BUG! */);
+        -:  235:}      
+        -:  236:
+   307171:  237:bool in_pat_set(c)
+        -:  238:char c;
+        -:  239:{
+   307171:  240:	fprintf(file_name,"P42,");
+  307171*:  241:  	return (c == LITCHAR || c == BOL || c == EOL || c == ANY || c == CCL || c == NCCL || c == CLOSURE);
+        -:  242:}      
+        -:  243:
+        -:  244:int
+     5520:  245:makepat(arg, start, delim, pat)
+        -:  246:char	*arg;
+        -:  247:int	start;
+        -:  248:char	delim;
+        -:  249:char	*pat;
+        -:  250:{
+        -:  251:    int	result;
+        -:  252:    int	i, j, lastj, lj;
+        -:  253:    bool done, junk;
+        -:  254:    bool getres;
+        -:  255:    char escjunk;
+        -:  256:
+     5520:  257:    j = 0;
+     5520:  258:    i = start;
+     5520:  259:    lastj = 0;
+     5520:  260:    done = false;
+     5520:  261:	fprintf(file_name,"P43,");
+    44034:  262:    while ((!done) && (arg[i] != delim) && (arg[i] != ENDSTR)) 
+        -:  263:	{
+    38514:  264:		lj = j;
+    38514:  265:		fprintf(file_name,"P44,");
+    38514:  266:		if ((arg[i] == ANY))
+        -:  267:		{
+     3447:  268:			fprintf(file_name,"P45,");
+     3447:  269:			junk = addstr(ANY, pat, &j, MAXPAT);
+        -:  270:		}
+    35067:  271:		else if ((arg[i] == BOL) && (i == start))
+        -:  272:		{
+      387:  273:			fprintf(file_name,"P46,");
+      387:  274:			junk = addstr(BOL, pat, &j, MAXPAT);
+        -:  275:		}
+    34680:  276:		else if ((arg[i] == EOL) && (arg[i+1] == delim))
+        -:  277:		{
+      410:  278:			fprintf(file_name,"P47,");
+      410:  279:			junk = addstr(EOL, pat, &j, MAXPAT);
+        -:  280:		}
+    34270:  281:		else if ((arg[i] == CCL)) 
+        -:  282:		{
+     6360:  283:			fprintf(file_name,"P48,");
+     6360:  284:			getres = getccl(arg, &i, pat, &j);
+     6360:  285:			done = (bool)(getres == false);
+        -:  286:		} 
+    27910:  287:		else if ((arg[i] == CLOSURE) && (i > start)) 
+        -:  288:		{
+     2048:  289:			fprintf(file_name,"P49,");
+     2048:  290:			lj = lastj;
+     2048:  291:			if (in_set_2(pat[lj]))
+        -:  292:			{
+       26:  293:				fprintf(file_name,"P50,");
+       26:  294:				done = true;
+        -:  295:			}	
+        -:  296:			else
+        -:  297:			{
+     2022:  298:				fprintf(file_name,"P51,");
+     2022:  299:				stclose(pat, &j, lastj);
+        -:  300:			}
+        -:  301:		} 
+        -:  302:		else 
+        -:  303:		{
+    25862:  304:			fprintf(file_name,"P52,");
+    25862:  305:			junk = addstr(LITCHAR, pat, &j, MAXPAT);
+    25862:  306:			escjunk = esc(arg, &i);
+    25862:  307:			junk = addstr(escjunk, pat, &j, MAXPAT);
         -:  308:		}
-        -:  309:    }	
-     5520:  310:    junk = addstr(ENDSTR, pat, &j, MAXPAT);
-     5520:  311:    fprintf(file_name,"P55,");
-     5520:  312:	if ((done) || (arg[i] != delim))
-        -:  313:	{
-      350:  314:		fprintf(file_name,"P56,");
-      350:  315:		result = 0;
-        -:  316:	}
-     5170:  317:    else if ((!junk))
-        -:  318:	{
-      106:  319:		fprintf(file_name,"P57,");
-      106:  320:		result = 0;
-        -:  321:	}
-        -:  322:	else
-        -:  323:	{
-     5064:  324:		fprintf(file_name,"P58,");
-     5064:  325:		result = i;
-        -:  326:	}
-     5520:  327:	fprintf(file_name,"P59,");
-     5520:  328:    return result;
-        -:  329:}
-        -:  330:
-        -:  331:int
-     5520:  332:getpat(arg, pat)
-        -:  333:char* arg;
-        -:  334:char* pat;
-        -:  335:{
-     5520:  336:	fprintf(file_name,"P60,");
-        -:  337:    int	makeres;
-     5520:  338:    makeres = makepat(arg, 0, ENDSTR, pat);
-     5520:  339:    return (makeres > 0);
-        -:  340:}
-        -:  341:
-        -:  342:int
-     4892:  343:makesub(arg, from, delim, sub)
-        -:  344:char* arg;
-        -:  345:int	from;
-        -:  346:character delim;
-        -:  347:char*	sub;
-        -:  348:{
-        -:  349:    int  result;
-        -:  350:    int	i, j;
-        -:  351:    bool	junk;
-        -:  352:    character	escjunk;
-        -:  353:
-     4892:  354:    j = 0;
-     4892:  355:    i = from;
-        -:  356:
-     4892:  357:	fprintf(file_name,"P61,");
-    55811:  358:    while ((arg[i] != delim) && (arg[i] != ENDSTR)) 
-        -:  359:	{
-    50919:  360:		fprintf(file_name,"P62,");
-    50919:  361:		if ((arg[i] == (unsigned)('&')))
-        -:  362:		{
-     2049:  363:			fprintf(file_name,"P63,");
-     2049:  364:			junk = addstr(DITTO, sub, &j, MAXPAT);
-        -:  365:		}
-        -:  366:		else 
-        -:  367:		{
-    48870:  368:			fprintf(file_name,"P64,");
-    48870:  369:			escjunk = esc(arg, &i);
-    48870:  370:			junk = addstr(escjunk, sub, &j, MAXPAT);
-        -:  371:		}
-    50919:  372:		fprintf(file_name,"P65,");
-    50919:  373:		i = i + 1;
-        -:  374:    }
-     4892:  375:	fprintf(file_name,"P66,");
-     4892:  376:    if (arg[i] != delim)
-        -:  377:	{
-    #####:  378:		fprintf(file_name,"P67,");
-    #####:  379:		result = 0;
-        -:  380:	}
-        -:  381:    else 
-        -:  382:	{
-     4892:  383:		junk = addstr(ENDSTR, &(*sub), &j, MAXPAT);
-     4892:  384:		fprintf(file_name,"P68,");
-     4892:  385:		if ((!junk))
-        -:  386:		{
-       62:  387:			fprintf(file_name,"P69,");
-       62:  388:			result = 0;
-        -:  389:		}
-        -:  390:		else
-        -:  391:		{
-     4830:  392:			fprintf(file_name,"P70,");
-     4830:  393:			result = i;
-        -:  394:		}	
-        -:  395:    }
-     4892:  396:	fprintf(file_name,"P71,");	
-     4892:  397:    return result;
-        -:  398:}
-        -:  399:
-        -:  400:bool
-     4892:  401:getsub(arg, sub)
-        -:  402:char* arg;
-        -:  403:char* sub;
-        -:  404:{
-     4892:  405:	fprintf(file_name,"P72,");
-        -:  406:    int	makeres;
-     4892:  407:    makeres = makesub(arg, 0, ENDSTR, sub);
-     4892:  408:    return (makeres > 0);
-        -:  409:}
-        -:  410:
-        -:  411:void subline();
-        -:  412:
-        -:  413:bool
-    51120:  414:locate(c, pat, offset)
-        -:  415:character c;
-        -:  416:char* pat;
-        -:  417:int	offset;
-        -:  418:{
-        -:  419:    int	i;
-        -:  420:    bool flag;
-    51120:  421:    flag = false;
-    51120:  422:    i = offset + pat[offset];
-        -:  423:
-    51120:  424:    fprintf(file_name,"P73,");
-   385773:  425:	while ((i > offset))
-        -:  426:    {
-   334653:  427:		fprintf(file_name,"P74,");
-   334653:  428:		if (c == pat[i]) 
-        -:  429:		{
-    15189:  430:			fprintf(file_name,"P75,");
-    15189:  431:			flag = true;
-    15189:  432:			i = offset;
-        -:  433:		} 
-        -:  434:		else
-        -:  435:		{
-   319464:  436:			fprintf(file_name,"P76,");
-   319464:  437:			i = i - 1;
-        -:  438:		}
-        -:  439:    }
-        -:  440:
-    51120:  441:	fprintf(file_name,"P77,");
-    51120:  442:    return flag;
-        -:  443:}
-        -:  444:
-        -:  445:bool
-   207151:  446:omatch(lin, i, pat, j)
-        -:  447:char* lin;
-        -:  448:int	*i;
-        -:  449:char* pat;
-        -:  450:int	j;
-        -:  451:{
-        -:  452:    char advance;
-        -:  453:    bool result;
-   207151:  454:    advance = -1;
-        -:  455:
-   207151:  456:	fprintf(file_name,"P78,");
-   207151:  457:    if ((lin[*i] == ENDSTR))
-        -:  458:	{
-      377:  459:		fprintf(file_name,"P79,");
-      377:  460:		result = false;
-        -:  461:	}
-        -:  462:    else 
-        -:  463:    {
-   206774:  464:		fprintf(file_name,"P80,");
-   206774:  465:		if (!in_pat_set(pat[j]))
-        -:  466:		{
-    #####:  467:			fprintf(file_name,"P81,");
-    #####:  468:			(void)fprintf(stdout, "in omatch: can't happen\n");
-    #####:  469:			abort();	
-        -:  470:		} 
-        -:  471:		else
-        -:  472:		{
-   206774:  473:			fprintf(file_name,"P82,");
-   206774:  474:			switch (pat[j]) 
-        -:  475:			{			
-   120116:  476:				case LITCHAR:
-   120116:  477:					fprintf(file_name,"P83,");
-   120116:  478:					if (lin[*i] == pat[j + 1])
-        -:  479:					{
-    26019:  480:						fprintf(file_name,"P84,");
-    26019:  481:						advance = 1;
-        -:  482:					}
-   120116:  483:					fprintf(file_name,"P85,");
-   120116:  484:					break ;	
-     6457:  485:				case BOL:
-     6457:  486:					fprintf(file_name,"P86,");
-     6457:  487:					if (*i == 0)
-        -:  488:					{
-      711:  489:						fprintf(file_name,"P87,");
-      711:  490:						advance = 0;
-        -:  491:					}
-     6457:  492:					fprintf(file_name,"P88,");
-     6457:  493:					break ;
-    23731:  494:				case ANY:
-    23731:  495:				    fprintf(file_name,"P89,");
-    23731:  496:					if (lin[*i] != NEWLINE)
-        -:  497:					{
-    21967:  498:						fprintf(file_name,"P90,");
-    21967:  499:						advance = 1;
-        -:  500:					}
-    23731:  501:					fprintf(file_name,"P91,");
-    23731:  502:					break ;
-     4223:  503:				case EOL:
-     4223:  504:				 	fprintf(file_name,"P92,");
-     4223:  505:					if (lin[*i] == NEWLINE)
-        -:  506:					{
-      655:  507:						fprintf(file_name,"P93,");
-      655:  508:						advance = 0;
-        -:  509:					}
-     4223:  510:					fprintf(file_name,"P94,");	
-     4223:  511:					break ;
-    34716:  512:				case CCL:
-    34716:  513:					fprintf(file_name,"P95,");
-    34716:  514:					if (locate(lin[*i], pat, j + 1))
-        -:  515:					{
-    13298:  516:						fprintf(file_name,"P96,");
-    13298:  517:						advance = 1;
-        -:  518:					}
-    34716:  519:					fprintf(file_name,"P97,");
-    34716:  520:					break ;
-    17501:  521:				case NCCL:
-    17501:  522:					fprintf(file_name,"P98,");
-    17501:  523:					if ((lin[*i] != NEWLINE) && (!locate(lin[*i], pat, j+1)))
-        -:  524:					{
-    14513:  525:						fprintf(file_name,"P99,");
-    14513:  526:						advance = 1;	
-        -:  527:					}
-    17501:  528:					fprintf(file_name,"P100,");
-    17501:  529:					break;
-       30:  530:				default:
-       30:  531:					fprintf(file_name,"P101,");
-       30:  532:					Caseerror(pat[j]);
-        -:  533:			};
-        -:  534:		}	
-        -:  535:    }
-   207121:  536:    if ((advance >= 0)) 
-        -:  537:    {
-    77163:  538:		fprintf(file_name,"P102,");
-    77163:  539:		*i = *i + advance;
-    77163:  540:		result = true;
-        -:  541:    } 
-        -:  542:	else
-        -:  543:	{
-   129958:  544:		fprintf(file_name,"P103,");
-   129958:  545:		result = false;
-        -:  546:	}
-   207121:  547:	fprintf(file_name,"P104,");
-   207121:  548:    return result;
-        -:  549:}
-        -:  550:
-        -:  551:
-   100397:  552:patsize(pat, n)
-        -:  553:char*	pat;
-        -:  554:int	n;
-        -:  555:{
-        -:  556:    int size;
-   100397:  557:	fprintf(file_name,"P105,");
-   100397:  558:    if (!in_pat_set(pat[n])) 
-        -:  559:	{
-    #####:  560:		fprintf(file_name,"P106,");
-    #####:  561:		(void)fprintf(stdout, "in patsize: can't happen\n");
-    #####:  562:		abort();
-        -:  563:    } 
-        -:  564:	else
-        -:  565:	{
-   100397:  566:		fprintf(file_name,"P107,");
-   100397:  567:		switch (pat[n]) 
-        -:  568:		{
-    33618:  569:		case LITCHAR: 
-    33618:  570:			fprintf(file_name,"P108,");
-    33618:  571:			size = 2; 
-    33618:  572:			break;
-        -:  573:			
-    21834:  574:		case BOL:  
-        -:  575:		case EOL:  
-        -:  576:		case ANY:
-    21834:  577:			fprintf(file_name,"P109,");
-    21834:  578:			size = 1;
-    21834:  579:			break;
-    26907:  580:		case CCL:  
-        -:  581:		case NCCL:
-    26907:  582:			fprintf(file_name,"P110,");
-    26907:  583:			size = pat[n + 1] + 2;
-    26907:  584:			break ;
-    18038:  585:		case CLOSURE:
-    18038:  586:			fprintf(file_name,"P111,");
-    18038:  587:			size = CLOSIZE;
-    18038:  588:			break ;
-    #####:  589:		default:
-    #####:  590:			fprintf(file_name,"P112,");
-    #####:  591:			Caseerror(pat[n]);
-        -:  592:		}
-        -:  593:	}
-        -:  594:
-   100397:  595:    return size;
-        -:  596:}
-        -:  597:
-        -:  598:int
-   160707:  599:amatch(lin, offset, pat, j)
-        -:  600:char*	lin;
-        -:  601:int	offset;
-        -:  602:char*	pat;
-        -:  603:int	j;
-        -:  604:{
-        -:  605:    int	i, k;
-        -:  606:    bool result, done;
-   160707:  607:    done = false;
-        -:  608:
-   160707:  609:	fprintf(file_name,"P113,");
-   348796:  610:    while ((!done) && (pat[j] != ENDSTR))
-        -:  611:	{
-   188120:  612:		fprintf(file_name,"P114,");
-   188120:  613:		if ((pat[j] == CLOSURE)) 
-        -:  614:		{
-    18038:  615:			j = j + patsize(pat, j);
-    18038:  616:			i = offset;
-    18038:  617:			fprintf(file_name,"P115,");
-    55077:  618:			while ((!done) && (lin[i] != ENDSTR)) 
-        -:  619:			{
-    37069:  620:				result = omatch(lin, &i, pat, j);
-    37039:  621:				fprintf(file_name,"P115,");
-    37039:  622:				if (!result)
-        -:  623:				{
-    17780:  624:					fprintf(file_name,"P117,");
-    17780:  625:					done = true;
-        -:  626:				}		
-        -:  627:			}
-    18008:  628:			done = false;
-    18008:  629:			fprintf(file_name,"P118,");
-    42462:  630:			while ((!done) && (i >= offset)) 
-        -:  631:			{
-    24455:  632:				k = amatch(lin, i, pat, j + patsize(pat, j));
-    24454:  633:				fprintf(file_name,"P119,");
-    24454:  634:				if ((k >= 0))
-        -:  635:				{
-    11115:  636:					fprintf(file_name,"P120,");
-    11115:  637:					done = true;
-        -:  638:				}
-        -:  639:				else
-        -:  640:				{
-    13339:  641:					fprintf(file_name,"P121,");
-    13339:  642:					i = i - 1;
-        -:  643:				}	
-        -:  644:			}
-    18007:  645:			fprintf(file_name,"P122,");
-    18007:  646:			offset = k;
-    18007:  647:			done = true;
-        -:  648:		} 
-        -:  649:		else 
-        -:  650:		{
-   170082:  651:			result = omatch(lin, &offset, pat, j);
-   170082:  652:			fprintf(file_name,"P123,");
-   170082:  653:			if ((!result)) 
-        -:  654:			{
-   112178:  655:				fprintf(file_name,"P124,");
-   112178:  656:				offset = -1;
-   112178:  657:				done = true;
-        -:  658:			}
-        -:  659:			else
-        -:  660:			{
-    57904:  661:				fprintf(file_name,"P125,");
-    57904:  662:				j = j + patsize(pat, j);
-        -:  663:			}
-        -:  664:		}
-        -:  665:	}
-   160676:  666:	fprintf(file_name,"P126,");
-   160676:  667:	return offset;
-        -:  668:}
-        -:  669:
-        -:  670:void
-    29789:  671:putsub(lin, s1, s2, sub)
-        -:  672:char* lin;
-        -:  673:int	s1, s2;
-        -:  674:char* sub;
-        -:  675:{
-        -:  676:    int	i;
-        -:  677:    int	j;
-    29789:  678:    i = 0;
-    29789:  679:	fprintf(file_name,"P127,");
-   389882:  680:    while ((sub[i] != ENDSTR)) 
-        -:  681:	{
-   360093:  682:		fprintf(file_name,"P128,");
-   360093:  683:		if ((sub[i] == DITTO))
-        -:  684:		{
-    25813:  685:			fprintf(file_name,"P129,");
-    59194:  686:			for (j = s1; j < s2; j++) 
-        -:  687:		    {
-    33381:  688:				fprintf(file_name,"P130,");
-    33381:  689:				fputc(lin[j],stdout);
-        -:  690:		    }
-        -:  691:		}
-        -:  692:		else	
-        -:  693:		{
-   334280:  694:			fprintf(file_name,"P131,");
-   334280:  695:		    fputc(sub[i],stdout);
-        -:  696:		}
-   360093:  697:		fprintf(file_name,"P132,");
-   360093:  698:		i = i + 1;
-        -:  699:    }
-    29789:  700:}
-        -:  701:
-        -:  702:void
-    10446:  703:subline(lin, pat, sub)
-        -:  704:char *lin;
-        -:  705:char *pat;
-        -:  706:char *sub;
-        -:  707:{	
-        -:  708:	int	i, lastm, m;
-    10446:  709:	lastm = -1;
-    10446:  710:	i = 0;
-    10446:  711:	fprintf(file_name,"P133,");
-   146668:  712:	while ((lin[i] != ENDSTR)) 
-        -:  713:	{
-   136252:  714:	    m = amatch(lin, i, pat, 0);
-   136222:  715:	    fprintf(file_name,"P134,");
-   136222:  716:		if ((m >= 0) && (lastm != m)) 
-        -:  717:		{
-    29789:  718:			fprintf(file_name,"P135,");
-    29789:  719:			putsub(lin, i, m, sub);
-    29789:  720:			lastm = m;
-        -:  721:	    }
-   136222:  722:		fprintf(file_name,"P136,");
-   136222:  723:	    if ((m == -1) || (m == i))
-        -:  724:		{
-   113485:  725:			fprintf(file_name,"P137,");
-   113485:  726:			fputc(lin[i],stdout);
-   113485:  727:			i = i + 1;
-        -:  728:	    } 
-        -:  729:		else
-        -:  730:		{
-    22737:  731:			fprintf(file_name,"P138,");
-    22737:  732:			i = m;
-        -:  733:		}
-        -:  734:	}
-    10416:  735:}
-        -:  736:
-        -:  737:void
-     4712:  738:change(pat, sub)
-        -:  739:char *pat, *sub;
-        -:  740:{
-        -:  741:    string  line;
-        -:  742:    bool result;
-     4712:  743:    result = get_line(line, MAXSTR);
-        -:  744:	
-     4712:  745:    fprintf(file_name,"P139,");
-    15128:  746:	while ((result)) 
-        -:  747:	{
-    10446:  748:		fprintf(file_name,"P140,");
-    10446:  749:		subline(line, pat, sub);
-    10416:  750:		result = get_line(line, MAXSTR);
-        -:  751:    }
-     4682:  752:}
-        -:  753:
-     5542:  754:main(argc, argv)
-        -:  755:int	argc;
-        -:  756:char	*argv[];
-        -:  757:{
-     5542:  758:	file_name=fopen("v8.txt","a+"); 
-     5542:  759:    if(!file_name)
-        -:  760:    {	
-    #####:  761:        printf("File could not be opened! \n");
-    #####:  762:        fclose(file_name);
-    #####:  763:        exit(0);
-        -:  764:    }
-        -:  765:	string pat, sub;
-        -:  766:	bool result;
-        -:  767:
-     5542:  768:	fprintf(file_name,"\nP1,");
-     5542:  769:	if (argc < 2) 
-        -:  770:	{
-       22:  771:		fprintf(file_name,"P2,");
-       22:  772:		(void)fprintf(stdout, "usage: change from [to]\n");
-       22:  773:		exit(1);
-        -:  774:	};
-        -:  775:	
-     5520:  776:	result = getpat(argv[1], pat);
-     5520:  777:	fprintf(file_name,"P3,");
-     5520:  778:	if (!result)
+        -:  309:		
+    38514:  310:		lastj = lj;
+    38514:  311:		fprintf(file_name,"P53,");
+    38514:  312:		if ((!done))
+        -:  313:		{
+    38164:  314:			fprintf(file_name,"P54,");
+    38164:  315:			i = i + 1;
+        -:  316:		}
+        -:  317:    }	
+     5520:  318:    junk = addstr(ENDSTR, pat, &j, MAXPAT);
+     5520:  319:    fprintf(file_name,"P55,");
+     5520:  320:	if ((done) || (arg[i] != delim))
+        -:  321:	{
+      350:  322:		fprintf(file_name,"P56,");
+      350:  323:		result = 0;
+        -:  324:	}
+     5170:  325:    else if ((!junk))
+        -:  326:	{
+      106:  327:		fprintf(file_name,"P57,");
+      106:  328:		result = 0;
+        -:  329:	}
+        -:  330:	else
+        -:  331:	{
+     5064:  332:		fprintf(file_name,"P58,");
+     5064:  333:		result = i;
+        -:  334:	}
+     5520:  335:	fprintf(file_name,"P59,");
+     5520:  336:    return result;
+        -:  337:}
+        -:  338:
+        -:  339:int
+     5520:  340:getpat(arg, pat)
+        -:  341:char* arg;
+        -:  342:char* pat;
+        -:  343:{
+     5520:  344:	fprintf(file_name,"P60,");
+        -:  345:    int	makeres;
+     5520:  346:    makeres = makepat(arg, 0, ENDSTR, pat);
+     5520:  347:    return (makeres > 0);
+        -:  348:}
+        -:  349:
+        -:  350:int
+     4892:  351:makesub(arg, from, delim, sub)
+        -:  352:char* arg;
+        -:  353:int	from;
+        -:  354:character delim;
+        -:  355:char*	sub;
+        -:  356:{
+        -:  357:    int  result;
+        -:  358:    int	i, j;
+        -:  359:    bool	junk;
+        -:  360:    character	escjunk;
+        -:  361:
+     4892:  362:    j = 0;
+     4892:  363:    i = from;
+        -:  364:
+     4892:  365:	fprintf(file_name,"P61,");
+    55811:  366:    while ((arg[i] != delim) && (arg[i] != ENDSTR)) 
+        -:  367:	{
+    50919:  368:		fprintf(file_name,"P62,");
+    50919:  369:		if ((arg[i] == (unsigned)('&')))
+        -:  370:		{
+     2049:  371:			fprintf(file_name,"P63,");
+     2049:  372:			junk = addstr(DITTO, sub, &j, MAXPAT);
+        -:  373:		}
+        -:  374:		else 
+        -:  375:		{
+    48870:  376:			fprintf(file_name,"P64,");
+    48870:  377:			escjunk = esc(arg, &i);
+    48870:  378:			junk = addstr(escjunk, sub, &j, MAXPAT);
+        -:  379:		}
+    50919:  380:		fprintf(file_name,"P65,");
+    50919:  381:		i = i + 1;
+        -:  382:    }
+     4892:  383:	fprintf(file_name,"P66,");
+     4892:  384:    if (arg[i] != delim)
+        -:  385:	{
+    #####:  386:		fprintf(file_name,"P67,");
+    #####:  387:		result = 0;
+        -:  388:	}
+        -:  389:    else 
+        -:  390:	{
+     4892:  391:		junk = addstr(ENDSTR, &(*sub), &j, MAXPAT);
+     4892:  392:		fprintf(file_name,"P68,");
+     4892:  393:		if ((!junk))
+        -:  394:		{
+       62:  395:			fprintf(file_name,"P69,");
+       62:  396:			result = 0;
+        -:  397:		}
+        -:  398:		else
+        -:  399:		{
+     4830:  400:			fprintf(file_name,"P70,");
+     4830:  401:			result = i;
+        -:  402:		}	
+        -:  403:    }
+     4892:  404:	fprintf(file_name,"P71,");	
+     4892:  405:    return result;
+        -:  406:}
+        -:  407:
+        -:  408:bool
+     4892:  409:getsub(arg, sub)
+        -:  410:char* arg;
+        -:  411:char* sub;
+        -:  412:{
+     4892:  413:	fprintf(file_name,"P72,");
+        -:  414:    int	makeres;
+     4892:  415:    makeres = makesub(arg, 0, ENDSTR, sub);
+     4892:  416:    return (makeres > 0);
+        -:  417:}
+        -:  418:
+        -:  419:void subline();
+        -:  420:
+        -:  421:bool
+    51120:  422:locate(c, pat, offset)
+        -:  423:character c;
+        -:  424:char* pat;
+        -:  425:int	offset;
+        -:  426:{
+        -:  427:    int	i;
+        -:  428:    bool flag;
+    51120:  429:    flag = false;
+    51120:  430:    i = offset + pat[offset];
+        -:  431:
+    51120:  432:    fprintf(file_name,"P73,");
+   385773:  433:	while ((i > offset))
+        -:  434:    {
+   334653:  435:		fprintf(file_name,"P74,");
+   334653:  436:		if (c == pat[i]) 
+        -:  437:		{
+    15189:  438:			fprintf(file_name,"P75,");
+    15189:  439:			flag = true;
+    15189:  440:			i = offset;
+        -:  441:		} 
+        -:  442:		else
+        -:  443:		{
+   319464:  444:			fprintf(file_name,"P76,");
+   319464:  445:			i = i - 1;
+        -:  446:		}
+        -:  447:    }
+        -:  448:
+    51120:  449:	fprintf(file_name,"P77,");
+    51120:  450:    return flag;
+        -:  451:}
+        -:  452:
+        -:  453:bool
+   207151:  454:omatch(lin, i, pat, j)
+        -:  455:char* lin;
+        -:  456:int	*i;
+        -:  457:char* pat;
+        -:  458:int	j;
+        -:  459:{
+        -:  460:    char advance;
+        -:  461:    bool result;
+   207151:  462:    advance = -1;
+        -:  463:
+   207151:  464:	fprintf(file_name,"P78,");
+   207151:  465:    if ((lin[*i] == ENDSTR))
+        -:  466:	{
+      377:  467:		fprintf(file_name,"P79,");
+      377:  468:		result = false;
+        -:  469:	}
+        -:  470:    else 
+        -:  471:    {
+   206774:  472:		fprintf(file_name,"P80,");
+   206774:  473:		if (!in_pat_set(pat[j]))
+        -:  474:		{
+    #####:  475:			fprintf(file_name,"P81,");
+    #####:  476:			(void)fprintf(stdout, "in omatch: can't happen\n");
+    #####:  477:			abort();	
+        -:  478:		} 
+        -:  479:		else
+        -:  480:		{
+   206774:  481:			fprintf(file_name,"P82,");
+   206774:  482:			switch (pat[j]) 
+        -:  483:			{			
+   120116:  484:				case LITCHAR:
+   120116:  485:					fprintf(file_name,"P83,");
+   120116:  486:					if (lin[*i] == pat[j + 1])
+        -:  487:					{
+    26019:  488:						fprintf(file_name,"P84,");
+    26019:  489:						advance = 1;
+        -:  490:					}
+   120116:  491:					fprintf(file_name,"P85,");
+   120116:  492:					break ;	
+     6457:  493:				case BOL:
+     6457:  494:					fprintf(file_name,"P86,");
+     6457:  495:					if (*i == 0)
+        -:  496:					{
+      711:  497:						fprintf(file_name,"P87,");
+      711:  498:						advance = 0;
+        -:  499:					}
+     6457:  500:					fprintf(file_name,"P88,");
+     6457:  501:					break ;
+    23731:  502:				case ANY:
+    23731:  503:				    fprintf(file_name,"P89,");
+    23731:  504:					if (lin[*i] != NEWLINE)
+        -:  505:					{
+    21967:  506:						fprintf(file_name,"P90,");
+    21967:  507:						advance = 1;
+        -:  508:					}
+    23731:  509:					fprintf(file_name,"P91,");
+    23731:  510:					break ;
+     4223:  511:				case EOL:
+     4223:  512:				 	fprintf(file_name,"P92,");
+     4223:  513:					if (lin[*i] == NEWLINE)
+        -:  514:					{
+      655:  515:						fprintf(file_name,"P93,");
+      655:  516:						advance = 0;
+        -:  517:					}
+     4223:  518:					fprintf(file_name,"P94,");	
+     4223:  519:					break ;
+    34716:  520:				case CCL:
+    34716:  521:					fprintf(file_name,"P95,");
+    34716:  522:					if (locate(lin[*i], pat, j + 1))
+        -:  523:					{
+    13298:  524:						fprintf(file_name,"P96,");
+    13298:  525:						advance = 1;
+        -:  526:					}
+    34716:  527:					fprintf(file_name,"P97,");
+    34716:  528:					break ;
+    17501:  529:				case NCCL:
+    17501:  530:					fprintf(file_name,"P98,");
+    17501:  531:					if ((lin[*i] != NEWLINE) && (!locate(lin[*i], pat, j+1)))
+        -:  532:					{
+    14513:  533:						fprintf(file_name,"P99,");
+    14513:  534:						advance = 1;	
+        -:  535:					}
+    17501:  536:					fprintf(file_name,"P100,");
+    17501:  537:					break;
+       30:  538:				default:
+       30:  539:					fprintf(file_name,"P101,");
+       30:  540:					Caseerror(pat[j]);
+        -:  541:			};
+        -:  542:		}	
+        -:  543:    }
+   207121:  544:    if ((advance >= 0)) 
+        -:  545:    {
+    77163:  546:		fprintf(file_name,"P102,");
+    77163:  547:		*i = *i + advance;
+    77163:  548:		result = true;
+        -:  549:    } 
+        -:  550:	else
+        -:  551:	{
+   129958:  552:		fprintf(file_name,"P103,");
+   129958:  553:		result = false;
+        -:  554:	}
+   207121:  555:	fprintf(file_name,"P104,");
+   207121:  556:    return result;
+        -:  557:}
+        -:  558:
+        -:  559:
+   100397:  560:patsize(pat, n)
+        -:  561:char*	pat;
+        -:  562:int	n;
+        -:  563:{
+        -:  564:    int size;
+   100397:  565:	fprintf(file_name,"P105,");
+   100397:  566:    if (!in_pat_set(pat[n])) 
+        -:  567:	{
+    #####:  568:		fprintf(file_name,"P106,");
+    #####:  569:		(void)fprintf(stdout, "in patsize: can't happen\n");
+    #####:  570:		abort();
+        -:  571:    } 
+        -:  572:	else
+        -:  573:	{
+   100397:  574:		fprintf(file_name,"P107,");
+   100397:  575:		switch (pat[n]) 
+        -:  576:		{
+    33618:  577:		case LITCHAR: 
+    33618:  578:			fprintf(file_name,"P108,");
+    33618:  579:			size = 2; 
+    33618:  580:			break;
+        -:  581:			
+    21834:  582:		case BOL:  
+        -:  583:		case EOL:  
+        -:  584:		case ANY:
+    21834:  585:			fprintf(file_name,"P109,");
+    21834:  586:			size = 1;
+    21834:  587:			break;
+    26907:  588:		case CCL:  
+        -:  589:		case NCCL:
+    26907:  590:			fprintf(file_name,"P110,");
+    26907:  591:			size = pat[n + 1] + 2;
+    26907:  592:			break ;
+    18038:  593:		case CLOSURE:
+    18038:  594:			fprintf(file_name,"P111,");
+    18038:  595:			size = CLOSIZE;
+    18038:  596:			break ;
+    #####:  597:		default:
+    #####:  598:			fprintf(file_name,"P112,");
+    #####:  599:			Caseerror(pat[n]);
+        -:  600:		}
+        -:  601:	}
+        -:  602:
+   100397:  603:    return size;
+        -:  604:}
+        -:  605:
+        -:  606:int
+   160707:  607:amatch(lin, offset, pat, j)
+        -:  608:char*	lin;
+        -:  609:int	offset;
+        -:  610:char*	pat;
+        -:  611:int	j;
+        -:  612:{
+        -:  613:    int	i, k;
+        -:  614:    bool result, done;
+   160707:  615:    done = false;
+        -:  616:
+   160707:  617:	fprintf(file_name,"P113,");
+   348796:  618:    while ((!done) && (pat[j] != ENDSTR))
+        -:  619:	{
+   188120:  620:		fprintf(file_name,"P114,");
+   188120:  621:		if ((pat[j] == CLOSURE)) 
+        -:  622:		{
+    18038:  623:			j = j + patsize(pat, j);
+    18038:  624:			i = offset;
+    18038:  625:			fprintf(file_name,"P115,");
+    55077:  626:			while ((!done) && (lin[i] != ENDSTR)) 
+        -:  627:			{
+    37069:  628:				result = omatch(lin, &i, pat, j);
+    37039:  629:				fprintf(file_name,"P115,");
+    37039:  630:				if (!result)
+        -:  631:				{
+    17780:  632:					fprintf(file_name,"P117,");
+    17780:  633:					done = true;
+        -:  634:				}		
+        -:  635:			}
+    18008:  636:			done = false;
+    18008:  637:			fprintf(file_name,"P118,");
+    42462:  638:			while ((!done) && (i >= offset)) 
+        -:  639:			{
+    24455:  640:				k = amatch(lin, i, pat, j + patsize(pat, j));
+    24454:  641:				fprintf(file_name,"P119,");
+    24454:  642:				if ((k >= 0))
+        -:  643:				{
+    11115:  644:					fprintf(file_name,"P120,");
+    11115:  645:					done = true;
+        -:  646:				}
+        -:  647:				else
+        -:  648:				{
+    13339:  649:					fprintf(file_name,"P121,");
+    13339:  650:					i = i - 1;
+        -:  651:				}	
+        -:  652:			}
+    18007:  653:			fprintf(file_name,"P122,");
+    18007:  654:			offset = k;
+    18007:  655:			done = true;
+        -:  656:		} 
+        -:  657:		else 
+        -:  658:		{
+   170082:  659:			result = omatch(lin, &offset, pat, j);
+   170082:  660:			fprintf(file_name,"P123,");
+   170082:  661:			if ((!result)) 
+        -:  662:			{
+   112178:  663:				fprintf(file_name,"P124,");
+   112178:  664:				offset = -1;
+   112178:  665:				done = true;
+        -:  666:			}
+        -:  667:			else
+        -:  668:			{
+    57904:  669:				fprintf(file_name,"P125,");
+    57904:  670:				j = j + patsize(pat, j);
+        -:  671:			}
+        -:  672:		}
+        -:  673:	}
+   160676:  674:	fprintf(file_name,"P126,");
+   160676:  675:	return offset;
+        -:  676:}
+        -:  677:
+        -:  678:void
+    29789:  679:putsub(lin, s1, s2, sub)
+        -:  680:char* lin;
+        -:  681:int	s1, s2;
+        -:  682:char* sub;
+        -:  683:{
+        -:  684:    int	i;
+        -:  685:    int	j;
+    29789:  686:    i = 0;
+    29789:  687:	fprintf(file_name,"P127,");
+   389882:  688:    while ((sub[i] != ENDSTR)) 
+        -:  689:	{
+   360093:  690:		fprintf(file_name,"P128,");
+   360093:  691:		if ((sub[i] == DITTO))
+        -:  692:		{
+    25813:  693:			fprintf(file_name,"P129,");
+    59194:  694:			for (j = s1; j < s2; j++) 
+        -:  695:		    {
+    33381:  696:				fprintf(file_name,"P130,");
+    33381:  697:				fputc(lin[j],stdout);
+        -:  698:		    }
+        -:  699:		}
+        -:  700:		else	
+        -:  701:		{
+   334280:  702:			fprintf(file_name,"P131,");
+   334280:  703:		    fputc(sub[i],stdout);
+        -:  704:		}
+   360093:  705:		fprintf(file_name,"P132,");
+   360093:  706:		i = i + 1;
+        -:  707:    }
+    29789:  708:}
+        -:  709:
+        -:  710:void
+    10446:  711:subline(lin, pat, sub)
+        -:  712:char *lin;
+        -:  713:char *pat;
+        -:  714:char *sub;
+        -:  715:{	
+        -:  716:	int	i, lastm, m;
+    10446:  717:	lastm = -1;
+    10446:  718:	i = 0;
+    10446:  719:	fprintf(file_name,"P133,");
+   146668:  720:	while ((lin[i] != ENDSTR)) 
+        -:  721:	{
+   136252:  722:	    m = amatch(lin, i, pat, 0);
+   136222:  723:	    fprintf(file_name,"P134,");
+   136222:  724:		if ((m >= 0) && (lastm != m)) 
+        -:  725:		{
+    29789:  726:			fprintf(file_name,"P135,");
+    29789:  727:			putsub(lin, i, m, sub);
+    29789:  728:			lastm = m;
+        -:  729:	    }
+   136222:  730:		fprintf(file_name,"P136,");
+   136222:  731:	    if ((m == -1) || (m == i))
+        -:  732:		{
+   113485:  733:			fprintf(file_name,"P137,");
+   113485:  734:			fputc(lin[i],stdout);
+   113485:  735:			i = i + 1;
+        -:  736:	    } 
+        -:  737:		else
+        -:  738:		{
+    22737:  739:			fprintf(file_name,"P138,");
+    22737:  740:			i = m;
+        -:  741:		}
+        -:  742:	}
+    10416:  743:}
+        -:  744:
+        -:  745:void
+     4712:  746:change(pat, sub)
+        -:  747:char *pat, *sub;
+        -:  748:{
+        -:  749:    string  line;
+        -:  750:    bool result;
+     4712:  751:    result = get_line(line, MAXSTR);
+        -:  752:	
+     4712:  753:    fprintf(file_name,"P139,");
+    15128:  754:	while ((result)) 
+        -:  755:	{
+    10446:  756:		fprintf(file_name,"P140,");
+    10446:  757:		subline(line, pat, sub);
+    10416:  758:		result = get_line(line, MAXSTR);
+        -:  759:    }
+     4682:  760:}
+        -:  761:
+     5542:  762:main(argc, argv)
+        -:  763:int	argc;
+        -:  764:char	*argv[];
+        -:  765:{
+     5542:  766:	signal(SIGSEGV, segfault_handler);
+     5542:  767:	file_name=fopen("v8.txt","a+"); 
+     5542:  768:    if(!file_name)
+        -:  769:    {	
+    #####:  770:        printf("File could not be opened! \n");
+    #####:  771:        fclose(file_name);
+    #####:  772:        exit(0);
+        -:  773:    }
+        -:  774:	string pat, sub;
+        -:  775:	bool result;
+        -:  776:
+     5542:  777:	fprintf(file_name,"\nP1,");
+     5542:  778:	if (argc < 2) 
         -:  779:	{
-      516:  780:		fprintf(file_name,"P4,");
-      516:  781:		(void)fprintf(stdout, "change: illegal \"from\" pattern\n");
-      516:  782:		exit(2);
-        -:  783:	}
-        -:  784:
-     5004:  785:	fprintf(file_name,"P5,");
-     5004:  786:	if (argc >= 3)
-        -:  787:	{
-     4892:  788:		result = getsub(argv[2], sub);
-     4892:  789:		fprintf(file_name,"P6,");
-     4892:  790:		if (!result)
-        -:  791:		{	
-      292:  792:			fprintf(file_name,"P7,");
-      292:  793:			(void)fprintf(stdout, "change: illegal \"to\" string\n");
-      292:  794:			exit(3);
-        -:  795:		}
-        -:  796:	} 
-        -:  797:	else
-        -:  798:	{
-      112:  799:		fprintf(file_name,"P8,");
-      112:  800:		sub[0] = '\0';
-        -:  801:	}
-        -:  802:
-     4712:  803:	fprintf(file_name,"P9,");
-     4712:  804:	change(pat, sub);
-     4682:  805:	return 0;
-        -:  806:}
-        -:  807:
-        -:  808:void
-       30:  809:Caseerror(n)
-        -:  810:int	n;
-        -:  811:{
-       30:  812:	fprintf(file_name,"P10,");
-       30:  813:	(void)fprintf(stdout, "Missing case limb: line %d\n", n);
-       30:  814:	exit(4);
+       22:  780:		fprintf(file_name,"P2,");
+       22:  781:		(void)fprintf(stdout, "usage: change from [to]\n");
+       22:  782:		exit(1);
+        -:  783:	};
+        -:  784:	
+     5520:  785:	result = getpat(argv[1], pat);
+     5520:  786:	fprintf(file_name,"P3,");
+     5520:  787:	if (!result)
+        -:  788:	{
+      516:  789:		fprintf(file_name,"P4,");
+      516:  790:		(void)fprintf(stdout, "change: illegal \"from\" pattern\n");
+      516:  791:		exit(2);
+        -:  792:	}
+        -:  793:
+     5004:  794:	fprintf(file_name,"P5,");
+     5004:  795:	if (argc >= 3)
+        -:  796:	{
+     4892:  797:		result = getsub(argv[2], sub);
+     4892:  798:		fprintf(file_name,"P6,");
+     4892:  799:		if (!result)
+        -:  800:		{	
+      292:  801:			fprintf(file_name,"P7,");
+      292:  802:			(void)fprintf(stdout, "change: illegal \"to\" string\n");
+      292:  803:			exit(3);
+        -:  804:		}
+        -:  805:	} 
+        -:  806:	else
+        -:  807:	{
+      112:  808:		fprintf(file_name,"P8,");
+      112:  809:		sub[0] = '\0';
+        -:  810:	}
+        -:  811:
+     4712:  812:	fprintf(file_name,"P9,");
+     4712:  813:	change(pat, sub);
+     4682:  814:	return 0;
         -:  815:}
+        -:  816:
+        -:  817:void
+       30:  818:Caseerror(n)
+        -:  819:int	n;
+        -:  820:{
+       30:  821:	fprintf(file_name,"P10,");
+       30:  822:	(void)fprintf(stdout, "Missing case limb: line %d\n", n);
+       30:  823:	exit(4);
+        -:  824:}
